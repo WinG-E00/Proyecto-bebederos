@@ -6,12 +6,9 @@ body {
   flex-direction: column;
   min-height: 100vh;
 
+  /* MEJORA: Se cambió a un degradado oscuro semitransparente para que el fondo resalte y las letras blancas no se pierdan */
   background:
-    linear-gradient(
-      to right,
-      rgba(232, 245, 233, 0.8),
-      rgba(241, 248, 233, 0.8)
-    ),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2)),
     url("imgs/WhatsApp-Image-2020-10-03-at-11.18.04.webp");
 
   background-size: cover;
@@ -20,7 +17,8 @@ body {
 }
 
 nav {
-  background-color: #2e7d32;
+  /* MEJORA: Se oscureció un poco el verde (#1b5e20) para dar un contraste perfecto (Accesibilidad WCAG) con el texto blanco */
+  background-color: #1b5e20;
   color: white;
   padding: 15px 20px;
   display: flex;
@@ -63,35 +61,68 @@ section {
 
 h1 {
   font-size: 40px;
-  color: #1b5e20;
+  /* MEJORA: Texto blanco con sombra suave para que sea ultra legible sobre el fondo de la imagen */
+  color: #ffffff;
   margin: 0;
+  text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.6);
 }
 
 section p {
   margin: 10px 0 20px 0;
 }
 
+/* MEJORA: Se modificó el color de este párrafo específico para que tenga suficiente contraste sobre el fondo oscuro */
+section > p.text-muted {
+  color: #f8f9fa !important;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.8);
+}
+
 section div {
   background-color: white;
   border: 1px solid #c8e6c9;
-  padding: 15px;
+  padding: 25px 15px; /* MEJORA: Más espaciado interno */
   width: 250px;
   margin: 10px;
   display: inline-block;
   vertical-align: top;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
   cursor: pointer;
+
+  /* MEJORA: Bordes redondeados y transición suave para que parezcan botones interactivos */
+  border-radius: 12px;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    border-color 0.2s ease;
 }
 
 section div:hover {
-  transform: translateY(-5px);
-  transition: transform 0.2s ease;
+  /* MEJORA: Al pasar el mouse, el botón se eleva, la sombra crece y el borde se ilumina en verde */
+  transform: translateY(-6px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  border-color: #2e7d32;
+}
+
+/* MEJORA: Estilos internos para los títulos de los roles */
+section div h3 {
+  color: #1b5e20;
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+/* MEJORA: Estilos internos para las descripciones de los roles */
+section div p {
+  color: #555555;
+  font-size: 14px;
+  margin: 0;
 }
 
 footer {
-  background-color: #c8e6c9;
-  color: #1b1b1b;
+  /* MEJORA: Un color verde tierra suave que combina con el concepto sin ser tan brillante como el anterior */
+  background-color: #e8f5e9;
+  color: #2e7d32;
   margin-top: 30px;
   padding: 15px;
   text-align: center;
+  font-weight: 500;
 }
