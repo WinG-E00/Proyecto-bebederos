@@ -13,6 +13,76 @@
     />
   </head>
   <body>
+    <nav class="navbar navbar-dark navbar-custom">
+      <div class="container-fluid">
+        <span class="navbar-brand">🌱 Proyecto Bebederos</span>
+        <div>
+          <a href="login.html" class="nav-link-custom">Iniciar sesión</a>
+          <a href="registro.html" class="nav-link-custom">Registrarse</a>
+        </div>
+      </div>
+    </nav>
+
+    <!-- CONTENIDO -->
+    <div class="overlay">
+      <div class="card-login">
+        <h2>Login</h2>
+
+        <form>
+          <!-- Email -->
+          <input
+            type="email"
+            class="form-control"
+            placeholder="Email"
+            required
+          />
+
+          <!-- Password -->
+          <div class="position-relative">
+            <input
+              type="password"
+              class="form-control"
+              placeholder="Contraseña"
+              required
+            />
+            <span class="toggle-password">👁️</span>
+          </div>
+
+          <!-- Recordar usuario -->
+          <div class="form-check text-start mt-2">
+            <input class="form-check-input" type="checkbox" id="recordar" />
+            <label class="form-check-label" for="recordar">
+              Recordar usuario
+            </label>
+          </div>
+
+          <!-- Botón login -->
+          <button type="submit" class="btn btn-login mt-3">Ingresar</button>
+
+          <!-- Separador -->
+          <div class="divider">o</div>
+
+          <!-- Google (solo visual) -->
+          <button type="button" class="google-btn">
+            <img
+              src="https://developers.google.com/identity/images/g-logo.png"
+              alt="Google"
+            />
+            <span>Continuar con Google</span>
+          </button>
+        </form>
+
+        <!-- Links -->
+        <div class="extra-links">
+          <a href="#">¿Olvidaste tu contraseña?</a>
+
+          <p class="mt-2">
+            ¿No tenés cuenta?
+            <a href="registro.html">Registrate</a>
+          </p>
+        </div>
+      </div>
+    </div>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
