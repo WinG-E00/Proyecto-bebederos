@@ -1,5 +1,7 @@
-a {
-  text-decoration: none;
+#mensajeRol {
+  color: #2e7d32;
+  font-weight: bold;
+  margin-bottom: 10px;
 }
 
 body {

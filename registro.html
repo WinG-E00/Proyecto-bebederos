@@ -35,11 +35,19 @@
             </div>
             <div>
               <label for="email">Email:</label>
-              <input type="email" id="email" name="email" />
+              <input type="email" id="email" name="email" required />
             </div>
             <div>
               <label for="password">Contraseña:</label>
               <input type="password" id="password" name="password" required />
+              <ul class="password-checklist">
+                <li id="rule-length">❌ Mínimo 6 caracteres</li>
+                <li id="rule-uppercase">❌ Una mayúscula</li>
+                <li id="rule-number">❌ Un número</li>
+              </ul>
+              <p id="passwordStrength"></p>
+              <p id="errorGeneral"></p>
+              <p id="registroExitoso" class="success-msg"></p>
             </div>
             <div>
               <label for="rol">Rol:</label>
@@ -58,6 +66,7 @@
       </div>
     </div>
 
+    <script src="js/registro.js"></script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"

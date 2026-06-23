@@ -1,5 +1,30 @@
-a {
-  text-decoration: none;
+.password-checklist li {
+  color: red;
+}
+
+.password-checklist li.ok {
+  color: green;
+}
+
+.fuerte {
+  color: green;
+}
+
+.media {
+  color: orange;
+}
+
+.debil {
+  color: red;
+}
+
+#errorGeneral {
+  color: red;
+}
+
+.success-msg {
+  color: green;
+  font-weight: bold;
 }
 
 body {
