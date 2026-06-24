@@ -220,3 +220,39 @@ body {
     width: 0;
   }
 }
+
+/* modo oscuro base */
+body.dark {
+  background: #121212;
+  color: #e0e0e0;
+}
+
+/* títulos */
+body.dark h1,
+body.dark h2,
+body.dark h3 {
+  color: #81c784;
+}
+
+/* tarjetas (como tus card-rol) */
+body.dark .card-rol {
+  background: #1e1e1e;
+  border: 1px solid #2e7d32;
+  color: white;
+}
+
+/* hover tarjetas */
+body.dark .card-rol:hover {
+  background: #2a2a2a;
+}
+
+/* botones */
+body.dark button {
+  background: #2e7d32;
+  color: white;
+  border: none;
+}
+
+body.dark button:hover {
+  background: #1b5e20;
+}
