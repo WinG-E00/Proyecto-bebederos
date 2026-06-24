@@ -48,11 +48,11 @@
             <div>
               <label for="password">Contraseña:</label>
               <input type="password" id="password" name="password" required />
-              <ul class="password-checklist">
-                <li id="rule-length">❌ Mínimo 6 caracteres</li>
-                <li id="rule-uppercase">❌ Una mayúscula</li>
-                <li id="rule-number">❌ Un número</li>
-              </ul>
+              <div class="password-checklist small" id="checklist">
+                <span id="rule-length">•6 caracteres</span>
+                <span id="rule-uppercase">•Mayúscula</span>
+                <span id="rule-number">•Número</span>
+              </div>
               <p id="passwordStrength"></p>
               <p id="errorGeneral"></p>
               <p id="registroExitoso" class="success-msg"></p>

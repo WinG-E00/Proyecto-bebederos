@@ -1,11 +1,21 @@
-.password-checklist li {
+#passwordStrength {
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.password-checklist {
+  gap: 10px;
+  margin-top: 5px;
+  font-size: 0.8rem;
+}
+
+.password-checklist span {
   color: red;
 }
 
-.password-checklist li.ok {
-  color: green;
+.password-checklist span.ok {
+  color: #2e7d32;
 }
-
 .fuerte {
   color: green;
 }
