@@ -1,5 +1,5 @@
 const form = document.querySelector("form");
-
+2
 const passwordInput = document.getElementById("password");
 
 const ruleLength = document.getElementById("rule-length");
