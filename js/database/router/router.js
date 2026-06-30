@@ -1,4 +1,4 @@
-import express from "express.js";
+import express from "express";
 
 //Probablemente aca necesito los controladores?
 //Probablemente sean controladores para manejar la base de datos y hacer un insert a de un registro
