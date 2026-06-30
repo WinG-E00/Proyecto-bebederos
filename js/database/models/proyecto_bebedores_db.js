@@ -67,4 +67,3 @@ export const Sensor = sequelize.define('Sensor', {
 });
 
 
-

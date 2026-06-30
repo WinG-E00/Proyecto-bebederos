@@ -1,5 +1,6 @@
 import express from "express";
+import { routerAuth } from "./js/database/router/router.js"
 
+const app = express();
 
-Usuario
-sensores
+app.use(express.json())
