@@ -1,5 +1,7 @@
 const form = document.querySelector("form");
-2
+
+const formularioRegister = document.getElementById("formularioRegister");
+
 const passwordInput = document.getElementById("password");
 
 const ruleLength = document.getElementById("rule-length");
@@ -10,8 +12,11 @@ const strengthText = document.getElementById("passwordStrength");
 const errorGeneral = document.getElementById("errorGeneral");
 const mensajeExito = document.getElementById("registroExitoso");
 
-// VALIDACIÓN EN TIEMPO REAL
+
+
+// validacion solo del elemento password osea del input....
 passwordInput.addEventListener("input", () => {
+
   const value = passwordInput.value;
 
   let score = 0;
@@ -92,8 +97,29 @@ form.addEventListener("submit", (e) => {
   localStorage.setItem("usuario", JSON.stringify(usuario));
 
   mensajeExito.textContent = "✅ Registro exitoso";
+  
+
+
 
   setTimeout(() => {
     navegar("login.html");
   }, 1500);
 });
+
+
+
+
+
+  formularioRegister.addEventListener("submit", (event) => {
+
+    event.preventDefault();
+
+    //Validacion para ver como saldra el json
+    const datos = new FormData(formularioRegister);
+    
+    // 3. Convertimos los datos en un objeto fácil de leer en JavaScript
+    const datosJS = Object.fromEntries(datos.entries());
+    
+    console.log(datosJS); 
+
+  })

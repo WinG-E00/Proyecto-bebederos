@@ -7,10 +7,14 @@ const routerAuth = express.Router();
 
 //Para la creacion de usuario
 //Necesito un midleware que registre a mi usuario en la base de datos
-routerAuth.post("/api/auth/register",);
+routerAuth.post("/api/auth/register", () => {
+    console.log("Hola register")
+});
 
 // Para el logeo de usuario
-routerAuth.post("/api/auth/login",);
+routerAuth.post("/api/auth/login", () => {
+    console.log("Hola login")
+});
 
 
 

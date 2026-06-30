@@ -10,7 +10,7 @@ export const User = sequelize.define('User', {
     primaryKey: true,
     autoIncrement: true
   },
-  gmail: {
+  email: {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true, // Evita que se repitan correos
@@ -23,15 +23,14 @@ export const User = sequelize.define('User', {
     allowNull: false,
     // Puedes mapearlo a snake_case en la BD si prefieres: field: 'nombre_completo'
   },
-  contraseña: {
+  password: {
     type: DataTypes.STRING,
     allowNull: false
     // Recuerda que en producción es buena práctica guardar el hash (ej. con bcrypt) y no texto plano
   },
   rol: {
-    type: DataTypes.ENUM('peon', 'dueño'),
+    type: DataTypes.ENUM('owner', 'slave'),
     allowNull: false,
-    defaultValue: 'peon' // Opción por defecto si no se especifica
   }
 }, {
   tableName: 'usuarios' // Fuerza a que la tabla en MySQL se llame exactamente así

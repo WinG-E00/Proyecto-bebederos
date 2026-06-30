@@ -79,10 +79,10 @@
 
 
          <!-- //Aca hay que definir hacia adonde hara el metodo post -->
-          <form action="" method="POST" id="formularioRegister"  >
+          <form action="/api/auth/register" method="POST" id="formularioRegister"  >
             <div>
               <label for="nombre">Nombre completo:</label>
-              <input type="text" id="nombre" name="nombre" />
+              <input type="text" id="nombre" name="nombreCompleto" />
             </div>
             <div>
               <label for="email">Email:</label>
@@ -104,8 +104,8 @@
               <label for="rol">Rol:</label>
               <select id="rol" name="rol">
                 <option value="">Seleccionar</option>
-                <option value="dueno">Dueño</option>
-                <option value="peon">Peón</option>
+                <option value="owner">Dueño</option>
+                <option value="slave">Peón</option>
               </select>
             </div>
             <button type="submit">Registrarse</button>
@@ -127,12 +127,21 @@
     <div id="loader">
       <div class="spinner"></div>
     </div>
+
+
+    <!-- script transiciones -->
     <script src="js/transiciones.js"></script>
+    
+    <!-- script registro  -->
     <script src="js/registro.js"></script>
+    
+
+    <!-- script cdn boostrap -->
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
       integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
       crossorigin="anonymous"
     ></script>
+    
   </body>
 </html>
