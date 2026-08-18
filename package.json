@@ -6,8 +6,12 @@
   "main": "index.js",
 =======
   "main": "app.js",
+<<<<<<< HEAD
   "type":"module",
 >>>>>>> da0b6ada3908c94d30c9dde918e6585aa94348b5
+=======
+  "type": "module",
+>>>>>>> c67be466c06e25cf8caecb5048e844271d39ccb7
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -20,7 +24,6 @@
 >>>>>>> da0b6ada3908c94d30c9dde918e6585aa94348b5
   },
   "keywords": [],
-  "author": "",
   "license": "ISC",
 <<<<<<< HEAD
   "type": "commonjs",
@@ -41,8 +44,11 @@
   "dependencies": {
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
-    "mysql2": "^3.22.5",
+    "mysql2": "^3.23.2",
     "sequelize": "^6.37.8"
   }
 }
+<<<<<<< HEAD
 >>>>>>> da0b6ada3908c94d30c9dde918e6585aa94348b5
+=======
+>>>>>>> c67be466c06e25cf8caecb5048e844271d39ccb7
