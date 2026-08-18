@@ -2,7 +2,11 @@
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap");
 
 /* ===== BASE ===== */
-body {
+<<<<<<< HEAD ======= a {
+  text-decoration: none;
+}
+
+>>>>>>>da0b6ada3908c94d30c9dde918e6585aa94348b5 body {
   margin: 0;
   font-family: "Inter", sans-serif;
   background: #f5f7fb;
