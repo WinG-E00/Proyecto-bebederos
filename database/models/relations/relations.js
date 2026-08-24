@@ -13,12 +13,12 @@ export { sequelize, User, Perfil };
 
 // Un User tiene muchos bebederos
 User.hasMany(Bebederos,{
-    foreignKey: 'bebederosId',
+    foreignKey: 'userId',
     as: 'bebederos'
 })
 
 Bebederos.belongsTo(User, {
-    foreignKey: 'bebederosId',
+    foreignKey: 'userId',
     as: 'user'
 })
 
