@@ -28,8 +28,15 @@ export const User = sequelize.define('User', {
     password: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    perfilId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: { model: 'perfil', key: 'id' }
     }
 }, {
     tableName: 'usuarios', // Opcional: si quieres que la tabla se llame así en la BD
     timestamps: true       // Crea automáticamente createdAt y updatedAt
 });
+
+export default User;
