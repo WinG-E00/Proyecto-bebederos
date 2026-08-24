@@ -1,5 +1,5 @@
 //Importacion de router
-import { Router } from 'sequelize';
+import { Router } from 'express';
 import { createBebederosRegister } from '../controllers/bebederos_controllers/createBebederos.js';
 //aqui van las importaciones de los controladores
 

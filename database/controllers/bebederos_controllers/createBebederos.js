@@ -15,7 +15,7 @@ export const createBebederosRegister = async (req, res) => {
             longitud,
             latitud,
             userId
-        })
+        });
 
         return res.status(201).json({
             ok: true,
