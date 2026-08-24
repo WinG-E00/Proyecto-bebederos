@@ -7,7 +7,10 @@ import { Router } from 'sequelize';
 export const router = Router();
 
 
-//Ruta para crear 
+//Ruta para crear registro de bebederos
+router.post('api/bebederos/create',  );
+
+
 
 
 
