@@ -1,6 +1,6 @@
 //Importacion de router
 import { Router } from 'sequelize';
-
+import { createBebederosRegister } from '../controllers/bebederos_controllers/createBebederos.js';
 //aqui van las importaciones de los controladores
 
 
@@ -8,7 +8,8 @@ export const router = Router();
 
 
 //Ruta para crear registro de bebederos
-router.post('api/bebederos/create',  );
+router.post('api/bebederos/create', createBebederosRegister );
+
 
 
 
