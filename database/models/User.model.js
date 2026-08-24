@@ -1,42 +1,35 @@
 import { DataTypes } from 'sequelize';
+import sequelize from '../db/database.js';
 
-import sequelize from './db/database.js';
-
-
-
-
-
-export const User = sequelize.define('User', {
+const User = sequelize.define('User', {
     id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
-        primaryKey: true
+        primaryKey: true,
     },
     user: {
         type: DataTypes.STRING,
         allowNull: false,
-        unique: true
+        unique: true,
     },
     gmail: {
         type: DataTypes.STRING,
         allowNull: false,
         unique: true,
-        validate: {
-            isEmail: true // Validación opcional para asegurar que sea un correo válido
-        }
+        validate: { isEmail: true },
     },
     password: {
         type: DataTypes.STRING,
-        allowNull: false
+        allowNull: false,
     },
     perfilId: {
         type: DataTypes.INTEGER,
         allowNull: true,
-        references: { model: 'perfil', key: 'id' }
-    }
+        references: { model: 'perfiles', key: 'id' },
+    },
 }, {
-    tableName: 'usuarios', // Opcional: si quieres que la tabla se llame así en la BD
-    timestamps: true       // Crea automáticamente createdAt y updatedAt
+    tableName: 'usuarios',
+    timestamps: true,
 });
 
 export default User;

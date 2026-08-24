@@ -2,14 +2,27 @@ import express from "express";
 import 'dotenv/config';
 import sequelize from "./db/database.js";
 
+//import routers
+import { router } from './router/user.router.js'
+
+
+//import de modelos
+import User from './models/User.model.js';
+import Perfil from './models/Perfil.mode.js';
+import Bebederos from './models/Bebederos.model.js';
+import './models/relations/relations.js';
+import { router as userRouter } from './router/user.router.js';
 
 
 const app = express();
+const PORT = process.env.PORT || 3000;
 
 
 //midleware basico para que mi app entienda formato json
 app.use(express.json());
-
+// Montar routers
+app.use(userRouter);
+app.use(router)
 //Aca uso mi router que tiene las rutas de Auth que van a ser login y register
 //Aca voy a tener que crear todos los routers necesarios para cada modelo que voy a tener.
 
@@ -37,8 +50,8 @@ async function main() {
 
 
         // 3. Iniciar el servidor Express
-        app.listen(process.env.PORT, () => {
-            console.log(`Servidor corriendo en http://localhost:`);
+        app.listen(PORT, () => {
+            console.log(`Servidor corriendo en http://localhost:${PORT}`);
         });
     } catch (error) {
         console.error("No se pudo conectar a la base de datos:", error);

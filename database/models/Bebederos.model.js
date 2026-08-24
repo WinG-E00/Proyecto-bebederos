@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import sequelize from '../config/database.js'; // Ajusta la ruta a tu archivo de conexión de Sequelize
+import sequelize from '../db/database.js'; // Ajusta la ruta a tu archivo de conexión de Sequelize
 
 const Bebederos = sequelize.define('Bebederos', {
   id: {
