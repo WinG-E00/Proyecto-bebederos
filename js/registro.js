@@ -120,6 +120,9 @@ form.addEventListener("submit", (e) => {
     // 3. Convertimos los datos en un objeto fácil de leer en JavaScript
     const datosJS = Object.fromEntries(datos.entries());
     
-    console.log(datosJS); 
+    const datosJSON = JSON.stringify(datosJS);
+
+    
+    console.log(datosJSON); 
 
   })

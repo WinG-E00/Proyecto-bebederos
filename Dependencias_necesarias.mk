@@ -1,0 +1,1 @@
+npm install sequelize, dotenv, mysql2, express
