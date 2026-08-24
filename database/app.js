@@ -26,12 +26,12 @@ app.get('/test', (req, res) => {
 async function main() {
     try {
             // 1. Verificar la conexión con la base de datos
-        // await sequelize.authenticate();
+        await sequelize.authenticate();
         console.log("Conexión a la base de datos establecida correctamente.");
 
             // 2. Sincronizar modelos (Crea las tablas 'usuarios' y 'sensores' si no existen)
             // El uso de { alter: true } actualiza las tablas si hay cambios en los modelos
-        // await sequelize.sync({ force: true }); // Ahora esta en forze por que esta en fase de desarrollo
+        await sequelize.sync({ force: true }); // Ahora esta en forze por que esta en fase de desarrollo
         console.log("Modelos sincronizados con la base de datos.");
 
 
