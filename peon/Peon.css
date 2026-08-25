@@ -1,36 +1,788 @@
+:root {
+  --verde: #198754;
+  --verde-oscuro: #126b42;
+  --verde-claro: #e8f5ee;
+
+  --azul: #0d6efd;
+  --azul-claro: #eaf2ff;
+
+  --fondo: #f4f7f6;
+  --blanco: #ffffff;
+
+  --texto: #1f2937;
+  --texto-secundario: #6b7280;
+
+  --borde: #e5e7eb;
+
+  --sombra: 0 8px 30px rgba(15, 23, 42, 0.07);
+
+  --radio: 16px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
-  background-image: url("/peon/imagen/Fondo-Interfaz-Peon.jpg");
-  background-size: cover;
-  background-position: center;
+  margin: 0;
+
+  background: linear-gradient(
+    135deg,
+    rgba(25, 135, 84, 0.04),
+    rgba(255, 255, 255, 0.8)
+  );
+
+  background-color: var(--fondo);
+
+  color: var(--texto);
+
+  font-family:
+    Inter,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+
   min-height: 100vh;
+
+  transition:
+    background 0.3s ease,
+    color 0.3s ease;
+}
+.navbar-empresa {
+  background: linear-gradient(135deg, #087443, #198754);
+
+  min-height: 76px;
+
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
 }
 
-.titulo {
+.navbar-brand {
+  text-decoration: none;
+}
+
+.logo {
+  width: 42px;
+  height: 42px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(255, 255, 255, 0.16);
+
+  border: 1px solid rgba(255, 255, 255, 0.2);
+
+  border-radius: 12px;
+
+  font-size: 21px;
+}
+
+.brand-title {
+  display: block;
+
+  font-size: 17px;
+  font-weight: 700;
+
+  letter-spacing: 0.2px;
+}
+
+.navbar-brand small {
+  display: block;
+
+  color: rgba(255, 255, 255, 0.7);
+
+  font-size: 11px;
+}
+.hora-container {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
   color: white;
-  text-shadow: 3px 3px 10px black;
+
+  font-size: 14px;
+  font-weight: 500;
 }
 
-.tarjeta {
-  transition: 0.3s;
+.btn-primary-custom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  background: #dc3545 !important;
+  color: #ffffff !important;
+
   border: none;
-  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+
+  padding: 11px;
+
+  border-radius: 10px;
+
+  font-size: 13px;
+  font-weight: 600;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
-.tarjeta:hover {
-  transform: translateY(-10px);
+.btn-primary-custom i {
+  color: #ffffff !important;
 }
 
-.card-img-top {
-  height: 250px;
+.btn-primary-custom:hover {
+  background: #bb2d3b !important;
+  color: #ffffff !important;
+
+  transform: translateY(-2px);
+
+  box-shadow: 0 5px 15px rgba(220, 53, 69, 0.3);
+}
+
+.btn-primary-custom:hover i {
+  color: #ffffff !important;
+}
+
+.usuario {
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  padding-left: 12px;
+
+  border-left: 1px solid rgba(255, 255, 255, 0.25);
+}
+
+.usuario-icon {
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.16);
+
+  color: white;
+}
+
+.usuario-info strong,
+.usuario-info small {
+  display: block;
+  color: white;
+}
+
+.usuario-info strong {
+  font-size: 13px;
+}
+
+.usuario-info small {
+  opacity: 0.7;
+  font-size: 11px;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: end;
+
+  margin-bottom: 28px;
+}
+
+.badge-operativo {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+
+  color: var(--verde);
+
+  background: var(--verde-claro);
+
+  padding: 6px 11px;
+
+  border-radius: 20px;
+
+  font-size: 12px;
+  font-weight: 600;
+
+  margin-bottom: 10px;
+}
+
+.badge-operativo i {
+  font-size: 7px;
+}
+
+.dashboard-header h1 {
+  margin: 0;
+
+  font-size: 30px;
+
+  font-weight: 700;
+
+  letter-spacing: -0.7px;
+}
+
+.dashboard-header p {
+  margin: 7px 0 0;
+
+  color: var(--texto-secundario);
+
+  font-size: 14px;
+}
+
+.fecha {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  color: var(--texto-secundario);
+
+  font-size: 13px;
+}
+
+.stat-card {
+  display: flex;
+  align-items: center;
+
+  gap: 16px;
+
+  background: var(--blanco);
+
+  border: 1px solid var(--borde);
+
+  border-radius: var(--radio);
+
+  padding: 20px;
+
+  box-shadow: var(--sombra);
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-3px);
+
+  box-shadow: 0 12px 35px rgba(15, 23, 42, 0.11);
+}
+
+.stat-icon {
+  min-width: 52px;
+  height: 52px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 13px;
+
+  font-size: 21px;
+}
+
+.stat-icon.agua {
+  color: var(--azul);
+  background: var(--azul-claro);
+}
+
+.stat-icon.ganado {
+  color: var(--verde);
+  background: var(--verde-claro);
+}
+
+.stat-icon.clima {
+  color: #d97706;
+  background: #fff7e6;
+}
+
+.stat-icon.alertas {
+  color: #7c3aed;
+  background: #f3e8ff;
+}
+
+.stat-card span {
+  display: block;
+
+  color: var(--texto-secundario);
+
+  font-size: 12px;
+}
+
+.stat-card h3 {
+  margin: 2px 0 3px;
+
+  font-size: 22px;
+
+  font-weight: 700;
+}
+
+.stat-card small {
+  color: var(--verde);
+
+  font-size: 11px;
+}
+
+.dashboard-card {
+  background: var(--blanco);
+
+  border: 1px solid var(--borde);
+
+  border-radius: var(--radio);
+
+  box-shadow: var(--sombra);
+
+  padding: 25px;
+
+  transition:
+    background 0.3s ease,
+    border 0.3s ease;
+}
+
+.card-header-custom {
+  display: flex;
+  justify-content: space-between;
+
+  margin-bottom: 22px;
+}
+
+.section-label {
+  color: var(--verde);
+
+  font-size: 10px;
+
+  font-weight: 700;
+
+  letter-spacing: 1.2px;
+}
+
+.card-header-custom h2 {
+  margin: 5px 0;
+
+  font-size: 20px;
+
+  font-weight: 700;
+}
+
+.card-header-custom h2 i {
+  color: var(--verde);
+}
+
+.card-header-custom p {
+  margin: 0;
+
+  color: var(--texto-secundario);
+
+  font-size: 12px;
+}
+
+.status-normal {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  height: fit-content;
+
+  color: var(--verde);
+
+  background: var(--verde-claro);
+
+  padding: 7px 10px;
+
+  border-radius: 20px;
+
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.bebedero-content {
+  display: grid;
+
+  grid-template-columns: 1fr 1fr;
+
+  gap: 25px;
+
+  align-items: center;
+}
+
+.bebedero-image {
+  position: relative;
+
+  height: 270px;
+
+  overflow: hidden;
+
+  border-radius: 13px;
+}
+
+.bebedero-image img {
+  width: 100%;
+  height: 100%;
+
   object-fit: cover;
+
+  transition: transform 0.5s ease;
 }
 
-.modo-oscuro {
-  background: #121212;
+.bebedero-image:hover img {
+  transform: scale(1.05);
+}
+
+.image-overlay {
+  position: absolute;
+
+  left: 12px;
+  bottom: 12px;
+
+  display: flex;
+  align-items: center;
+  gap: 7px;
+
+  padding: 8px 12px;
+
+  color: white;
+
+  background: rgba(0, 0, 0, 0.6);
+
+  backdrop-filter: blur(5px);
+
+  border-radius: 8px;
+
+  font-size: 11px;
+}
+
+.nivel-header {
+  display: flex;
+  justify-content: space-between;
+
+  margin-bottom: 9px;
+
+  font-size: 13px;
+}
+
+.nivel-header strong {
+  color: var(--azul);
+
+  font-size: 18px;
+}
+
+.progress-custom {
+  height: 11px;
+
+  background: #e9ecef;
+
+  border-radius: 20px;
+
+  overflow: hidden;
+}
+
+.progress-custom .progress-bar {
+  background: linear-gradient(90deg, #0d6efd, #3d8bfd);
+
+  border-radius: 20px;
+
+  transition: width 0.7s ease;
+}
+
+.nivel-info {
+  display: flex;
+  justify-content: space-between;
+
+  margin: 10px 0 20px;
+
+  color: var(--texto-secundario);
+
+  font-size: 10px;
+}
+
+.nivel-info i {
+  color: var(--verde);
+}
+
+.btn-primary-custom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  background: var(--verde);
+
+  border: none;
+
+  padding: 11px;
+
+  border-radius: 10px;
+
+  font-size: 13px;
+
+  transition: 0.2s;
+}
+
+.btn-primary-custom:hover {
+  background: var(--verde-oscuro);
+
+  transform: translateY(-2px);
+}
+
+.btn-outline-custom {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+
+  border: 1px solid var(--borde);
+
+  color: var(--texto);
+
+  padding: 11px;
+
+  border-radius: 10px;
+
+  font-size: 13px;
+}
+
+.btn-outline-custom:hover {
+  background: var(--verde-claro);
+
+  color: var(--verde);
+
+  border-color: var(--verde);
+}
+
+.clima-main {
+  display: flex;
+  align-items: center;
+
+  gap: 20px;
+
+  padding: 15px 0 25px;
+}
+
+.clima-icon {
+  width: 75px;
+  height: 75px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 20px;
+
+  background: #fff7e6;
+
+  color: #f59e0b;
+
+  font-size: 35px;
+}
+
+.temperatura {
+  font-size: 42px;
+
+  line-height: 1;
+
+  font-weight: 700;
+
+  letter-spacing: -2px;
+}
+
+.estado-clima {
+  margin-top: 6px;
+
+  color: var(--texto-secundario);
+
+  font-size: 14px;
+}
+
+.clima-details {
+  display: grid;
+
+  grid-template-columns: repeat(3, 1fr);
+
+  gap: 10px;
+
+  border-top: 1px solid var(--borde);
+
+  border-bottom: 1px solid var(--borde);
+
+  padding: 18px 0;
+
+  margin-bottom: 20px;
+}
+
+.clima-details div {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+}
+
+.clima-details i {
+  color: var(--verde);
+
+  font-size: 18px;
+}
+
+.clima-details span {
+  color: var(--texto-secundario);
+
+  font-size: 9px;
+}
+
+.clima-details strong {
+  display: block;
+
+  color: var(--texto);
+
+  font-size: 11px;
+}
+
+.alerta-sistema {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  margin-top: 25px;
+
+  padding: 14px 18px;
+
+  color: #842029;
+
+  background: #f8d7da;
+
+  border: 1px solid #f1aeb5;
+
+  border-radius: 12px;
+
+  font-size: 13px;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-top: 40px;
+
+  padding: 22px 30px;
+
+  background: #126b42;
+
+  color: rgba(255, 255, 255, 0.75);
+
+  font-size: 11px;
+}
+
+.footer strong {
+  color: white;
+
+  margin-right: 10px;
+}
+
+.footer span {
+  opacity: 0.7;
+}
+
+body.modo-oscuro {
+  --fondo: #111827;
+  --blanco: #1f2937;
+  --texto: #f9fafb;
+  --texto-secundario: #9ca3af;
+  --borde: #374151;
+
+  background: linear-gradient(135deg, #111827, #17251f);
+}
+
+body.modo-oscuro .stat-card,
+body.modo-oscuro .dashboard-card {
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2);
+}
+
+body.modo-oscuro .progress-custom {
+  background: #374151;
+}
+
+body.modo-oscuro .btn-theme {
+  background: #374151;
   color: white;
 }
 
-.modo-oscuro .card {
-  background: #1f1f1f;
+body.modo-oscuro .clima-details strong {
   color: white;
+}
+
+@media (max-width: 992px) {
+  .usuario {
+    display: none;
+  }
+
+  .bebedero-content {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-header {
+    align-items: start;
+    flex-direction: column;
+
+    gap: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar-empresa {
+    min-height: auto;
+
+    padding: 12px 0;
+  }
+
+  .hora-container {
+    display: none;
+  }
+
+  .btn-theme span {
+    display: none;
+  }
+
+  .dashboard-header h1 {
+    font-size: 25px;
+  }
+
+  .dashboard-card {
+    padding: 18px;
+  }
+
+  .clima-details {
+    grid-template-columns: 1fr;
+  }
+
+  .footer {
+    flex-direction: column;
+
+    gap: 10px;
+
+    text-align: center;
+  }
+}
+
+@media (max-width: 500px) {
+  .bebedero-image {
+    height: 220px;
+  }
+
+  .stat-card {
+    padding: 16px;
+  }
+
+  .temperatura {
+    font-size: 36px;
+  }
+
+  .dashboard-header {
+    margin-bottom: 20px;
+  }
 }
