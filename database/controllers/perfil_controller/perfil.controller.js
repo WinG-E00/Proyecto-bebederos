@@ -12,15 +12,14 @@ export const agregarPerfilController = async (req, res) => {
         // añadir el registro a la base de datos
 
 
-        const nuevoRegistroPerfil = Perfil.create({
+        const nuevoRegistroPerfil = await Perfil.create({
             perfil
         });
 
-
         return res.status(201).json({
-            mensaje: 'perfilC reado con existo',
+            mensaje: 'Perfil creado con éxito',
             perfil: nuevoRegistroPerfil
-        })
+        });
 
 
 
@@ -32,3 +31,5 @@ export const agregarPerfilController = async (req, res) => {
         });
     }
 };
+
+

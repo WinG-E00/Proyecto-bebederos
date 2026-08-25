@@ -18,3 +18,5 @@ const Perfil = sequelize.define('Perfil', {
 });
 
 export default Perfil;
+
+

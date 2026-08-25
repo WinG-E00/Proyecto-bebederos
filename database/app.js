@@ -23,9 +23,12 @@ app.use(express.json());
 // Montar routers
 app.use(bebederosRouter);
 app.use(userRouter);
-// app.use(perfilRouter);
+app.use(perfilRouter);
 //Aca uso mi router que tiene las rutas de Auth que van a ser login y register
 //Aca voy a tener que crear todos los routers necesarios para cada modelo que voy a tener.
+
+
+
 
 
 
