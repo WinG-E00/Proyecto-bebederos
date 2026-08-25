@@ -3,7 +3,7 @@ import Perfil from '../../models/Perfil.mode.js';
 
 
 
-const agregarPerfilController = async (req, res) => {
+export const agregarPerfilController = async (req, res) => {
     try {
 
         const { perfil } = req.body;

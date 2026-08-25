@@ -3,7 +3,7 @@ import { agregarPerfilController } from '../controllers/perfil_controller/perfil
 
 
 
-const router = Router();
+export const router = Router();
 
 
 //

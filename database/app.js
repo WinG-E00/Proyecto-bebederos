@@ -5,7 +5,7 @@ import sequelize from "./db/database.js";
 //import routers
 import { router as userRouter } from './router/user.router.js';
 import { router as bebederosRouter } from './router/bebederos.router.js';
-
+import { router as perfilRouter} from './router/perfil.router.js';
 
 //import de modelos
 import User from './models/User.model.js';
@@ -23,6 +23,7 @@ app.use(express.json());
 // Montar routers
 app.use(bebederosRouter);
 app.use(userRouter);
+// app.use(perfilRouter);
 //Aca uso mi router que tiene las rutas de Auth que van a ser login y register
 //Aca voy a tener que crear todos los routers necesarios para cada modelo que voy a tener.
 
