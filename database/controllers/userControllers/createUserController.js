@@ -27,7 +27,7 @@ export const createUserController = async (req, res) => {
     } catch(err) {
         return res.status(500).json({
       mensaje: 'Error al crear el usuario',
-      error: error.message })
+      error: err.message })
 };
 
 

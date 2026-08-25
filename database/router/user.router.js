@@ -8,3 +8,7 @@ export const router =  Router();
 //Ruta para crear usuario
 router.post('/api/user/create', createUserController);
 
+// Ruta para hacer login
+// router.get('api/user/login', loginUser)
+
+

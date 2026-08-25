@@ -8,7 +8,7 @@ export const router = Router();
 
 
 //Ruta para crear registro de bebederos
-router.post('api/bebederos/create', createBebederosRegister );
+router.post('/api/bebederos/create', createBebederosRegister );
 
 
 

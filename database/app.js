@@ -3,7 +3,8 @@ import 'dotenv/config';
 import sequelize from "./db/database.js";
 
 //import routers
-import { router } from './router/user.router.js'
+import { router as userRouter } from './router/user.router.js';
+import { router as bebederosRouter } from './router/bebederos.router.js';
 
 
 //import de modelos
@@ -11,8 +12,7 @@ import User from './models/User.model.js';
 import Perfil from './models/Perfil.mode.js';
 import Bebederos from './models/Bebederos.model.js';
 import './models/relations/relations.js';
-import { router as userRouter } from './router/user.router.js';
-import { router as bebederosRouter} from './router/bebederos.router.js' ;
+
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -23,7 +23,6 @@ app.use(express.json());
 // Montar routers
 app.use(bebederosRouter);
 app.use(userRouter);
-app.use(router);
 //Aca uso mi router que tiene las rutas de Auth que van a ser login y register
 //Aca voy a tener que crear todos los routers necesarios para cada modelo que voy a tener.
 

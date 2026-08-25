@@ -1,7 +1,7 @@
 import { DataTypes } from 'sequelize';
 import sequelize from '../db/database.js'; // Ajusta la ruta a tu archivo de conexión de Sequelize
 
-const Bebederos = sequelize.define('Bebederos', {
+export const Bebederos = sequelize.define('Bebederos', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
