@@ -8,6 +8,6 @@ cards.forEach((card) => {
     localStorage.setItem("rol", rol);
 
     // redirigir al login
-    navegar("login.html");
+    navegar("/login/login.html");
   });
 });

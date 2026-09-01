@@ -94,6 +94,6 @@ form.addEventListener("submit", (e) => {
   mensajeExito.textContent = "✅ Registro exitoso";
 
   setTimeout(() => {
-    navegar("login.html");
+    navegar("/login/login.html");
   }, 1500);
 });

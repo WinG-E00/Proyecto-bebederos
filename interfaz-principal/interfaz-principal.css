@@ -13,7 +13,7 @@ body {
   /* MEJORA: Se cambió a un degradado oscuro semitransparente para que el fondo resalte y las letras blancas no se pierdan */
   background:
     linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.2)),
-    url("imgs/WhatsApp-Image-2020-10-03-at-11.18.04.webp");
+    url("/imgs/WhatsApp-Image-2020-10-03-at-11.18.04.webp");
 
   background-size: cover;
   background-position: center;
