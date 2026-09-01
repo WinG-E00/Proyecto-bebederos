@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/WinG-E00/Proyecto-bebederos#readme",
   "dependencies": {
+    "bcrypt": "^6.0.0",
     "dotenv": "^17.4.2",
     "express": "^5.2.1",
     "mysql2": "^3.24.2",

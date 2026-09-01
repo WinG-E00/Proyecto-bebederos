@@ -2,7 +2,7 @@
 import User from '../../models/User.model.js';
 
 
-
+//Falta terminar
 export const loginUser = async (req, res) => {
 
   try {
@@ -19,6 +19,7 @@ export const loginUser = async (req, res) => {
 
 
     
+
 
 
   }
