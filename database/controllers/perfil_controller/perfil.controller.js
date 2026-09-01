@@ -1,4 +1,4 @@
-import Perfil from '../../models/Perfil.mode.js';
+import Perfil from '../../models/Perfil.model.js';
 
 
 
@@ -27,7 +27,7 @@ export const agregarPerfilController = async (req, res) => {
     }catch(err){
         return res.status(500).json({
             mensaje:'Error al crear el registro',
-            error: err
+            error: err.message
         });
     }
 };

@@ -7,7 +7,5 @@ export const router = Router();
 
 
 //
-router.post('/api/perfil/create', agregarPerfilController );
-
-
+router.post('/api/perfil/create', agregarPerfilController);
 

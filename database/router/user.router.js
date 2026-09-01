@@ -1,14 +1,18 @@
 import { Router } from 'express';
 import { createUserController } from '../controllers/userControllers/createUserController.js';
 
-export const router =  Router();
+import { loginUser } from '../controllers/userControllers/loginUser.controller.js';
 
+
+export const router =  Router();
 
 
 //Ruta para crear usuario
 router.post('/api/user/create', createUserController);
 
 // Ruta para hacer login
-// router.get('api/user/login', loginUser)
+router.post('api/user/login', loginUser);
+
+
 
 

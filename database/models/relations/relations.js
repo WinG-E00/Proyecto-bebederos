@@ -1,6 +1,6 @@
 import sequelize from '../../db/database.js';
 import User from '../User.model.js';
-import Perfil from '../Perfil.mode.js';
+import Perfil from '../Perfil.model.js';
 import Bebederos from "../Bebederos.model.js";
 
 

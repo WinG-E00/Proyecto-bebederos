@@ -3,21 +3,18 @@ import User from '../../models/User.model.js';
 // Se supone que aca podes crear el usuario, este controllador sera usado para el router que permite hacer register
 
 export const createUserController = async (req, res) => {
-
     try {
-        const { user, gmail, password, perfilId } = await req.body;
+        const { user, gmail, password, perfilId } = req.body;
 
-        //Faltan crear las validaciones
+        // Faltan crear las validaciones
 
-
-        //Creacion
+        // Creacion
         const nuevoUsuario = await User.create({
             user,
             gmail,
             password,
             perfilId
         });
-
 
         return res.status(201).json({
             mensaje: 'Usuario creado con éxito',
@@ -26,13 +23,8 @@ export const createUserController = async (req, res) => {
 
     } catch(err) {
         return res.status(500).json({
-      mensaje: 'Error al crear el usuario',
-      error: err.message })
+            mensaje: 'Error al crear el usuario',
+            error: err.message
+        });
+    }
 };
-
-
-};
-
-
-
-

@@ -1,5 +1,14 @@
 import express from "express";
-import 'dotenv/config';
+import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Cargar .env desde la raíz del proyecto
+dotenv.config({ path: path.resolve(__dirname, "../.env") });
+
 import sequelize from "./db/database.js";
 
 //import routers
@@ -9,7 +18,7 @@ import { router as perfilRouter} from './router/perfil.router.js';
 
 //import de modelos
 import User from './models/User.model.js';
-import Perfil from './models/Perfil.mode.js';
+import Perfil from './models/Perfil.model.js';
 import Bebederos from './models/Bebederos.model.js';
 import './models/relations/relations.js';
 
