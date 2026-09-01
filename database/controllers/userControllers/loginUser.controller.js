@@ -9,9 +9,20 @@ export const loginUser = async (req, res) => {
 
     const { user, gmail, password, perfilId } = req.body;
 
+
+    //Buscar el usuario por correo
+    const existingUser = await User.findOne({ gmail });
+
+    if (!existingUser) {
+      return res.status(404).json({ message: 'Usuario no encontrado...' })
+    }
+
+
     
+
+
   }
-  catch () {
+  catch (error) {
     
   }
   
