@@ -5,20 +5,166 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Monitoreo de Bebederos</title>
 
-    <link rel="stylesheet" href="Estado-bebederos.css" />
+    <!-- Fuentes y CDN de Íconos Bootstrap -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+
+    <!-- Leaflet & Estilos Propios -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <link rel="stylesheet" href="Estado-bebederos.css" />
   </head>
-  <body class="row">
-    <h1>Monitoreo de Bebederos</h1>
+  <body>
+    <!-- Navbar Corporativa -->
+    <header class="navbar-empresa">
+      <div class="nav-container">
+        <a href="#" class="navbar-brand">
+          <div class="logo">💧</div>
+          <div>
+            <span class="brand-title">Proyecto bebederos</span>
+            <small>Monitoreo Ganadero</small>
+          </div>
+        </a>
 
-    <div id="contenedor" class="contenedor"></div>
+        <div class="nav-right">
+          <div class="hora-container">
+            <i class="bi bi-clock"></i>
+            <span id="hora-actual">16:37</span>
+          </div>
 
-    <section class="mapa-section">
-      <h2>Ubicación de Bebederos</h2>
-      <div id="mapa"></div>
-    </section>
+          <button
+            class="btn-theme"
+            id="btn-toggle-theme"
+            onclick="toggleModoOscuro()"
+          >
+            <i class="bi bi-moon-stars"></i>
+            <span>Modo</span>
+          </button>
+
+          <div class="usuario">
+            <div class="usuario-icon">
+              <i class="bi bi-person"></i>
+            </div>
+            <div class="usuario-info">
+              <strong>Operador Campo</strong>
+              <small>Estancia El Norte</small>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Contenedor Principal -->
+    <div class="main-layout">
+      <!-- Encabezado Dashboard -->
+      <section class="dashboard-header">
+        <div>
+          <div class="badge-operativo">
+            <i class="bi bi-circle-fill"></i> Sistema Operativo
+          </div>
+          <h1>Monitoreo de Bebederos</h1>
+          <p>Estado hídrico y telemetría de ganado en tiempo real</p>
+        </div>
+        <div class="fecha">
+          <i class="bi bi-calendar3"></i>
+          <span id="fecha-actual">Hoy</span>
+        </div>
+      </section>
+
+      <!-- Tarjetas de Estadísticas Rápidas -->
+      <section class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon agua"><i class="bi bi-droplet-fill"></i></div>
+          <div>
+            <span>Bebederos Activos</span>
+            <h3>4 / 4</h3>
+            <small>100% Operativos</small>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon ganado"><i class="bi bi-award-fill"></i></div>
+          <div>
+            <span>Ganado Monitoreado</span>
+            <h3>14,973</h3>
+            <small>Caravanas registradas</small>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon clima">
+            <i class="bi bi-thermometer-half"></i>
+          </div>
+          <div>
+            <span>Prom. Temperatura</span>
+            <h3 id="prom-temp">26.5 °C</h3>
+            <small>Rango Normal</small>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon alertas">
+            <i class="bi bi-shield-check"></i>
+          </div>
+          <div>
+            <span>Estado General</span>
+            <h3>Normal</h3>
+            <small>Sin incidencias críticas</small>
+          </div>
+        </div>
+      </section>
+
+      <!-- Grilla Principal: Tarjetas e Integración de Mapa -->
+      <main class="dashboard-grid">
+        <div class="cards-section">
+          <div class="section-title">
+            <span class="section-label">MÓDULOS DE CAMPO</span>
+            <h2><i class="bi bi-water"></i> Bebederos en Registro</h2>
+          </div>
+
+          <div id="contenedor" class="contenedor"></div>
+        </div>
+
+        <!-- Sección Mapa Geoespacial -->
+        <div class="dashboard-card mapa-card">
+          <div class="card-header-custom">
+            <div>
+              <span class="section-label">GEO-LOCALIZACIÓN</span>
+              <h2><i class="bi bi-geo-alt"></i> Ubicación en Terreno</h2>
+              <p>Geolocalización de puntos de agua y ganado</p>
+            </div>
+            <div class="status-normal">
+              <i class="bi bi-broadcast"></i> GPS Activo
+            </div>
+          </div>
+          <div id="mapa"></div>
+        </div>
+      </main>
+    </div>
+
+    <!-- Footer Corporativo -->
+    <footer class="footer">
+      <div>
+        <strong>Proyecto bebederos</strong>
+        <span>&copy; 2026 Todos los derechos reservados.</span>
+      </div>
+      <div>
+        <span
+          >Servidor: <strong>NODE-AR-01</strong> | Latencia:
+          <strong>24ms</strong></span
+        >
+      </div>
+    </footer>
+
+    <!-- Scripts -->
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-
     <script src="Estado-bebederos.js"></script>
   </body>
 </html>
