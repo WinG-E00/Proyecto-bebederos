@@ -1,7 +1,7 @@
 const bebederos = [
   {
     id: 1,
-    ubicacion: "Potrero Norte",
+    ubicacion: "Casa",
     porcentaje: 85,
     temperatura: 22,
     indiceHidratacion: 84,
@@ -12,12 +12,12 @@ const bebederos = [
     ultimaVisita: "14:35",
     caravana: 2548,
     anioCaravana: 2024,
-    lat: -34.6037,
-    lng: -58.3816,
+    lat: -26.215246,
+    lng: -58.970338,
   },
   {
     id: 2,
-    ubicacion: "Potrero Sur",
+    ubicacion: "Medio",
     porcentaje: 40,
     temperatura: 26,
     indiceHidratacion: 48,
@@ -28,12 +28,12 @@ const bebederos = [
     ultimaVisita: "12:10",
     caravana: 3171,
     anioCaravana: 2023,
-    lat: -34.6137,
-    lng: -58.3916,
+    lat: -26.225179,
+    lng: -58.96781,
   },
   {
     id: 3,
-    ubicacion: "Lote 5",
+    ubicacion: "Zalinas",
     porcentaje: 20,
     temperatura: 30,
     indiceHidratacion: 31,
@@ -44,27 +44,10 @@ const bebederos = [
     ultimaVisita: "09:40",
     caravana: 4156,
     anioCaravana: 2022,
-    lat: -34.5937,
-    lng: -58.3716,
-  },
-  {
-    id: 4,
-    ubicacion: "Corral Principal",
-    porcentaje: 70,
-    temperatura: 28,
-    indiceHidratacion: 18,
-    estado: "🔴 Riesgo alto",
-    claseEstado: "rojo",
-    tiempoBebiendo: "15 s",
-    visitasHoy: 1,
-    ultimaVisita: "Hace 8 horas",
-    caravana: 5298,
-    anioCaravana: 2021,
-    lat: -34.608,
-    lng: -58.384,
+    lat: -26.275742,
+    lng: -58.969547,
   },
 ];
-
 function obtenerGradienteBarra(porcentaje) {
   if (porcentaje > 60) return "linear-gradient(90deg, #198754, #20c997)";
   if (porcentaje > 30) return "linear-gradient(90deg, #fd7e14, #ffc107)";
