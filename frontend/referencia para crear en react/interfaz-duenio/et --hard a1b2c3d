@@ -1,0 +1,38 @@
+[33m32e05ff[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32minterfaz-principal[m[33m, [m[1;32mlogin[m[33m)[m interfaz-pri: se borraron algunos archivos
+[33m6079980[m[33m ([m[1;31morigin/interfaz-principal[m[33m)[m Se ordenaron las carpetas y archivos
+[33m8c087b7[m Se agregaron animaciones en las paginas
+[33m20d8ed4[m Se hicieron cambios en el formulario de registro
+[33m23c38ed[m Se añadió una imagen y se hicieron arreglos
+[33m45e1c66[m Cambios generales
+[33mf3d214f[m Se vincularon las páginas
+[33m8924521[m Cambio en la interfaz del dueño
+[33m0c907d6[m Se añadió css a la pagina y se hicieron modificaciones en el css
+[33m949ed86[m Se terminó la estructura html de login
+[33m237dc54[m Se creó la estructura base para el login
+[33m7ea28fd[m Se crearon los archivos para diseñar el login
+[33md72a968[m Se cambio la estructura del html y se agregaron cambios visuales
+[33md46d976[m Formulario registro html
+[33m800d6b7[m Se creó la estructura base html de la pagina registro
+[33md540e49[m Se crearon los respectivos archivos para el registro
+[33m7e3712c[m Cambios visuales
+[33m65b1f97[m Se realizaron cambios de diseño
+[33mb94d3d9[m Se aplicaron estilos con css y se mejoró la estructura html
+[33m2cc0468[m Se añadieron cambios generales a la pagina
+[33m6b0aef4[m Se creo la estructura base html para la interfaz del dueño
+[33m5a9b080[m Se creó el archivo css para la interfaz del dueño
+[33m5e1b6d3[m Se creó el archivo html para la interfaz del dueño
+[33m5d61847[m Se añadio una imagen y se hicieron cambios visuales
+[33m2813fd7[m Se añadió una imagen y se utilizó de fondo
+[33mcb36ee1[m Personalizacion texto y botones de la pagina
+[33mfdb1b7c[m Se agrego efectos a los elementos de la pagina
+[33m8f34a3e[m Se centraron los elementos con flex
+[33m5bca22e[m Se agregó espaciados a los elementos
+[33m3d3d5bc[m Se añadio colores basicos a la interfaz principal
+[33m72bf188[m Se hizo el enlace con el archivo css de la interfaz principal
+[33m1b49385[m Se creó el archivo css para la interfaz principal
+[33mcce62cb[m Se creó la estructura básica de html
+[33m562ba9f[m Se hizo la conexion correspondiente para utilizar bootstrap
+[33m5fb87ef[m Estructura básica interfaz principal
+[33m935ce52[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m, [m[1;32mmain[m[33m)[m main: html estructura basica
+[33m415ccd3[m main: index.html sin estructura
+[33m89b4ad0[m first commit

@@ -17,8 +17,17 @@ export const loginUser = async (req, res) => {
       return res.status(404).json({ message: 'Usuario no encontrado...' })
     }
 
+    
+
+    const isPasswordValid = await bcrypt.compare(password, existingUser.password);
+
+    if(!isPasswordValid){
+        return res.status(401).json({ message: 'Contraseña incorrecta' });
+    }
 
     
+    return res.status(200).json({ message: "Se logeo correctamente", existingUser })
+
 
 
 

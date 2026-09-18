@@ -6,15 +6,19 @@ import { fileURLToPath } from "url";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Cargar .env desde la raíz del proyecto
-dotenv.config({ path: path.resolve(__dirname, "../.env") });
+
+// Cargar la configuración local de la API.
+dotenv.config({ path: path.resolve(__dirname, ".env") });
+
 
 import sequelize from "./db/database.js";
+
 
 //import routers
 import { router as userRouter } from './router/user.router.js';
 import { router as bebederosRouter } from './router/bebederos.router.js';
 import { router as perfilRouter} from './router/perfil.router.js';
+
 
 //import de modelos
 import User from './models/User.model.js';
@@ -28,6 +32,20 @@ const PORT = process.env.PORT || 3000;
 
 
 //midleware basico para que mi app entienda formato json
+app.use((req, res, next) => {
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+
+    if (req.method === "OPTIONS") {
+        return res.sendStatus(204);
+    }
+
+    next();
+});
+
+
+
 app.use(express.json());
 // Montar routers
 app.use(bebederosRouter);
@@ -72,6 +90,4 @@ async function main() {
 }
 
 main();
-
-
 

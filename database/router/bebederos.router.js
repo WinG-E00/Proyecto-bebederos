@@ -7,6 +7,9 @@ import { createBebederosRegister } from '../controllers/bebederos_controllers/cr
 
 //Controller para informacion de bebederos
 import { getBebederosInfo } from '../controllers/bebederos_controllers/getBebederosInfo.js';
+
+import { getAllbebederosInfo } from '../controllers/bebederos_controllers/getAllBebederos.js'
+
 import { getBebederosPerIdBebedero } from '../controllers/bebederos_controllers/getBebederosPerIdBebedero.controller.js'
 
 
@@ -27,10 +30,10 @@ router.post('/api/bebederos/UserId/:id', getBebederosInfo);
 
 
 //ruta para obtener la informacion de un bebedero en especifico
-router.post('/api/bebederos/bebederoId/:id', getBebederosPerIdBebedero)
+router.post('/api/bebederos/bebederoId/:id', getBebederosPerIdBebedero);
 
 
-
+router.post('/api/bebederos/getAllBebederos/:id', getAllbebederosInfo);
 
 
 
