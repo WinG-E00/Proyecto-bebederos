@@ -1,6 +1,6 @@
 # Guía de puesta en marcha y validación prevista
 
-**Importante**: Esta fase genera solo documentos. No se instalaron dependencias del plan ni se implementaron sus comandos/rutas. Los comandos marcados como «previstos» deberán existir después de ejecutar las tareas de implementación. Esta guía no afirma que el MVP ya funcione.
+**Estado actualizado (2026-10-13)**: T001–T020 implementadas; comandos actuales y configuración en [database/deployment/README.md](../../database/deployment/README.md), evidencia de preparación en [validation/baseline.md](validation/baseline.md) y base compartida en [validation/foundational.md](validation/foundational.md). Las secciones «previstas» siguientes conservan el plan de aceptación del MVP completo; autenticación, rutas de negocio, seed y monitoreo de agua/GPS todavía requieren las historias posteriores.
 
 ## Requisitos del entorno futuro
 
@@ -10,7 +10,7 @@
 - Credenciales Open-Meteo aptas para uso comercial antes de operar campos reales. En pruebas usar respuestas controladas.
 - Navegadores Playwright instalados para E2E.
 
-La base actual tiene datos de ejemplo. Antes de cambiarla confirmar que sigue siendo desarrollo/pruebas. El arranque existente usa `sync({ force: true })`; su sustitución está prevista como primera corrección de persistencia. No arrancar ese backend contra una base que se necesite conservar.
+La base actual tiene datos de ejemplo. Antes de aplicar migraciones confirmar que se apunta al entorno previsto. El arranque nuevo ya no usa `sync({ force: true })`; únicamente verifica el esquema. La fase 2 se comprobó en una base MySQL aislada y no migró la base del `.env` local.
 
 ## Configuración a documentar en implementación
 

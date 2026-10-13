@@ -10,6 +10,7 @@ const __dirname = path.dirname(__filename)
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  optimizeDeps: { include: ["@base-ui/react/button"] },
   server: {
     proxy: {
       // Preservar /api y las respuestas de error de Express; sin rewrite.
@@ -17,6 +18,7 @@ export default defineConfig({
     },
   },
   resolve: {
+    dedupe: ["react", "react-dom"],
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },

@@ -1,93 +1,18 @@
-import express from "express";
-import dotenv from "dotenv";
-import path from "path";
-import { fileURLToPath } from "url";
+import express from 'express'
+import { ApiError, errorHandler, notFound } from './middleware/errors.js'
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-
-
-// Cargar la configuración local de la API.
-dotenv.config({ path: path.resolve(__dirname, ".env") });
-
-
-import sequelize from "./db/database.js";
-
-
-//import routers
-import { router as userRouter } from './router/user.router.js';
-import { router as bebederosRouter } from './router/bebederos.router.js';
-import { router as perfilRouter} from './router/perfil.router.js';
-
-
-//import de modelos
-import User from './models/User.model.js';
-import Perfil from './models/Perfil.model.js';
-import Bebederos from './models/Bebederos.model.js';
-import './models/relations/relations.js';
-
-
-const app = express();
-const PORT = process.env.PORT || 3000;
-
-
-//midleware basico para que mi app entienda formato json
-app.use((req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", "*");
-    res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
-
-    if (req.method === "OPTIONS") {
-        return res.sendStatus(204);
-    }
-
-    next();
-});
-
-
-
-app.use(express.json());
-// Montar routers
-app.use(bebederosRouter);
-app.use(userRouter);
-app.use(perfilRouter);
-//Aca uso mi router que tiene las rutas de Auth que van a ser login y register
-//Aca voy a tener que crear todos los routers necesarios para cada modelo que voy a tener.
-
-
-
-
-
-
-
-app.get('/test', (req, res) => {
-    res.send('Ok')
-});
-
-
-
-// Funcion que va conectar mi base de datos de la siguiente forma
-async function main() {
-    try {
-            // 1. Verificar la conexión con la base de datos
-        await sequelize.authenticate();
-        console.log("Conexión a la base de datos establecida correctamente.");
-
-            // 2. Sincronizar modelos (Crea las tablas 'usuarios' y 'sensores' si no existen)
-            // El uso de { alter: true } actualiza las tablas si hay cambios en los modelos
-        await sequelize.sync({ force: true }); // Ahora esta en forze por que esta en fase de desarrollo
-        console.log("Modelos sincronizados con la base de datos.");
-
-
-
-        // 3. Iniciar el servidor Express
-        app.listen(PORT, () => {
-            console.log(`Servidor corriendo en http://localhost:${PORT}`);
-        });
-    } catch (error) {
-        console.error("No se pudo conectar a la base de datos:", error);
-    }
+// Importar la API no carga .env, abre conexiones, sincroniza tablas ni escucha puertos.
+export function createApp({ configure, trustProxy = 0 } = {}) {
+  const app = express()
+  app.disable('x-powered-by')
+  app.set('trust proxy', trustProxy)
+  app.use(express.json({ limit: '100kb' }))
+  app.use(['/api/user', '/api/perfil', '/api/bebederos'], (_req, _res, next) => {
+    next(new ApiError(404, 'NOT_FOUND'))
+  })
+  configure?.(app)
+  app.use(notFound)
+  app.use(errorHandler)
+  return app
 }
-
-main();
-
+export default createApp()

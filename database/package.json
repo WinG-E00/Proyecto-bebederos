@@ -5,13 +5,14 @@
   "main": "app.js",
   "scripts": {
     "test": "vitest run --project unit",
-    "dev": "node --watch app.js",
+    "dev": "node --watch server.js",
     "test:integration": "vitest run --project integration",
     "test:watch": "vitest --project unit",
     "check:env": "node scripts/check-env.js",
     "migrate": "node scripts/migrate.js",
     "seed": "node scripts/seed.js",
-    "worker": "node workers/index.js"
+    "worker": "node workers/index.js",
+    "start": "node server.js"
   },
   "keywords": [],
   "type": "module",
