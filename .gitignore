@@ -1,1 +1,15 @@
 node_modules/
+dist/
+build/
+coverage/
+*.log
+.env
+.env.*
+!.env.example
+!.env.test.example
+test-results/
+playwright-report/
+playwright/.auth/
+.DS_Store
+.idea/
+*.swp

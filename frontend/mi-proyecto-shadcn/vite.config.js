@@ -10,6 +10,12 @@ const __dirname = path.dirname(__filename)
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
+  server: {
+    proxy: {
+      // Preservar /api y las respuestas de error de Express; sin rewrite.
+      "/api": { target: "http://127.0.0.1:3000", changeOrigin: true },
+    },
+  },
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),

@@ -2,7 +2,7 @@
 
 **Input**: Documentos de diseño en `specs/001-monitoreo-bebederos/`.
 **Prerequisites**: [plan.md](plan.md), [spec.md](spec.md), [research.md](research.md), [data-model.md](data-model.md), [contrato API](contracts/api.md), [contrato UI](contracts/ui.md) y [quickstart.md](quickstart.md).
-**Estado**: Solo planificación. Todas las casillas quedan pendientes; este documento no autoriza ejecutar código, instalar paquetes, enviar correos ni desplegar durante `$speckit-tasks`.
+**Estado**: Fase 1 implementada y verificada (T001–T008, 2026-10-13); evidencia en [validation/baseline.md](validation/baseline.md). T009–T143 pendientes. La generación con `$speckit-tasks` no autoriza implementación, envíos ni despliegues.
 **Tests**: Incluir validaciones significativas de los escenarios y criterios de éxito exigidos por la especificación y la estrategia de pruebas acordada en el plan; no introducir TDD general ni pruebas que solo reproduzcan implementación. Definir los casos de contrato/reglas antes de la funcionalidad y confirmar que fallan por el comportamiento pendiente, no por fallos del entorno; ejecutar al integrar cada historia.
 **Organization**: Historias US1–US9 en el orden P1–P9. Todas pertenecen al MVP; US1 sola es un primer incremento demostrable, no el MVP completo.
 
@@ -26,14 +26,14 @@ Las migraciones de Phase 2 crean todo el esquema relacional para que autorizaci�
 
 **Independent Test**: Instalación reproducible y herramientas separadas por proyecto; baseline visual documentado.
 
-- [ ] T001 Registrar estado del código, rutas/importaciones actuales y capturas de los paneles dueño/peón en `specs/001-monitoreo-bebederos/validation/baseline.md`, señalando cambios necesarios sin rediseño general.
-- [ ] T002 Agregar únicamente las dependencias de backend del plan y scripts futuros de migración/worker/pruebas en `database/package.json` y `database/package-lock.json`; conservar Express, Sequelize, mysql2, bcrypt y dotenv existentes.
-- [ ] T003 [P] Agregar React Router, TanStack Query y herramientas de prueba en `frontend/mi-proyecto-shadcn/package.json` y `frontend/mi-proyecto-shadcn/package-lock.json`, conservando versiones existentes y JavaScript/JSX.
-- [ ] T004 [P] Documentar y validar variables de `quickstart.md` en `database/.env.example`, `database/config/env.js` y `.gitignore`; secretos de sesión y cola separados, SMTP y clima comercial solo en backend, configuración de teselas pública sin credenciales privadas.
-- [ ] T005 [P] Configurar Vitest/Supertest y MySQL de pruebas en `database/vitest.config.js` y `database/tests/helpers/testDatabase.js`, impidiendo usar o borrar la base operativa; preparar reloj y proveedores sustituibles.
-- [ ] T006 [P] Configurar Vitest, jsdom y React Testing Library en `frontend/mi-proyecto-shadcn/vitest.config.js` y `frontend/mi-proyecto-shadcn/tests/setup.js`.
-- [ ] T007 Configurar Playwright con proyectos de 375, 768 y 1280 px en `frontend/mi-proyecto-shadcn/playwright.config.js` y `frontend/mi-proyecto-shadcn/tests/e2e/helpers.js`, usando cuentas y datos de prueba identificados.
-- [ ] T008 Configurar proxy de desarrollo `/api` hacia Express en `frontend/mi-proyecto-shadcn/vite.config.js`; documentar mismo origen HTTPS y fallback SPA que no capture errores API en `database/deployment/README.md`.
+- [X] T001 Registrar estado del código, rutas/importaciones actuales y capturas de los paneles dueño/peón en `specs/001-monitoreo-bebederos/validation/baseline.md`, señalando cambios necesarios sin rediseño general.
+- [X] T002 Agregar únicamente las dependencias de backend del plan y scripts futuros de migración/worker/pruebas en `database/package.json` y `database/package-lock.json`; conservar Express, Sequelize, mysql2, bcrypt y dotenv existentes.
+- [X] T003 [P] Agregar React Router, TanStack Query y herramientas de prueba en `frontend/mi-proyecto-shadcn/package.json` y `frontend/mi-proyecto-shadcn/package-lock.json`, conservando versiones existentes y JavaScript/JSX.
+- [X] T004 [P] Documentar y validar variables de `quickstart.md` en `database/.env.example`, `database/config/env.js` y `.gitignore`; secretos de sesión y cola separados, SMTP y clima comercial solo en backend, configuración de teselas pública sin credenciales privadas.
+- [X] T005 [P] Configurar Vitest/Supertest y MySQL de pruebas en `database/vitest.config.js` y `database/tests/helpers/testDatabase.js`, impidiendo usar o borrar la base operativa; preparar reloj y proveedores sustituibles.
+- [X] T006 [P] Configurar Vitest, jsdom y React Testing Library en `frontend/mi-proyecto-shadcn/vitest.config.js` y `frontend/mi-proyecto-shadcn/tests/setup.js`.
+- [X] T007 Configurar Playwright con proyectos de 375, 768 y 1280 px en `frontend/mi-proyecto-shadcn/playwright.config.js` y `frontend/mi-proyecto-shadcn/tests/e2e/helpers.js`, usando cuentas y datos de prueba identificados.
+- [X] T008 Configurar proxy de desarrollo `/api` hacia Express en `frontend/mi-proyecto-shadcn/vite.config.js`; documentar mismo origen HTTPS y fallback SPA que no capture errores API en `database/deployment/README.md`.
 
 **Checkpoint**: Validar el criterio independiente de esta fase y mantener funcionando las fases ya integradas. Casillas se marcan solo al terminar y verificar la implementación, nunca durante generación de tareas.
 
@@ -455,8 +455,8 @@ No publicar, contratar servicios ni enviar correos reales automáticamente como 
 | Phase 11: User Story 9 | US9 | T121–T132 | 12 |
 | Phase 12: Polish & Cross-Cutting Concerns | Compartida | T133–T143 | 11 |
 
-**Total**: 143 tareas pendientes; 47 con marcador `[P]`, sujetas a las tandas y dependencias documentadas.
+**Total**: 143 tareas: 8 completas (T001–T008) y 135 pendientes. 47 tienen marcador `[P]`, sujetas a las tandas y dependencias documentadas.
 
 ## Notes
 
-Todas las casillas representan implementación futura. No se marcaron completas ni se modificó código durante esta generación. Hooks: no existe `.specify/extensions.yml`, por lo que no hay hooks previos/posteriores registrados. Antes de implementar puede ejecutarse `$speckit-analyze` para revisar consistencia entre spec, plan y tasks.
+La generación original no modificó código ni marcó tareas completas. La implementación posterior de la fase 1 está registrada en [validation/baseline.md](validation/baseline.md); las casillas restantes representan trabajo futuro. Hooks: no existe `.specify/extensions.yml`, por lo que no hay hooks previos/posteriores registrados. Antes de nuevas fases puede ejecutarse `$speckit-analyze` para revisar consistencia entre spec, plan y tasks.
