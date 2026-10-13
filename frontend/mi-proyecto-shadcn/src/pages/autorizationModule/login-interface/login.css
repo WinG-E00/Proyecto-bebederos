@@ -65,3 +65,16 @@
   .login__panel { padding: 27px 22px; border-radius: 14px; }
   .login__panel-heading { align-items: flex-start; }
 }
+
+/* Acciones de identidad (US1): mismos colores y controles del login existente. */
+.login__submit--secondary { color: var(--forest-950); background: var(--forest-100); box-shadow: none; }
+.login__submit--secondary:hover { color: #fff; }
+.login__link-button { display: grid; place-items: center; text-decoration: none; }
+.login__rules { display: flex; flex-wrap: wrap; gap: 5px 12px; margin: -10px 0 0; padding: 0; list-style: none; color: #8a6158; font-size: .77rem; }
+.login__rules .is-valid { color: var(--forest-700); }
+.login__choice { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; padding: 4px; border-radius: 12px; background: var(--forest-100); }
+.login__choice button { min-height: 44px; border: 0; border-radius: 9px; color: #314c3b; background: transparent; font: inherit; font-size: .88rem; font-weight: 650; cursor: pointer; }
+.login__choice button[aria-pressed="true"] { color: #fff; background: var(--forest-700); }
+.login__choice button:focus-visible { outline: 3px solid #d3a865; outline-offset: 2px; }
+.login__readonly { display: grid; gap: 4px; padding: 11px 13px; border: 1px dashed #b8cabc; border-radius: 10px; color: #314c3b; background: #f6f9f4; font-size: .92rem; overflow-wrap: anywhere; }
+.login__readonly small { color: #58705e; font-size: .78rem; font-weight: 650; }

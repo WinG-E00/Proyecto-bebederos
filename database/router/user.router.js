@@ -1,18 +1,6 @@
-import { Router } from 'express';
-import { createUserController } from '../controllers/userControllers/createUserController.js';
+import { Router } from 'express'
 
-import { loginUser } from '../controllers/userControllers/loginUser.controller.js';
-
-
-export const router =  Router();
-
-
-//Ruta para crear usuario
-router.post('/api/user/create', createUserController);
-
-// Ruta para hacer login
-router.post('api/user/login', loginUser);
-
-
-
-
+// Retirado en US1: registro y login legacy aceptaban rol (perfilId) del cliente, devolvían
+// el hash de la contraseña y no creaban sesión. Reemplazo: POST /api/v1/auth/register y
+// /api/v1/auth/login (router/auth.router.js). app.js responde 404 a /api/user.
+export const router = Router()

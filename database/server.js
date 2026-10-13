@@ -4,6 +4,8 @@ import { loadEnv } from './config/loadEnv.js'
 import { createDatabase } from './db/database.js'
 import { registerModels } from './models/index.js'
 import { assertSchemaReady } from './scripts/migrate.js'
+import { createIdentityApi } from './router/auth.router.js'
+import { createMailService } from './services/mail.service.js'
 
 export async function startServer({ env = loadEnv() } = {}) {
   const db = createDatabase(env)
@@ -11,7 +13,8 @@ export async function startServer({ env = loadEnv() } = {}) {
     await db.authenticate()
     await assertSchemaReady(db)
     registerModels(db)
-    const app = createApp({ trustProxy: env.TRUST_PROXY })
+    const identity = createIdentityApi({ db, env, mail: createMailService(db, { secret: env.OUTBOX_SECRET }) })
+    const app = createApp({ trustProxy: env.TRUST_PROXY, configure: identity.install })
     const server = await new Promise((resolve, reject) => {
       const listener = app.listen(env.PORT, '127.0.0.1', () => resolve(listener))
       listener.once('error', reject)
@@ -19,6 +22,7 @@ export async function startServer({ env = loadEnv() } = {}) {
     let closing
     const close = () => closing ??= (async () => {
       await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()))
+      identity.close()
       await db.close()
     })()
     return { app, server, db, close }

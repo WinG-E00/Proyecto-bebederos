@@ -189,6 +189,8 @@ it('API arranca sin migrar/sincronizar y worker admite una sola instancia y cier
     DB_NAME: process.env.TEST_DB_NAME, DB_HOST: process.env.TEST_DB_HOST, DB_PORT: Number(process.env.TEST_DB_PORT),
     DB_USER: process.env.TEST_DB_USER, DB_PASSWORD: process.env.TEST_DB_PASSWORD,
     OUTBOX_SECRET: secret, PORT: 0, TRUST_PROXY: 0,
+    // US1 monta sesiones: la API exige secreto de sesión y URL pública para enlaces.
+    NODE_ENV: 'test', SESSION_SECRET: 'phase2-session-secret-test-only-32-b', APP_URL: 'http://localhost:5173',
   }
   const server = await startServer({ env })
   try {
