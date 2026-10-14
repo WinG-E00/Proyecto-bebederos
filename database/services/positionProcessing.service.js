@@ -1,3 +1,4 @@
+import { evaluateResourceAlerts } from './alerts.service.js'
 import { select, insert, update } from './monitoringSql.service.js'
 import { writeHistory } from './historyWriter.service.js'
 import { isNewerSample } from './water.service.js'
@@ -130,6 +131,7 @@ export function createPositionProcessing(
                   transaction,
                   'animalId',
                 )
+                await evaluateResourceAlerts(db, farm, 'animal', id, sample, { transaction, now })
                 current = sample
                 inRange = next
               }

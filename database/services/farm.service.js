@@ -3,7 +3,7 @@ import { select, insert } from './monitoringSql.service.js'
 import { pagination, paginated } from './pagination.js'
 import { applyFarmSettings } from './farmSettings.service.js'
 import { retireFarm } from './farmRetirement.service.js'
-const representation = `SELECT f.id,f.name,f.latitude,f.longitude,f.areaHa,f.description,f.staleMinutes,f.timezone,
+const representation = `SELECT f.id,f.name,f.deletedAt,f.latitude,f.longitude,f.areaHa,f.description,f.staleMinutes,f.timezone,
  (SELECT COUNT(*) FROM Animals a WHERE a.farmId=f.id AND a.deletedAt IS NULL) animalCount,
  (SELECT COUNT(*) FROM Troughs t WHERE t.farmId=f.id AND t.deletedAt IS NULL) troughCount FROM Farms f`
 export function createFarmService(db, { clock = { now: () => new Date() } } = {}) {
@@ -13,7 +13,7 @@ export function createFarmService(db, { clock = { now: () => new Date() } } = {}
     return (await select(db, `${representation} WHERE f.id=:id`, { id }, transaction))[0]
   }
   async function list(account, query) {
-    const ids = await access.farmIds(account)
+    const ids = await access.farmIds(account, {includeRetired: query.includeRetired === 'true'})
     const p = pagination(query)
     if (!ids.length) return paginated([], 0, p)
     const rows = await select(

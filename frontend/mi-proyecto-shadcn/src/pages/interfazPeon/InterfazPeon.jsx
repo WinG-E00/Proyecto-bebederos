@@ -9,7 +9,7 @@ import {
   RefreshCw,
   ShieldCheck,
   Sun,
-  Thermometer,
+  Bell,
   User,
   Waves,
 } from 'lucide-react'
@@ -26,6 +26,10 @@ function InterfazPeon({
   onActualizar,
   cargando = false,
   error = '',
+  summary,
+  farmId,
+  center,
+  children,
 }) {
   const titleId = useId()
   const [darkMode, setDarkMode] = useState(false)
@@ -33,7 +37,7 @@ function InterfazPeon({
   const records = bebederos
   const measured = records.filter((b) => Number.isFinite(b.porcentaje)).length
   const cattle = animalCount ?? '—'
-  const risks = records.filter((b) => Number.isFinite(b.porcentaje) && b.porcentaje <= 50).length
+  const risks = summary ? summary.water.low + summary.water.critical : records.filter((b) => Number.isFinite(b.porcentaje) && b.porcentaje <= 50).length
 
   useEffect(() => {
     const interval = setInterval(() => setNow(new Date()), 1000)
@@ -43,8 +47,8 @@ function InterfazPeon({
   const stats = [
     {
       label: 'Bebederos Activos',
-      value: `${measured} / ${records.length}`,
-      detail: 'Con medición disponible',
+      value: summary?.troughs ?? '—',
+      detail: 'Bebederos activos autorizados',
       Icon: Droplets,
       color: 'agua',
     },
@@ -56,10 +60,10 @@ function InterfazPeon({
       color: 'ganado',
     },
     {
-      label: 'Prom. Temperatura',
-      value: '—',
-      detail: 'Información no disponible',
-      Icon: Thermometer,
+      label: 'Alertas activas',
+      value: summary?.activeAlerts ?? '—',
+      detail: 'Condiciones para revisar',
+      Icon: Bell,
       color: 'clima',
     },
     {
@@ -250,6 +254,7 @@ function InterfazPeon({
           </div>
         </section>
 
+        {children}
         <section className="interfaz-peon__map-card" aria-labelledby={`${titleId}-map`}>
           <div className="interfaz-peon__map-heading">
             <div>
@@ -261,7 +266,7 @@ function InterfazPeon({
             </div>
             <span className="interfaz-peon__system">Ubicaciones registradas</span>
           </div>
-          <MapaBebederos />
+          <MapaBebederos farmId={farmId} center={center} />
         </section>
       </main>
 

@@ -1,3 +1,5 @@
+import { defineWeatherCache } from './WeatherCache.model.js'
+import { defineAlert } from './Alert.model.js'
 import { defineNotification } from './Notification.model.js'
 import { defineTaskEvent } from './TaskEvent.model.js'
 import { defineTask } from './Task.model.js'
@@ -43,7 +45,11 @@ export function registerModels(db) {
   const Task = db.models.Task ?? defineTask(db)
   const TaskEvent = db.models.TaskEvent ?? defineTaskEvent(db)
   const Notification = db.models.Notification ?? defineNotification(db)
+  const Alert = db.models.Alert ?? defineAlert(db)
+  const WeatherCache = db.models.WeatherCache ?? defineWeatherCache(db)
   return {
+    WeatherCache,
+    Alert,
     Notification,
     TaskEvent,
     Task,

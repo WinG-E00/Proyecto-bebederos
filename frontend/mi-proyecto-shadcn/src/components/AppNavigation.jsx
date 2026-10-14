@@ -14,7 +14,9 @@ export default function AppNavigation({ scope, showProfile = true }) {
         ['/animals', 'Animales'],
         ['/map', 'Mapa'],
         ['/tasks', 'Tareas'],
-        ...(account.role === 'owner' ? [['/team', 'Equipo']] : []),
+        ['/alerts', 'Alertas'],
+        ['/weather', 'Clima'],
+        ...(account.role === 'owner' ? [['/team', 'Equipo'], ['/history', 'Historial']] : []),
         ['/profile', 'Mi perfil'],
       ]
         .filter(([to]) => showProfile || to !== '/profile')

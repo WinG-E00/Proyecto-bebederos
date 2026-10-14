@@ -17,7 +17,7 @@ export async function resolveRetiredAlerts(db, farmId, { type, id, transaction, 
         type: 'alert',
         resourceId: alert.resourceId,
         occurredAt: now,
-        details: { alertId: alert.id, resolved: true, reason: 'retirement' },
+        details: { alertId: alert.id, resourceType: alert.resourceType, conditionName: alert.conditionName, resolved: true, reason: 'retirement' },
       },
       { transaction },
     )

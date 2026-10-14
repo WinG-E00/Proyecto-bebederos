@@ -101,3 +101,9 @@
 @media (prefers-reduced-motion: reduce) {
   .interfaz-duenio__sidebar nav a { transition: none; }
 }
+
+.interfaz-duenio .dashboard-details article,
+.interfaz-duenio .dashboard-details section,
+.interfaz-duenio .dashboard-details a { min-width: 0; overflow-wrap: anywhere; }
+.interfaz-duenio .dashboard-details article,
+.interfaz-duenio .dashboard-details section { background: var(--duenio-surface); }

@@ -11,20 +11,7 @@ const navigation = [
   { id: 'alertas', label: 'Alertas', Icon: Bell },
 ]
 
-const exampleData = {
-  estado: 'Funcionando correctamente',
-  estadoOptimo: true,
-  totalBebederos: 12,
-  totalPeones: 3,
-  alertas: [{ id: 'nivel-8', mensaje: 'Nivel bajo en bebedero #8' }],
-  actividad: [
-    { id: 'recarga-3', mensaje: 'Bebedero #3 recargado' },
-    { id: 'peon-activo', mensaje: 'Peón activo' },
-  ],
-}
-
-/** Pasar datos del sistema para reemplazar el resumen de ejemplo de la referencia. */
-function InterfazDuenio({ datos = exampleData, onNavigate }) {
+function InterfazDuenio({ datos = {}, onNavigate, children }) {
   const sectionId = useId()
   const [activeSection, setActiveSection] = useState('inicio')
   const [darkMode, setDarkMode] = useState(() => {
@@ -92,7 +79,6 @@ function InterfazDuenio({ datos = exampleData, onNavigate }) {
           </button>
         </header>
 
-        {datos === exampleData && <p className="interfaz-duenio__demo">Datos de ejemplo de la referencia.</p>}
 
         <div className="interfaz-duenio__dashboard">
           <section className="interfaz-duenio__box interfaz-duenio__status" aria-labelledby={`${sectionId}-estado`}>
@@ -100,7 +86,7 @@ function InterfazDuenio({ datos = exampleData, onNavigate }) {
             <p>{estado || 'Estado no disponible'}</p>
             <span className={`interfaz-duenio__status-label${estadoOptimo ? '' : ' interfaz-duenio__status-label--warning'}`}>
               <span aria-hidden="true" />
-              {estadoOptimo ? 'Óptimo' : 'Requiere atención'}
+              {estadoOptimo ? 'Sin alertas activas' : 'Revisar alertas y mediciones'}
             </span>
           </section>
 
@@ -114,7 +100,7 @@ function InterfazDuenio({ datos = exampleData, onNavigate }) {
 
           <section className="interfaz-duenio__box interfaz-duenio__metric interfaz-duenio__alert-count" aria-labelledby={`${sectionId}-alertas-title`}>
             <h2 id={`${sectionId}-alertas-title`}>Alertas</h2>
-            <p className="interfaz-duenio__count">{alertas.length}</p>
+            <p className="interfaz-duenio__count">{datos.totalAlertas ?? '—'}</p>
             <span className="interfaz-duenio__bar interfaz-duenio__bar--yellow" aria-hidden="true" />
           </section>
 
@@ -138,6 +124,7 @@ function InterfazDuenio({ datos = exampleData, onNavigate }) {
             ) : <p>No hay actividad reciente.</p>}
           </section>
         </div>
+        {children}
       </main>
     </div>
   )

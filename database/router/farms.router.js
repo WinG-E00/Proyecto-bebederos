@@ -1,3 +1,4 @@
+import { z } from 'zod'
 import { Router } from 'express'
 import { requireAccount, requireOwner } from '../middleware/authorization.js'
 import { validate } from '../middleware/validate.js'
@@ -7,7 +8,7 @@ export function createFarmsRouter({ db, access, clock }) {
   const r = Router()
   const s = createFarmService(db, { clock })
   r.use(requireAccount(access))
-  r.get('/', validate(listSchema, 'query'), async (req, res) =>
+  r.get('/', validate(listSchema.extend({includeRetired:z.enum(['true','false']).optional()}), 'query'), async (req, res) =>
     res.json(await s.list(req.account, req.validated.query)),
   )
   r.post('/', requireOwner, validate(farmSchema), async (req, res) =>

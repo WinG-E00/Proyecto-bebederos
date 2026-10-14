@@ -117,3 +117,8 @@
   .interfaz-peon__footer { flex-direction: column; align-items: center; text-align: center; }
 }
 @media (prefers-reduced-motion: reduce) { .interfaz-peon__progress > span { transition: none; } }
+
+.interfaz-peon .dashboard-details { margin-block: 24px; }
+.interfaz-peon .dashboard-details article,
+.interfaz-peon .dashboard-details section,
+.interfaz-peon .dashboard-details a { min-width: 0; overflow-wrap: anywhere; }

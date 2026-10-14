@@ -1,3 +1,4 @@
+import { ResourceHistory } from '../Historial/Historial.jsx'
 import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
@@ -13,6 +14,7 @@ import TroughForm from './TroughForm.jsx'
 export default function Bebederos() {
   const scope = useFarmScope()
   const [page, setPage] = useState(1)
+  const [historyId, setHistoryId] = useState(null)
   const [params] = useSearchParams()
   const selected = params.get('id')
   const query = useTroughs(scope.farmId, page, selected)
@@ -67,6 +69,8 @@ export default function Bebederos() {
                   {t.latitude === null ? 'Sin ubicación' : `${t.latitude}, ${t.longitude}`} ·{' '}
                   {t.locationSource === 'device' ? 'GPS de dispositivo' : 'Administrativa'}
                 </p>
+                <button className="min-h-11 px-3 underline" onClick={()=>setHistoryId(historyId===t.id?null:t.id)}>{historyId===t.id?'Ocultar antecedentes':'Ver antecedentes'}</button>
+                {historyId===t.id&&<ResourceHistory resourceType="troughs" resource={t}/>}
                 {account.role === 'owner' && (
                   <button className="min-h-11 px-3" onClick={() => setRemoving(t)}>
                     Eliminar

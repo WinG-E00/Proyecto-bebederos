@@ -40,10 +40,10 @@ export function createAccessService(db) {
     if (!rows[0]) throw new ApiError(404, 'NOT_FOUND')
     return rows[0]
   }
-  async function farmIds(identity, { transaction } = {}) {
+  async function farmIds(identity, { transaction, includeRetired = false } = {}) {
     if (!positiveId(identity?.id)) throw new ApiError(401, 'UNAUTHENTICATED')
-    const rows = await db.query(`SELECT f.id FROM Farms f JOIN Accounts a ON a.id = :accountId WHERE f.deletedAt IS NULL AND ${scope} ORDER BY f.id`, {
-      replacements: { accountId: identity.id }, transaction, type: QueryTypes.SELECT,
+    const rows = await db.query(`SELECT f.id FROM Farms f JOIN Accounts a ON a.id = :accountId WHERE (f.deletedAt IS NULL OR (:includeRetired AND a.role='owner')) AND ${scope} ORDER BY f.id`, {
+      replacements: { accountId: identity.id, includeRetired }, transaction, type: QueryTypes.SELECT,
     })
     return rows.map((row) => row.id)
   }

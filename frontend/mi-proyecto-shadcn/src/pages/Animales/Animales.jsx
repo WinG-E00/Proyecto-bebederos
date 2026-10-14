@@ -1,3 +1,4 @@
+import { ResourceHistory } from '../Historial/Historial.jsx'
 import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
@@ -21,6 +22,7 @@ const fields = [
 export default function Animales() {
   const scope = useFarmScope()
   const [page, setPage] = useState(1)
+  const [historyId, setHistoryId] = useState(null)
   const [params] = useSearchParams()
   const selected = params.get('id')
   const query = useAnimals(scope.farmId, page, selected)
@@ -89,6 +91,8 @@ export default function Animales() {
                 ) : (
                   <p>Sin visitas registradas</p>
                 )}
+                <button className="min-h-11 px-3 underline" onClick={()=>setHistoryId(historyId===a.id?null:a.id)}>{historyId===a.id?'Ocultar antecedentes':'Ver antecedentes'}</button>
+                {historyId===a.id&&<ResourceHistory resourceType="animals" resource={a}/>}
                 {account.role === 'owner' && (
                   <div className="flex gap-3">
                     <button className="min-h-11 px-3" onClick={() => setEditing(a)}>

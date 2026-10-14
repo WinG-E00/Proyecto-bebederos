@@ -1,3 +1,4 @@
+import { createWeatherProvider } from './services/weather.service.js'
 import { installMonitoringApi } from './router/monitoring.router.js'
 import { pathToFileURL } from 'node:url'
 import { createApp } from './app.js'
@@ -25,7 +26,7 @@ export async function startServer({ env = loadEnv(), limits } = {}) {
       trustProxy: env.TRUST_PROXY,
       configure(app) {
         identity.install(app)
-        installMonitoringApi(app, { db, mail, appUrl: env.APP_URL })
+        installMonitoringApi(app, { db, mail, appUrl: env.APP_URL, weatherProvider: createWeatherProvider({url:env.WEATHER_URL,apiKey:env.WEATHER_API_KEY}) })
       },
     })
     const server = await new Promise((resolve, reject) => {

@@ -229,17 +229,17 @@ Las migraciones de Phase 2 crean todo el esquema relacional para que autorizaci�
 
 ### Tests e implementación
 
-- [ ] T102 [P] [US7] Definir pruebas de vigencia y episodios de agua/GPS en `database/tests/unit/alertsFreshness.test.js`, exactitud del límite y reglas de resolución, incluyendo recursos sin ninguna muestra.
-- [ ] T103 [P] [US7] Definir contratos alerts/notifications/read con permisos vigentes y active filter en `database/tests/contract/alerts-notifications.test.js`.
-- [ ] T104 [US7] Implementar Alerta en `database/models/Alert.model.js`: "Una clave única no nula por recurso/condición activa; al resolver pasa a null." y "resueltaEn nullable, claveActiva nullable"; historial permite múltiples episodios resueltos.
-- [ ] T105 [US7] Implementar episodios bajos/críticos, ausencia/desactualización y recuperación en `database/services/alerts.service.js`, eventos transaccionales y resolución automática; lectura de mensaje no resuelve condición y nivel/vigencia pueden coexistir.
-- [ ] T106 [US7] Implementar vigencia y reevaluación inmediata del cambio de límite en `database/services/freshness.service.js` y `database/services/farmSettings.service.js`; 180 min predeterminado, vence solo al superar, valores nulos/cero/negativos rechazados y fecha de muestra no de metadata.
-- [ ] T107 [US7] Integrar evaluación por muestra y reloj aun sin usuarios en `database/workers/monitor.worker.js`, enlazando agua/GPS/settings/retirada; preservar transiciones intermedias en lotes, impedir duplicados con varios workers y resolver recursos dados de baja.
-- [ ] T108 [US7] Implementar listas de alertas/notificaciones y marcar lectura propia en `database/router/alerts.router.js` y `database/router/notifications.router.js`; aplicar destinatarios y campos vigentes, incluido histórico de eventos.
-- [ ] T109 [P] [US7] Crear pantalla Alertas y notificaciones internas en `frontend/mi-proyecto-shadcn/src/pages/Alertas/Alertas.jsx` y `frontend/mi-proyecto-shadcn/src/hooks/useAlerts.js`, con condición, recurso, fecha, active/resolved y mensajes de tareas.
-- [ ] T110 [US7] Añadir indicador compartido de datos antiguos/ausentes y últimas fechas en `frontend/mi-proyecto-shadcn/src/components/DataFreshness.jsx`, conectándolo a fichas Bebederos/Animales y actualización periódica sin sustituir valores por cero.
-- [ ] T111 [US7] Verificar vigencia configurable, lotes Bajo→Crítico→Normal, reinicios, cambios de límite y workers concurrentes contra MySQL en `database/tests/integration/alerts.test.js`.
-- [ ] T112 [US7] Demostrar US7 y SC-004 en `frontend/mi-proyecto-shadcn/tests/e2e/alerts.spec.js` y `specs/001-monitoreo-bebederos/validation/US7.md`, incluyendo alertas visibles solo a dueño y peones asignados.
+- [X] T102 [P] [US7] Definir pruebas de vigencia y episodios de agua/GPS en `database/tests/unit/alertsFreshness.test.js`, exactitud del límite y reglas de resolución, incluyendo recursos sin ninguna muestra.
+- [X] T103 [P] [US7] Definir contratos alerts/notifications/read con permisos vigentes y active filter en `database/tests/contract/alerts-notifications.test.js`.
+- [X] T104 [US7] Implementar Alerta en `database/models/Alert.model.js`: "Una clave única no nula por recurso/condición activa; al resolver pasa a null." y "resueltaEn nullable, claveActiva nullable"; historial permite múltiples episodios resueltos.
+- [X] T105 [US7] Implementar episodios bajos/críticos, ausencia/desactualización y recuperación en `database/services/alerts.service.js`, eventos transaccionales y resolución automática; lectura de mensaje no resuelve condición y nivel/vigencia pueden coexistir.
+- [X] T106 [US7] Implementar vigencia y reevaluación inmediata del cambio de límite en `database/services/freshness.service.js` y `database/services/farmSettings.service.js`; 180 min predeterminado, vence solo al superar, valores nulos/cero/negativos rechazados y fecha de muestra no de metadata.
+- [X] T107 [US7] Integrar evaluación por muestra y reloj aun sin usuarios en `database/workers/monitor.worker.js`, enlazando agua/GPS/settings/retirada; preservar transiciones intermedias en lotes, impedir duplicados con varios workers y resolver recursos dados de baja.
+- [X] T108 [US7] Implementar listas de alertas/notificaciones y marcar lectura propia en `database/router/alerts.router.js` y `database/router/notifications.router.js`; aplicar destinatarios y campos vigentes, incluido histórico de eventos.
+- [X] T109 [P] [US7] Crear pantalla Alertas y notificaciones internas en `frontend/mi-proyecto-shadcn/src/pages/Alertas/Alertas.jsx` y `frontend/mi-proyecto-shadcn/src/hooks/useAlerts.js`, con condición, recurso, fecha, active/resolved y mensajes de tareas.
+- [X] T110 [US7] Añadir indicador compartido de datos antiguos/ausentes y últimas fechas en `frontend/mi-proyecto-shadcn/src/components/DataFreshness.jsx`, conectándolo a fichas Bebederos/Animales y actualización periódica sin sustituir valores por cero.
+- [X] T111 [US7] Verificar vigencia configurable, lotes Bajo→Crítico→Normal, reinicios, cambios de límite y workers concurrentes contra MySQL en `database/tests/integration/alerts.test.js`.
+- [X] T112 [US7] Demostrar US7 y SC-004 en `frontend/mi-proyecto-shadcn/tests/e2e/alerts.spec.js` y `specs/001-monitoreo-bebederos/validation/US7.md`, incluyendo alertas visibles solo a dueño y peones asignados.
 
 **Checkpoint**: Validar el criterio independiente de esta fase y mantener funcionando las fases ya integradas. Casillas se marcan solo al terminar y verificar la implementación, nunca durante generación de tareas.
 
@@ -253,14 +253,14 @@ Las migraciones de Phase 2 crean todo el esquema relacional para que autorizaci�
 
 ### Tests e implementación
 
-- [ ] T113 [P] [US8] Definir contrato weather autenticado, fechas/período y unavailable/stale en `database/tests/contract/weather.test.js`.
-- [ ] T114 [P] [US8] Definir casos de caché 15 min, timeout 5 s, respuesta incompleta y cambio de ubicación en `database/tests/unit/weather.test.js`, usando adaptador simulado sin consultas comerciales durante tests.
-- [ ] T115 [US8] Implementar ClimaCache en `database/models/WeatherCache.model.js`: "Una fila por campo; 15 minutos; invalida al cambiar ubicación. Datos incluyen período de lluvia y fecha/modelo de referencia.".
-- [ ] T116 [US8] Implementar adaptador Open-Meteo comercial en `database/services/weather.service.js`: current temperatura/humedad/weather_code y daily.precipitation_probability_max del día local; timeout, caché, consolidación de solicitudes concurrentes y fallback antiguo/ausencia sin ceros inventados.
-- [ ] T117 [US8] Montar weather por campo en `database/router/weather.router.js` y conectar invalidación de ubicación desde `database/services/farmSettings.service.js`, sin exponer clave al navegador.
-- [ ] T118 [P] [US8] Crear pantalla y tarjeta climática reutilizable en `frontend/mi-proyecto-shadcn/src/pages/Clima/Clima.jsx`, `frontend/mi-proyecto-shadcn/src/components/WeatherCard.jsx` y `frontend/mi-proyecto-shadcn/src/hooks/useWeather.js`, mostrando período diario, zona y fecha y estado antiguo.
-- [ ] T119 [US8] Verificar aislamiento/cache por campo y fallos de proveedor en `database/tests/integration/weather.test.js`.
-- [ ] T120 [US8] Demostrar US8 y datos climáticos de SC-008 en `frontend/mi-proyecto-shadcn/tests/e2e/weather.spec.js` y `specs/001-monitoreo-bebederos/validation/US8.md`; validar configuración comercial como requisito de operación.
+- [X] T113 [P] [US8] Definir contrato weather autenticado, fechas/período y unavailable/stale en `database/tests/contract/weather.test.js`.
+- [X] T114 [P] [US8] Definir casos de caché 15 min, timeout 5 s, respuesta incompleta y cambio de ubicación en `database/tests/unit/weather.test.js`, usando adaptador simulado sin consultas comerciales durante tests.
+- [X] T115 [US8] Implementar ClimaCache en `database/models/WeatherCache.model.js`: "Una fila por campo; 15 minutos; invalida al cambiar ubicación. Datos incluyen período de lluvia y fecha/modelo de referencia.".
+- [X] T116 [US8] Implementar adaptador Open-Meteo comercial en `database/services/weather.service.js`: current temperatura/humedad/weather_code y daily.precipitation_probability_max del día local; timeout, caché, consolidación de solicitudes concurrentes y fallback antiguo/ausencia sin ceros inventados.
+- [X] T117 [US8] Montar weather por campo en `database/router/weather.router.js` y conectar invalidación de ubicación desde `database/services/farmSettings.service.js`, sin exponer clave al navegador.
+- [X] T118 [P] [US8] Crear pantalla y tarjeta climática reutilizable en `frontend/mi-proyecto-shadcn/src/pages/Clima/Clima.jsx`, `frontend/mi-proyecto-shadcn/src/components/WeatherCard.jsx` y `frontend/mi-proyecto-shadcn/src/hooks/useWeather.js`, mostrando período diario, zona y fecha y estado antiguo.
+- [X] T119 [US8] Verificar aislamiento/cache por campo y fallos de proveedor en `database/tests/integration/weather.test.js`.
+- [X] T120 [US8] Demostrar US8 y datos climáticos de SC-008 en `frontend/mi-proyecto-shadcn/tests/e2e/weather.spec.js` y `specs/001-monitoreo-bebederos/validation/US8.md`; validar configuración comercial como requisito de operación.
 
 **Checkpoint**: Validar el criterio independiente de esta fase y mantener funcionando las fases ya integradas. Casillas se marcan solo al terminar y verificar la implementación, nunca durante generación de tareas.
 

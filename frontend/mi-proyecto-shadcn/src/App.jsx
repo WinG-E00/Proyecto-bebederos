@@ -1,8 +1,17 @@
+import Historial from '@/pages/Historial/Historial.jsx'
+import DashboardDetails from '@/components/DashboardDetails.jsx'
+import FarmSelector from '@/components/FarmSelector.jsx'
+import MapaBebederos from '@/pages/interfazPeon/MapaBebederos.jsx'
+import { useFarmScope } from '@/hooks/useFarmScope.js'
+import { useDashboard } from '@/hooks/useDashboard.js'
+import { useAlerts } from '@/hooks/useAlerts.js'
+import { useTasks } from '@/hooks/useTasks.js'
+import Clima from '@/pages/Clima/Clima.jsx'
+import Alertas from '@/pages/Alertas/Alertas.jsx'
 import OwnerTasks from '@/pages/Tareas/OwnerTasks.jsx'
 import WorkerTasks from '@/pages/Tareas/WorkerTasks.jsx'
 import Peones from '@/pages/Peones/Peones.jsx'
 import { useTroughs } from '@/hooks/useTroughs.js'
-import { useAnimals } from '@/hooks/useAnimals.js'
 import Animales from '@/pages/Animales/Animales.jsx'
 import Mapa from '@/pages/Animales/Mapa.jsx'
 import Bebederos from '@/pages/Bebederos/Bebederos.jsx'
@@ -66,40 +75,54 @@ function SessionBar() {
   )
 }
 
-function WorkerPanel() {
+function WorkerPanel({scope,summary,children}) {
   const { account } = useAuth()
-  const troughs = useTroughs('')
-  const animals = useAnimals('')
+  const troughs = useTroughs(scope.farmId)
   return (
     <InterfazPeon
       usuario={account.name}
-      establecimiento={ROLE_LABELS.worker}
-      bebederos={(troughs.data?.items ?? []).map((t) => ({
-        ...t,
-        porcentaje: t.waterLevel,
-        ubicacion: t.name,
-      }))}
-      animalCount={animals.data?.total}
+      establecimiento={scope.selected?.name || 'Campos asignados'}
+      bebederos={(troughs.data?.items ?? []).map((t) => ({...t,porcentaje:t.waterLevel,ubicacion:t.name}))}
+      animalCount={summary.animals}
+      summary={summary}
+      farmId={scope.farmId}
+      center={scope.selected}
       cargando={troughs.isPending}
-      error={
-        troughs.error?.message ??
-        (troughs.stale ? 'Sin conexión. Datos anteriores.' : '')
-      }
+      error={troughs.error?.message ?? (troughs.stale ? 'Sin conexión. Datos anteriores.' : '')}
       onActualizar={() => troughs.refetch()}
-    />
+    >
+      {troughs.data?.total>troughs.data?.items.length&&<Link className="inline-flex min-h-11 items-center underline" to={`/troughs${scope.farmId?`?farmId=${scope.farmId}`:''}`}>Ver todos los bebederos ({troughs.data.total})</Link>}
+      {children}
+    </InterfazPeon>
   )
 }
 
-// El panel se elige por el rol que devuelve la API, nunca por localStorage.
 function Dashboard() {
-  const { account } = useAuth()
-  return (
-    <>
-      <SessionBar />
-      <AppNavigation showProfile={false} />
-      {account.role === 'owner' ? <InterfazDuenio /> : <WorkerPanel />}
-    </>
-  )
+  const { account } = useAuth(), scope=useFarmScope(), navigate=useNavigate()
+  const query=useDashboard(scope.farmId), alerts=useAlerts(scope.farmId), tasks=useTasks({farmId:scope.farmId})
+  const data=query.data
+  const details=data?<DashboardDetails data={data} scope={scope}/>:null
+  function go(destination){const path={inicio:'dashboard',bebederos:'troughs',peones:'team',alertas:'alerts'}[destination];navigate(`/${path}${scope.farmId?`?farmId=${scope.farmId}`:''}`)}
+  return <>
+    <SessionBar />
+    <AppNavigation scope={scope} showProfile={false} />
+    <div className="p-4 space-y-3">
+      <FarmSelector scope={scope}/>
+      <AsyncState loading={query.isPending||scope.farms.isPending} error={query.error||scope.farms.error} onRetry={()=>{query.refetch();scope.farms.refetch()}}/>
+      {query.stale&&<p role="status">Sin conexión. Resumen anterior.</p>}
+      {scope.invalidScope&&<p>No tenés acceso al establecimiento seleccionado.</p>}
+    </div>
+    {data&&!scope.invalidScope&&(account.role==='owner'?<InterfazDuenio onNavigate={go} datos={{
+      estado:data.activeAlerts?`${data.activeAlerts} alertas activas`:data.troughs||data.animals?'Sin alertas activas registradas':'Sin recursos registrados',
+      estadoOptimo:data.activeAlerts===0,totalBebederos:data.troughs,totalPeones:data.workers,totalAlertas:data.activeAlerts,
+      alertas:(alerts.data?.items??[]).slice(0,5).map(a=>({id:a.id,mensaje:`${a.message} · Recurso #${a.resourceId}`})),
+      actividad:(tasks.data?.items??[]).slice(0,5).map(t=>({id:t.id,mensaje:`${t.title} · ${t.state} · ${t.workerName??'Sin asignar'}`})),
+    }}>
+      <AsyncState loading={alerts.isPending||tasks.isPending} error={alerts.error||tasks.error} onRetry={()=>{alerts.refetch();tasks.refetch()}}/>
+      {details}
+      <section className="rounded-xl border p-4 mt-6"><h2 className="text-xl font-bold mb-3">Mapa de animales y bebederos</h2><MapaBebederos farmId={scope.farmId} center={scope.selected}/></section>
+    </InterfazDuenio>:<WorkerPanel scope={scope} summary={data}>{details}</WorkerPanel>)}
+  </>
 }
 
 // Login y registro no se muestran a una sesión iniciada.
@@ -215,6 +238,9 @@ function App() {
           </ProtectedRoute>
         }
       />
+      <Route path="/alerts" element={<ProtectedRoute><Alertas /></ProtectedRoute>} />
+      <Route path="/weather" element={<ProtectedRoute><Clima /></ProtectedRoute>} />
+      <Route path="/history" element={<ProtectedRoute role="owner"><Historial /></ProtectedRoute>} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )

@@ -1,3 +1,4 @@
+import { evaluateResourceAlerts } from './alerts.service.js'
 import { select, insert, update } from './monitoringSql.service.js'
 import { writeHistory } from './historyWriter.service.js'
 import { isNewerSample, waterCategory } from './water.service.js'
@@ -107,6 +108,7 @@ export function createWaterProcessing(
                 transaction,
                 'troughId',
               )
+              if (water) await evaluateResourceAlerts(db, farm, 'trough', id, sample, { transaction, now })
               current = sample
               if (!water) await update(db, 'Troughs', id, { locationSource: 'device' }, transaction)
             }
