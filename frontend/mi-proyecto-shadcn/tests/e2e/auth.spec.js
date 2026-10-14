@@ -77,6 +77,7 @@ test.describe('acceso con rol único (US1)', () => {
     await expect(page.getByText(/cuenta de dueño no puede aceptar/)).toBeVisible()
     await expect(page.getByRole('button', { name: 'Aceptar invitación' })).toHaveCount(0)
     await page.getByRole('button', { name: 'Cerrar sesión' }).click()
+    await expect(page.getByLabel('Nombre completo')).toBeVisible()
 
     await page.goto(`/invite?token=${invitation.token}`)
     await expect(page).toHaveURL(/\/invite$/)

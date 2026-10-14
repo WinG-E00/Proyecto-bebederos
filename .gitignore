@@ -13,3 +13,7 @@ playwright/.auth/
 .DS_Store
 .idea/
 *.swp
+
+Thumbs.db
+*.tmp
+.vscode/

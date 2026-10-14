@@ -1,3 +1,13 @@
+import OwnerTasks from '@/pages/Tareas/OwnerTasks.jsx'
+import WorkerTasks from '@/pages/Tareas/WorkerTasks.jsx'
+import Peones from '@/pages/Peones/Peones.jsx'
+import { useTroughs } from '@/hooks/useTroughs.js'
+import { useAnimals } from '@/hooks/useAnimals.js'
+import Animales from '@/pages/Animales/Animales.jsx'
+import Mapa from '@/pages/Animales/Mapa.jsx'
+import Bebederos from '@/pages/Bebederos/Bebederos.jsx'
+import Establecimientos from '@/pages/Establecimientos/Establecimientos.jsx'
+import AppNavigation from '@/components/AppNavigation.jsx'
 import { LogOut, UserRound } from 'lucide-react'
 import { useState } from 'react'
 import { Link, Navigate, Route, Routes, useNavigate } from 'react-router-dom'
@@ -7,7 +17,11 @@ import { useAuth } from '@/hooks/useAuth.js'
 import Login from '@/pages/autorizationModule/login-interface/login.jsx'
 import Register from '@/pages/autorizationModule/register-interface/register.jsx'
 import InvitationAccess from '@/pages/autorizationModule/InvitationAccess.jsx'
-import { ForgotPassword, ResetPassword, VerifyEmail } from '@/pages/autorizationModule/IdentityActions.jsx'
+import {
+  ForgotPassword,
+  ResetPassword,
+  VerifyEmail,
+} from '@/pages/autorizationModule/IdentityActions.jsx'
 import Profile from '@/pages/Profile/Profile.jsx'
 import InterfazDuenio from '@/pages/InterfazDuenio/InterfazDuenio.jsx'
 import InterfazPeon from '@/pages/interfazPeon/InterfazPeon.jsx'
@@ -21,52 +35,186 @@ function SessionBar() {
   const [leaving, setLeaving] = useState(false)
   async function signOut() {
     setLeaving(true)
-    try { await logout() } finally { navigate('/login', { replace: true }) }
+    try {
+      await logout()
+    } finally {
+      navigate('/login', { replace: true })
+    }
   }
   return (
     <div className="flex flex-wrap items-center justify-end gap-2 bg-[#103c27] px-4 py-2 text-sm text-[#eff9ed]">
-      <span className="mr-auto truncate">{account.name} · {ROLE_LABELS[account.role]}</span>
-      <Link className="inline-flex min-h-11 items-center gap-2 rounded-lg px-3 hover:bg-white/15 focus-visible:outline-3 focus-visible:outline-[#d3a865]" to="/profile">
-        <UserRound aria-hidden="true" size={17} />Mi perfil
+      <span className="mr-auto truncate">
+        {account.name} · {ROLE_LABELS[account.role]}
+      </span>
+      <Link
+        className="inline-flex min-h-11 items-center gap-2 rounded-lg px-3 hover:bg-white/15 focus-visible:outline-3 focus-visible:outline-[#d3a865]"
+        to="/profile"
+      >
+        <UserRound aria-hidden="true" size={17} />
+        Mi perfil
       </Link>
-      <button type="button" className="inline-flex min-h-11 items-center gap-2 rounded-lg px-3 hover:bg-white/15 focus-visible:outline-3 focus-visible:outline-[#d3a865] disabled:opacity-70" onClick={signOut} disabled={leaving}>
-        <LogOut aria-hidden="true" size={17} />{leaving ? 'Cerrando…' : 'Cerrar sesión'}
+      <button
+        type="button"
+        className="inline-flex min-h-11 items-center gap-2 rounded-lg px-3 hover:bg-white/15 focus-visible:outline-3 focus-visible:outline-[#d3a865] disabled:opacity-70"
+        onClick={signOut}
+        disabled={leaving}
+      >
+        <LogOut aria-hidden="true" size={17} />
+        {leaving ? 'Cerrando…' : 'Cerrar sesión'}
       </button>
     </div>
+  )
+}
+
+function WorkerPanel() {
+  const { account } = useAuth()
+  const troughs = useTroughs('')
+  const animals = useAnimals('')
+  return (
+    <InterfazPeon
+      usuario={account.name}
+      establecimiento={ROLE_LABELS.worker}
+      bebederos={(troughs.data?.items ?? []).map((t) => ({
+        ...t,
+        porcentaje: t.waterLevel,
+        ubicacion: t.name,
+      }))}
+      animalCount={animals.data?.total}
+      cargando={troughs.isPending}
+      error={
+        troughs.error?.message ??
+        (troughs.stale ? 'Sin conexión. Datos anteriores.' : '')
+      }
+      onActualizar={() => troughs.refetch()}
+    />
   )
 }
 
 // El panel se elige por el rol que devuelve la API, nunca por localStorage.
 function Dashboard() {
   const { account } = useAuth()
-  return <>
-    <SessionBar />
-    {account.role === 'owner' ? <InterfazDuenio /> : <InterfazPeon usuario={account.name} establecimiento={ROLE_LABELS.worker} />}
-  </>
+  return (
+    <>
+      <SessionBar />
+      <AppNavigation showProfile={false} />
+      {account.role === 'owner' ? <InterfazDuenio /> : <WorkerPanel />}
+    </>
+  )
 }
 
 // Login y registro no se muestran a una sesión iniciada.
 function PublicOnly({ children }) {
   const { status, error, refresh } = useAuth()
-  if (status === 'loading') return <main className="grid min-h-dvh place-items-center p-4"><AsyncState loading /></main>
+  if (status === 'loading')
+    return (
+      <main className="grid min-h-dvh place-items-center p-4">
+        <AsyncState loading />
+      </main>
+    )
   if (status === 'authenticated') return <Navigate to="/dashboard" replace />
-  if (status === 'error') return <main className="grid min-h-dvh place-items-center p-4"><AsyncState error={error} onRetry={() => refresh()} /></main>
+  if (status === 'error')
+    return (
+      <main className="grid min-h-dvh place-items-center p-4">
+        <AsyncState error={error} onRetry={() => refresh()} />
+      </main>
+    )
   return children
+}
+
+function Tasks() {
+  const { account } = useAuth()
+  return account.role === 'owner' ? <OwnerTasks /> : <WorkerTasks />
 }
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<Navigate to="/dashboard" replace />} />
-      <Route path="/login" element={<PublicOnly><Login /></PublicOnly>} />
-      <Route path="/register" element={<PublicOnly><Register /></PublicOnly>} />
+      <Route
+        path="/login"
+        element={
+          <PublicOnly>
+            <Login />
+          </PublicOnly>
+        }
+      />
+      <Route
+        path="/register"
+        element={
+          <PublicOnly>
+            <Register />
+          </PublicOnly>
+        }
+      />
       <Route path="/registro" element={<Navigate to="/register" replace />} />
       <Route path="/invite" element={<InvitationAccess />} />
       <Route path="/verify" element={<VerifyEmail />} />
       <Route path="/forgot" element={<ForgotPassword />} />
       <Route path="/reset" element={<ResetPassword />} />
-      <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-      <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+      <Route
+        path="/dashboard"
+        element={
+          <ProtectedRoute>
+            <Dashboard />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/animals"
+        element={
+          <ProtectedRoute>
+            <Animales />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/map"
+        element={
+          <ProtectedRoute>
+            <Mapa />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/troughs"
+        element={
+          <ProtectedRoute>
+            <Bebederos />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/farms"
+        element={
+          <ProtectedRoute>
+            <Establecimientos />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <Profile />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/tasks"
+        element={
+          <ProtectedRoute>
+            <Tasks />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/team"
+        element={
+          <ProtectedRoute>
+            <Peones />
+          </ProtectedRoute>
+        }
+      />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
   )

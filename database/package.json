@@ -12,7 +12,8 @@
     "migrate": "node scripts/migrate.js",
     "seed": "node scripts/seed.js",
     "worker": "node workers/index.js",
-    "start": "node server.js"
+    "start": "node server.js",
+    "sample": "node scripts/sample.js"
   },
   "keywords": [],
   "type": "module",

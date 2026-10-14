@@ -1,3 +1,4 @@
+import {sqlValues} from '../../services/monitoringSql.service.js'
 import bcrypt from 'bcrypt'
 import { randomUUID } from 'node:crypto'
 import { QueryTypes } from 'sequelize'
@@ -72,7 +73,7 @@ async function insert(db, table, values) {
   const keys = Object.keys(values)
   const [id] = await db.query(
     `INSERT INTO \`${table}\` (${keys.map((key) => `\`${key}\``).join(',')}) VALUES (${keys.map((key) => `:${key}`).join(',')})`,
-    { replacements: values },
+    { replacements: sqlValues(values) },
   )
   return id
 }

@@ -102,3 +102,30 @@ Referencia de payloads y errores: [contracts/api.md](contracts/api.md). Entidade
 Preparar 10 campos, 100 bebederos, 1.000 animales y 20 usuarios concurrentes con cuentas y accesos variados. Medir cambios visibles, atraso del worker, errores y duplicados durante entrada de muestras, consultas y acciones. Aceptar SC-003 solo si al menos 95% de cambios se refleja en ≤30 segundos, y comprobar los restantes SC con pruebas funcionales y usuarios de prueba.
 
 Antes de publicar: servicios de correo/clima operativos, teselas dentro de política, HTTPS y cookie Secure, procesos supervisados, migraciones sin sincronización destructiva, copia diaria y ensayo de restauración. Logs sin contraseñas/tokens; monitorizar último ciclo, errores SMTP/clima y solicitudes fallidas. Ninguna contratación, envío de correo real o despliegue se realiza en esta fase documental.
+
+## Implementado en fases 4–6
+
+Con una sesión verificada, usar `/farms`, `/troughs`, `/animals` y `/map`. Seleccionar campo para dar de alta recursos. Peones consultan sus campos asignados; la gestión de invitaciones de US5 sigue pendiente.
+
+La herramienta de muestras requiere `NODE_ENV=development` o `test` y la configuración de backend del entorno elegido. El JSON usa id numérico de recurso existente y fecha UTC de la fuente. Una clave repetida con los mismos datos es idempotente; reutilizarla con otros valores se rechaza. No ejecutarla contra producción.
+
+```bash
+npm run sample --prefix database -- water '{"sourceKey":"pilot-water-001","resourceId":1,"percentage":19,"measuredAt":"2026-10-14T03:00:00.000Z"}'
+npm run sample --prefix database -- animalPosition '{"sourceKey":"pilot-gps-001","resourceId":1,"latitude":-26,"longitude":-59,"measuredAt":"2026-10-14T03:00:00.000Z"}'
+npm run sample --prefix database -- troughPosition '{"sourceKey":"pilot-trough-gps-001","resourceId":1,"latitude":-26,"longitude":-59,"measuredAt":"2026-10-14T03:00:00.000Z"}'
+npm run worker --prefix database
+```
+
+El worker procesa agua/GPS cada cinco segundos y la interfaz consulta cada diez segundos en vistas visibles. Las muestras futuras se marcan sin actualizar datos actuales; las antiguas válidas quedan en historial. Las alertas de episodios y la consulta de historial se completan en US7/US9. La clave SMTP sigue opcional para estas verificaciones; no se envían correos reales. El mapa usa `VITE_TILE_URL` opcional y mantiene lista/fichas si fallan las teselas.
+
+Para repetir recorridos de las fases 4–6 usar `E2E_FULLSTACK=1` y las variables `E2E_DB_*`/`E2E_OUTBOX_SECRET` del apartado US1, con API y MySQL exclusivos de pruebas.
+
+## Fases 6–8 implementadas (2026-10-14)
+
+Animales/GPS/visitas/mapa, Equipo/invitaciones y Tareas ya están integrados en `/animals`, `/map`, `/team` (dueño) y `/tasks` (vista según rol). Aplican las tres migraciones existentes; estas fases no requieren recrear tablas. La API recibe la misma cola cifrada que identidad y el worker incorpora vencimiento de invitaciones. Configurar `APP_URL`, `OUTBOX_SECRET` y SMTP para envíos reales. Las pruebas capturan el enlace desde la cola y simulan el proveedor; no requieren enviar correo real.
+
+Para pruebas repetibles usar `database/.env.test` conforme al ejemplo y MySQL 8, con base/usuario exclusivos. Si MySQL tiene binlog habilitado, el administrador del servidor debe permitir la creación de los triggers de inmutabilidad al migrar; en el contenedor de pruebas se habilitó `log_bin_trust_function_creators`. No conceder privilegios globales al usuario de aplicación como sustituto.
+
+E2E requiere API real en 3000 y Vite en 5173, `E2E_FULLSTACK=1`, `E2E_DB_HOST/PORT/NAME/USER/PASSWORD` y `E2E_OUTBOX_SECRET` coincidentes con la API. Usar una base E2E separada de integración, con nombre terminado en `_e2e` o `_test`, para que los casos de cola no interfieran con el registro del navegador. Las variables `DB_*` de la API de pruebas deben apuntar a esa misma base aislada. Conservar los límites productivos por defecto; las ejecuciones repetidas de identidad pueden alcanzar 30 solicitudes por 15 minutos por IP.
+
+Evidencias: [US4](validation/US4.md), [US5](validation/US5.md), [US6](validation/US6.md). El MVP aún requiere las fases 9–12.

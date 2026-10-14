@@ -1,3 +1,4 @@
+import { installMonitoringApi } from './router/monitoring.router.js'
 import { pathToFileURL } from 'node:url'
 import { createApp } from './app.js'
 import { loadEnv } from './config/loadEnv.js'
@@ -7,35 +8,68 @@ import { assertSchemaReady } from './scripts/migrate.js'
 import { createIdentityApi } from './router/auth.router.js'
 import { createMailService } from './services/mail.service.js'
 
-export async function startServer({ env = loadEnv() } = {}) {
+export async function startServer({ env = loadEnv(), limits } = {}) {
   const db = createDatabase(env)
   try {
     await db.authenticate()
     await assertSchemaReady(db)
     registerModels(db)
-    const identity = createIdentityApi({ db, env, mail: createMailService(db, { secret: env.OUTBOX_SECRET }) })
-    const app = createApp({ trustProxy: env.TRUST_PROXY, configure: identity.install })
+    const mail = createMailService(db, { secret: env.OUTBOX_SECRET })
+    const identity = createIdentityApi({
+      db,
+      env,
+      limits,
+      mail,
+    })
+    const app = createApp({
+      trustProxy: env.TRUST_PROXY,
+      configure(app) {
+        identity.install(app)
+        installMonitoringApi(app, { db, mail, appUrl: env.APP_URL })
+      },
+    })
     const server = await new Promise((resolve, reject) => {
-      const listener = app.listen(env.PORT, '127.0.0.1', () => resolve(listener))
+      const listener = app.listen(env.PORT, '127.0.0.1', () =>
+        resolve(listener),
+      )
       listener.once('error', reject)
     })
     let closing
-    const close = () => closing ??= (async () => {
-      await new Promise((resolve, reject) => server.close((error) => error ? reject(error) : resolve()))
-      identity.close()
-      await db.close()
-    })()
+    const close = () =>
+      (closing ??= (async () => {
+        await new Promise((resolve, reject) =>
+          server.close((error) => (error ? reject(error) : resolve())),
+        )
+        identity.close()
+        await db.close()
+      })())
     return { app, server, db, close }
-  } catch (error) { await db.close(); throw error }
+  } catch (error) {
+    await db.close()
+    throw error
+  }
 }
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  startServer().then(({ close }) => {
-    console.log('API iniciada en loopback; esquema verificado, sin cambios automáticos.')
-    for (const signal of ['SIGINT', 'SIGTERM']) process.once(signal, () => {
-      close().catch(() => { console.error('No se pudo cerrar la API correctamente.'); process.exitCode = 1 })
+if (
+  process.argv[1] &&
+  import.meta.url === pathToFileURL(process.argv[1]).href
+) {
+  startServer()
+    .then(({ close }) => {
+      console.log(
+        'API iniciada en loopback; esquema verificado, sin cambios automáticos.',
+      )
+      for (const signal of ['SIGINT', 'SIGTERM'])
+        process.once(signal, () => {
+          close().catch(() => {
+            console.error('No se pudo cerrar la API correctamente.')
+            process.exitCode = 1
+          })
+        })
     })
-  }).catch(() => {
-    console.error('No se pudo iniciar la API. Revisar configuración, MySQL y migraciones pendientes.')
-    process.exitCode = 1
-  })
+    .catch(() => {
+      console.error(
+        'No se pudo iniciar la API. Revisar configuración, MySQL y migraciones pendientes.',
+      )
+      process.exitCode = 1
+    })
 }

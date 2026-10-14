@@ -35,6 +35,9 @@ beforeAll(async () => {
   loadTestEnvironment()
   db = createTestDatabase()
   await migrateDatabase(db); await assertSchemaReady(db)
+  // Esta base es exclusiva de pruebas y conserva filas históricas entre ejecuciones.
+  // Retirar correos sintéticos de ejecuciones anteriores antes de probar la cola global.
+  await db.query("UPDATE MailOutbox SET state='expired', encryptedPayload=NULL, errorCode='TEST_RETIRED' WHERE recipient LIKE '%@test.invalid' AND state IN ('pending','failed')")
   models = registerModels(db); access = createAccessService(db)
   owner = await account('owner', 'owner'); otherOwner = await account('owner', 'other'); worker = await account('worker', 'worker')
   farm = await createFarm(owner, 'Campo de prueba'); otherFarm = await createFarm(otherOwner, 'Otro campo')
