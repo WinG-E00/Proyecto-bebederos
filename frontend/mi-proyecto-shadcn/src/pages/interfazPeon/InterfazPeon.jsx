@@ -14,9 +14,13 @@ import {
   Waves,
 } from 'lucide-react'
 import MapaBebederos from './MapaBebederos'
-import { porcentajeSeguro } from './datosEjemplo'
 import { formatDate } from '../../lib/dates.js'
 import './InterfazPeon.css'
+
+// Limita el nivel visible a 0–100; sin medición devuelve null para no mostrar ceros inventados.
+function porcentajeSeguro(valor) {
+  return Number.isFinite(valor) ? Math.min(100, Math.max(0, valor)) : null
+}
 
 function InterfazPeon({
   bebederos = [],

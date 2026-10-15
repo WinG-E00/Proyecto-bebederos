@@ -32,7 +32,7 @@
 .interfaz-duenio__brand { display: block; margin-bottom: 34px; }
 .interfaz-duenio__brand img { display: block; width: 180px; max-width: 100%; height: auto; }
 .interfaz-duenio__sidebar nav { display: flex; flex-direction: column; gap: 12px; }
-.interfaz-duenio__sidebar nav a { display: flex; align-items: center; gap: 12px; padding: 11px 12px; border-radius: 8px; color: #fff; font-size: 14px; text-decoration: none; transition: background-color 160ms ease; }
+.interfaz-duenio__sidebar nav a { min-height: 44px; display: flex; align-items: center; gap: 12px; padding: 11px 12px; border-radius: 8px; color: #fff; font-size: 14px; text-decoration: none; transition: background-color 160ms ease; }
 .interfaz-duenio__sidebar nav a:hover { background: rgb(255 255 255 / 12%); }
 .interfaz-duenio__sidebar nav a[aria-current] { background: rgb(255 255 255 / 18%); font-weight: 600; }
 .interfaz-duenio__main { flex: 1; min-width: 0; padding: 32px 40px 48px; }

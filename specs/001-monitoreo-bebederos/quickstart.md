@@ -1,52 +1,43 @@
-# Guía de puesta en marcha y validación prevista
+# Guía de puesta en marcha y validación
 
-**Estado actualizado (2026-10-13)**: T001–T020 implementadas; comandos actuales y configuración en [database/deployment/README.md](../../database/deployment/README.md), evidencia de preparación en [validation/baseline.md](validation/baseline.md) y base compartida en [validation/foundational.md](validation/foundational.md). Las secciones «previstas» siguientes conservan el plan de aceptación del MVP completo; autenticación, rutas de negocio, seed y monitoreo de agua/GPS todavía requieren las historias posteriores.
+**Estado (2026-10-14)**: fases 1–12 implementadas (T001–T143 salvo T140, evaluación con usuarios). Operación y despliegue en [database/deployment/README.md](../../database/deployment/README.md). Evidencias en [validation/](validation/), resumen final en [validation/final-checks.md](validation/final-checks.md) y matriz en [validation/acceptance.md](validation/acceptance.md).
 
-## Requisitos del entorno futuro
+## Entorno mínimo
 
-- Node.js 22 compatible con Vite existente y npm.
-- MySQL 8 con bases separadas de desarrollo y pruebas y usuario con privilegios limitados a ellas.
-- SMTP configurable para invitaciones, verificación y recuperación; en pruebas, buzón de captura local o adaptador simulado, sin enviar mensajes reales.
-- Credenciales Open-Meteo aptas para uso comercial antes de operar campos reales. En pruebas usar respuestas controladas.
-- Navegadores Playwright instalados para E2E.
+- Node.js 22 o superior y npm (verificado también con Node 24.16).
+- MySQL 8.0.16+ con bases separadas de desarrollo, pruebas (`*_test`) y E2E (`*_e2e`), cada una con usuario limitado a su base. Con binlog activo, el administrador debe permitir crear los triggers de inmutabilidad (`log_bin_trust_function_creators`) al migrar.
+- Para operar: SMTP con TLS y credencial comercial de Open-Meteo. Para desarrollo y pruebas no hacen falta: el correo queda en la cola cifrada y el clima responde indisponible o se simula.
+- E2E: navegador Chromium de Playwright (`npm exec --prefix frontend/mi-proyecto-shadcn -- playwright install chromium`) o Edge instalado (`channel: 'msedge'`).
 
-La base actual tiene datos de ejemplo. Antes de aplicar migraciones confirmar que se apunta al entorno previsto. El arranque nuevo ya no usa `sync({ force: true })`; únicamente verifica el esquema. La fase 2 se comprobó en una base MySQL aislada y no migró la base del `.env` local.
+## Configuración
 
-## Configuración a documentar en implementación
-
-Crear ejemplos sin secretos y archivos locales ignorados por Git. Backend:
+Copiar `database/.env.example` a `database/.env` (no se versiona) y completar. Ninguna clave privada va al frontend: todo `VITE_*` es público.
 
 | Parámetro | Propósito |
 |---|---|
-| NODE_ENV, PORT | Entorno y puerto de API; desarrollo en 3000 |
-| DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD | Conexión MySQL; base de pruebas separada |
-| SESSION_SECRET | Secreto aleatorio de al menos 32 bytes para sesiones |
-| OUTBOX_SECRET | Secreto separado para cifrar la cola de correo |
-| APP_URL | URL pública usada en enlaces; desarrollo `http://localhost:5173` |
-| VISIT_RADIUS_METERS | Radio inicial 5 metros |
-| SMTP_HOST, SMTP_PORT, SMTP_USER, SMTP_PASSWORD, SMTP_FROM | Correo; TLS según puerto/proveedor |
-| WEATHER_URL, WEATHER_API_KEY | Endpoint y credencial comerciales de clima |
-| MAP_TILE_URL | Fuente de teselas configurable en interfaz; ninguna clave secreta al navegador |
-| TRUST_PROXY | Activar solo según proxy real y documentado |
-| DEMO_PASSWORD | Contraseña de cuentas de prueba, nunca producción |
+| `NODE_ENV`, `PORT` | Entorno y puerto de API (3000 en desarrollo) |
+| `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` | MySQL del entorno |
+| `SESSION_SECRET`, `OUTBOX_SECRET` | Secretos distintos de ≥32 bytes |
+| `APP_URL` | URL pública para enlaces (`http://localhost:5173`; HTTPS en producción) |
+| `VISIT_RADIUS_METERS` | Radio de visitas, 5 m |
+| `SMTP_*` | Correo (opcional en desarrollo) |
+| `WEATHER_URL`, `WEATHER_API_KEY` | Open-Meteo comercial; sin clave el clima figura indisponible |
+| `TRUST_PROXY` | Cantidad exacta de proxies; 0 en desarrollo |
+| `DEMO_PASSWORD` | Contraseña de las cuentas del seed; prohibida en producción |
+| `VITE_TILE_URL` (frontend, `.env.local`) | Teselas del mapa; OpenStreetMap por defecto |
 
-Vite utilizará proxy `/api` a Express. En producción frontend y API compartirán origen HTTPS; archivos estáticos tendrán fallback a la SPA para rutas públicas y protegidas, sin ocultar errores de `/api`.
+`npm run check:env --prefix database` valida sin conectar.
 
-## Instalación y ejecución después de implementar
-
-Ejecutar desde la raíz. `npm ci` instala dependencias según lockfiles que la implementación generará; no ejecutar esta sección para aplicar únicamente documentos.
+## Instalación y ejecución
 
 ```bash
 npm ci --prefix database
 npm ci --prefix frontend/mi-proyecto-shadcn
-```
-
-Comandos previstos para migrar y cargar ejemplos, sin reiniciar tablas al arrancar:
-
-```bash
 npm run migrate --prefix database
 npm run seed --prefix database
 ```
+
+`seed` (solo `NODE_ENV=development` o `test`, idempotente) crea el piloto: dueños `duenio-a@bebederos-piloto.invalid` y `duenio-b@bebederos-piloto.invalid`, peón compartido `peon@bebederos-piloto.invalid` (contraseña `DEMO_PASSWORD`), 10 campos, 100 bebederos, 1.000 animales, lecturas iniciales con niveles 0/5/19/20/35/49/50/62/85/100 y posiciones GPS. `--no-samples` omite las muestras. API y worker nunca ejecutan el seed.
 
 En terminales separadas:
 
@@ -56,11 +47,18 @@ npm run worker --prefix database
 npm run dev --prefix frontend/mi-proyecto-shadcn
 ```
 
-El proceso worker debe registrar su último ciclo exitoso y retomar pendientes tras reinicio. El seed preparará dos dueños, un peón compartido, campos asignados y no asignados, bebederos, animales, tareas y lecturas fronterizas. Cuentas identificadas como prueba, con contraseña configurada; no introducir datos ficticios silenciosamente en producción.
+Abrir `http://localhost:5173`. El worker procesa agua/GPS/visitas/alertas cada 5 s aun sin usuarios conectados; las vistas consultan cada 10 s.
 
-## Verificación automática prevista
+Muestras manuales (solo desarrollo/pruebas; clave de fuente repetida con los mismos datos es idempotente):
 
-Los scripts siguientes se agregarán en implementación; no existen todavía por esta planificación:
+```bash
+npm run sample --prefix database -- water '{"sourceKey":"pilot-water-001","resourceId":1,"percentage":19,"measuredAt":"2026-10-14T03:00:00.000Z"}'
+npm run sample --prefix database -- animalPosition '{"sourceKey":"pilot-gps-001","resourceId":1,"latitude":-26,"longitude":-59,"measuredAt":"2026-10-14T03:00:00.000Z"}'
+```
+
+Salud: `GET /api/v1/health` (público, mínimo) y `npm run health --prefix database` (interno: último ciclo del worker; código 1 si está degradado). Logs: una línea JSON por evento, sin secretos.
+
+## Verificación automática
 
 ```bash
 npm test --prefix database
@@ -69,63 +67,33 @@ npm test --prefix frontend/mi-proyecto-shadcn
 npm run lint --prefix frontend/mi-proyecto-shadcn
 npm run build --prefix frontend/mi-proyecto-shadcn
 npm run test:e2e --prefix frontend/mi-proyecto-shadcn
+npm run load:pilot --prefix database -- --minutes=3
 ```
 
-Separar pruebas unitarias de integración; integración exige MySQL de pruebas y migraciones, nunca la base operativa. Controlar fecha/hora sin esperar tres horas reales; correo, clima y teselas sustituibles en pruebas de fallos.
+- Integración: `database/.env.test` (de `.env.test.example`) con base `*_test` y usuario exclusivo, nunca root ni el operativo. Las pruebas migran esa base y no borran filas.
+- E2E: API real en 3000 apuntando a una base `*_e2e`, más `E2E_FULLSTACK=1`, `E2E_DB_HOST/PORT/NAME/USER/PASSWORD` y `E2E_OUTBOX_SECRET` iguales a los de esa API. Playwright inicia Vite en 5173. Muchas cuentas seguidas desde la misma IP alcanzan el límite de identidad (30/15 min): reiniciar la API entre tandas o usar en local un lanzador con límites altos (`startServer({ limits })`).
+- `load:pilot`: 20 usuarios contra la API en `LOAD_BASE_URL` (por defecto `http://127.0.0.1:3000/api/v1`) con `DEMO_PASSWORD`; inicia su propio worker salvo `--no-worker`. Crea 17 peones de carga en el dominio del piloto.
 
-## Escenarios de aceptación
+## Validación ejecutada
 
-| Escenario | Pasos | Resultado verificable |
-|---|---|---|
-| Cuenta dueño | Registro público, verificación por enlace y login | Rol único dueño; sesión protegida; perfil no permite cambiar rol |
-| Invitación | Invitar a correo en dos campos, crear/iniciar cuenta peón, aceptar | Correo SMTP y acceso solo tras aceptación; repetir no duplica |
-| Vencimiento | Antes y exactamente a siete días; retirar otra invitación | Exactamente al plazo no acepta; retiro no concede acceso |
-| Varios dueños | Peón acepta invitaciones de dos dueños | Acumula accesos; cada dueño ve solo sus datos |
-| Aislamiento | Acceso directo a campo/animal/tarea/mapa ajeno | Denegación sin detalles; conteos autorizados correctos |
-| Revocación | Dejar tareas abiertas y quitar campo sin otro peón disponible | Acceso retirado inmediatamente; tareas sin responsable, estado/historial conservados; otros dueños intactos |
-| Agua | Muestras 0, 19, 20, 50, 51, 100 y valores inválidos | Categorías exactas; inválido no sustituye valor válido; nivel no editable |
-| Automatismo | Incorporar lectura/posición desde fixture/comando de desarrollo con vista abierta | Cambio visible sin recarga en ≤30 s; worker procesa aun sin usuarios |
-| Vigencia | Antes, al cumplirse y después del límite; cambiar límite de un campo | Vence solo después; alerta/fecha visibles; otros campos intactos |
-| GPS y visita | Fuera, exactamente 5 m, dentro repetido, salida/reentrada, rangos superpuestos | Una visita por entrada; más cercano/id; mismo campo; nunca afirmar que bebió |
-| Tareas | Crear, iniciar, enviar, rechazar con motivo, reenviar, aprobar | Flujo definido y notificaciones internas; motivo requerido |
-| Concurrencia | Dos acciones con igual versión y una revocación simultánea | Primer cambio válido; segunda acción 409; no escribir con acceso retirado |
-| Historial | Consultar cinco tipos, retirar recursos y revocar acceso | Fechas/referencias conservadas para dueño; peón revocado no accede |
-| Clima y teselas | Consultar clima real configurado y simular fallos | Cuatro datos o indisponibilidad; período diario visible; listas funcionan sin mapa base |
-| Correo fallido | SMTP falla, reiniciar worker, reintentar invitación | Pendiente/fallido visible; no concede acceso; no extiende siete días |
-| Pantallas | Recorridos a 375, 768 y 1280 px; teclado y modo oscuro | Sin scroll global horizontal; controles utilizables; diseño existente reconocible |
-| Recuperación | Cambiar contraseña mediante enlace y reutilizarlo | Token de un uso; sesiones antiguas invalidadas |
+| Escenario | Evidencia |
+|---|---|
+| Cuenta, verificación, recuperación, sesión | [US1](validation/US1.md) |
+| Campos, bebederos, animales/GPS/visitas/mapa | [US2](validation/US2.md), [US3](validation/US3.md), [US4](validation/US4.md) |
+| Invitaciones, equipo, revocación | [US5](validation/US5.md) |
+| Tareas y concurrencia | [US6](validation/US6.md) |
+| Alertas y vigencia | [US7](validation/US7.md) |
+| Clima | [US8](validation/US8.md) |
+| Historial y dashboards | [US9](validation/US9.md) |
+| Aislamiento SC-002 | [security.md](validation/security.md) |
+| Carga y vista abierta SC-003 | [performance.md](validation/performance.md) |
+| Reinicios, correo, copia/restauración | [recovery.md](validation/recovery.md) |
+| Táctil, teclado y responsive | [visual-review.md](validation/visual-review.md) |
+| Evaluación con usuarios | [usability.md](validation/usability.md) — **pendiente** |
 
-Referencia de payloads y errores: [contracts/api.md](contracts/api.md). Entidades y estados: [data-model.md](data-model.md). Presentación: [contracts/ui.md](contracts/ui.md).
+## Pendiente de configuración para operar
 
-## Carga piloto y puesta en operación
-
-Preparar 10 campos, 100 bebederos, 1.000 animales y 20 usuarios concurrentes con cuentas y accesos variados. Medir cambios visibles, atraso del worker, errores y duplicados durante entrada de muestras, consultas y acciones. Aceptar SC-003 solo si al menos 95% de cambios se refleja en ≤30 segundos, y comprobar los restantes SC con pruebas funcionales y usuarios de prueba.
-
-Antes de publicar: servicios de correo/clima operativos, teselas dentro de política, HTTPS y cookie Secure, procesos supervisados, migraciones sin sincronización destructiva, copia diaria y ensayo de restauración. Logs sin contraseñas/tokens; monitorizar último ciclo, errores SMTP/clima y solicitudes fallidas. Ninguna contratación, envío de correo real o despliegue se realiza en esta fase documental.
-
-## Implementado en fases 4–6
-
-Con una sesión verificada, usar `/farms`, `/troughs`, `/animals` y `/map`. Seleccionar campo para dar de alta recursos. Peones consultan sus campos asignados; la gestión de invitaciones de US5 sigue pendiente.
-
-La herramienta de muestras requiere `NODE_ENV=development` o `test` y la configuración de backend del entorno elegido. El JSON usa id numérico de recurso existente y fecha UTC de la fuente. Una clave repetida con los mismos datos es idempotente; reutilizarla con otros valores se rechaza. No ejecutarla contra producción.
-
-```bash
-npm run sample --prefix database -- water '{"sourceKey":"pilot-water-001","resourceId":1,"percentage":19,"measuredAt":"2026-10-14T03:00:00.000Z"}'
-npm run sample --prefix database -- animalPosition '{"sourceKey":"pilot-gps-001","resourceId":1,"latitude":-26,"longitude":-59,"measuredAt":"2026-10-14T03:00:00.000Z"}'
-npm run sample --prefix database -- troughPosition '{"sourceKey":"pilot-trough-gps-001","resourceId":1,"latitude":-26,"longitude":-59,"measuredAt":"2026-10-14T03:00:00.000Z"}'
-npm run worker --prefix database
-```
-
-El worker procesa agua/GPS cada cinco segundos y la interfaz consulta cada diez segundos en vistas visibles. Las muestras futuras se marcan sin actualizar datos actuales; las antiguas válidas quedan en historial. Las alertas de episodios y la consulta de historial se completan en US7/US9. La clave SMTP sigue opcional para estas verificaciones; no se envían correos reales. El mapa usa `VITE_TILE_URL` opcional y mantiene lista/fichas si fallan las teselas.
-
-Para repetir recorridos de las fases 4–6 usar `E2E_FULLSTACK=1` y las variables `E2E_DB_*`/`E2E_OUTBOX_SECRET` del apartado US1, con API y MySQL exclusivos de pruebas.
-
-## Fases 6–8 implementadas (2026-10-14)
-
-Animales/GPS/visitas/mapa, Equipo/invitaciones y Tareas ya están integrados en `/animals`, `/map`, `/team` (dueño) y `/tasks` (vista según rol). Aplican las tres migraciones existentes; estas fases no requieren recrear tablas. La API recibe la misma cola cifrada que identidad y el worker incorpora vencimiento de invitaciones. Configurar `APP_URL`, `OUTBOX_SECRET` y SMTP para envíos reales. Las pruebas capturan el enlace desde la cola y simulan el proveedor; no requieren enviar correo real.
-
-Para pruebas repetibles usar `database/.env.test` conforme al ejemplo y MySQL 8, con base/usuario exclusivos. Si MySQL tiene binlog habilitado, el administrador del servidor debe permitir la creación de los triggers de inmutabilidad al migrar; en el contenedor de pruebas se habilitó `log_bin_trust_function_creators`. No conceder privilegios globales al usuario de aplicación como sustituto.
-
-E2E requiere API real en 3000 y Vite en 5173, `E2E_FULLSTACK=1`, `E2E_DB_HOST/PORT/NAME/USER/PASSWORD` y `E2E_OUTBOX_SECRET` coincidentes con la API. Usar una base E2E separada de integración, con nombre terminado en `_e2e` o `_test`, para que los casos de cola no interfieran con el registro del navegador. Las variables `DB_*` de la API de pruebas deben apuntar a esa misma base aislada. Conservar los límites productivos por defecto; las ejecuciones repetidas de identidad pueden alcanzar 30 solicitudes por 15 minutos por IP.
-
-Evidencias: [US4](validation/US4.md), [US5](validation/US5.md), [US6](validation/US6.md). El MVP aún requiere las fases 9–12.
+- SMTP real y credencial comercial de Open-Meteo (no contratados).
+- Política y proveedor de teselas para el volumen real.
+- Servidor con HTTPS, PM2/systemd, copia diaria y ensayo de restauración según `deployment/README.md`.
+- Repetir la carga piloto en ese servidor y la evaluación con usuarios reales.

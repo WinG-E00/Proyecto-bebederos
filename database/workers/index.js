@@ -9,6 +9,9 @@ import { registerModels } from '../models/index.js'
 import { createMailService, smtpTransport } from '../services/mail.service.js'
 import { createMailWorker } from './mail.worker.js'
 import { createWorkerHealth } from '../services/workerHealth.service.js'
+import { createLogger, errorSummary, silentLogger } from '../services/logger.js'
+
+const HEARTBEAT_EVERY = 12
 
 export function createWorker({
   jobs,
@@ -16,25 +19,44 @@ export function createWorker({
   clock = { now: () => new Date() },
   intervalMs = 5000,
   wait = delay,
+  logger = silentLogger,
 }) {
   let loop
   let controller
   let activeCycle = false
-  async function cycle() {
+  let cycles = 0
+  // Cada trabajo puede ser una función o {name, run}; el nombre solo identifica logs.
+  const named = jobs.map((job, index) =>
+    typeof job === 'function' ? { name: job.name || `job${index + 1}`, run: job } : job,
+  )
+  async function cycle(lagMs = 0) {
     if (activeCycle) throw new Error('No se permiten ciclos solapados')
     activeCycle = true
     const started = clock.now().getTime()
     let errorCode = null
+    let processed = 0
     try {
-      for (const job of jobs) {
+      for (const job of named) {
         try {
-          const result = await job()
-          if (result?.errorCode) errorCode = result.errorCode
-        } catch {
+          const result = await job.run()
+          if (typeof result?.processed === 'number') processed += result.processed
+          else if (result?.processed === true) processed += 1
+          if (result?.errorCode) {
+            errorCode = result.errorCode
+            // SMTP/cola: solo código y estado, nunca destinatario, asunto ni payload.
+            logger.warn('worker.job_failed', { job: job.name, errorCode: result.errorCode, state: result.state })
+          }
+        } catch (error) {
           errorCode = 'JOB_FAILED'
+          logger.error('worker.job_failed', { job: job.name, errorCode, ...errorSummary(error) })
         }
       }
-      await health.record(clock.now().getTime() - started, errorCode)
+      const durationMs = clock.now().getTime() - started
+      await health.record(durationMs, errorCode)
+      cycles += 1
+      // Duración y atraso: siempre ante errores, lentitud o trabajo; si no, un latido por minuto.
+      if (errorCode || durationMs > intervalMs || lagMs > 1000 || processed || cycles % HEARTBEAT_EVERY === 1)
+        logger[errorCode || durationMs > intervalMs ? 'warn' : 'info']('worker.cycle', { durationMs, lagMs, processed, errorCode })
     } finally {
       activeCycle = false
     }
@@ -43,13 +65,16 @@ export function createWorker({
     if (loop) throw new Error('El worker ya está iniciado')
     controller = new AbortController()
     loop = (async () => {
+      let scheduled = clock.now().getTime()
       while (!controller.signal.aborted) {
         const started = clock.now().getTime()
         try {
-          await cycle()
-        } catch {
-          /* La siguiente vuelta reintenta salud/jobs sin imprimir secretos. */
+          await cycle(Math.max(0, started - scheduled))
+        } catch (error) {
+          // La siguiente vuelta reintenta salud/jobs sin imprimir secretos.
+          logger.error('worker.cycle_failed', errorSummary(error))
         }
+        scheduled = started + intervalMs
         const remaining = Math.max(0, intervalMs - (clock.now().getTime() - started))
         try {
           await wait(remaining, undefined, { signal: controller.signal })
@@ -70,7 +95,7 @@ export function createWorker({
   }
   return { start, stop, cycle }
 }
-export async function startWorker({ env = loadEnv() } = {}) {
+export async function startWorker({ env = loadEnv(), logger = silentLogger } = {}) {
   const db = createDatabase(env)
   let connection
   let locked = false
@@ -90,13 +115,19 @@ export async function startWorker({ env = loadEnv() } = {}) {
     const mailWorker = createMailWorker(db, { mail, transport, from: env.SMTP_FROM })
     const monitor = createMonitorWorker(db, { radius: env.VISIT_RADIUS_METERS })
     const worker = createWorker({
-      jobs: [createInvitationsWorker(db).process, mailWorker.processNext, monitor.process],
+      jobs: [
+        { name: 'invitations', run: createInvitationsWorker(db).process },
+        { name: 'mail', run: mailWorker.processNext },
+        { name: 'monitor', run: monitor.process },
+      ],
       health: createWorkerHealth(db),
+      logger,
     })
     const running = worker.start()
     let closing
     const close = () =>
       (closing ??= (async () => {
+        logger.info('worker.stopping')
         try {
           await worker.stop()
         } finally {
@@ -106,6 +137,7 @@ export async function startWorker({ env = loadEnv() } = {}) {
           } finally {
             await db.connectionManager.releaseConnection(connection)
             await db.close()
+            logger.info('worker.stopped')
           }
         }
       })())
@@ -118,26 +150,26 @@ export async function startWorker({ env = loadEnv() } = {}) {
   }
 }
 if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
-  startWorker()
+  const logger = createLogger({ base: { process: 'worker' } })
+  startWorker({ logger })
     .then(({ close, running }) => {
-      console.log('Worker iniciado; ciclo 5 s y trabajos implementados únicamente.')
-      running.catch(() => {
-        console.error('Worker detenido por fallo clasificado.')
+      logger.info('worker.started', { intervalMs: 5000 })
+      running.catch((error) => {
+        logger.error('worker.crashed', errorSummary(error))
         process.exitCode = 1
         close().catch(() => {})
       })
       for (const signal of ['SIGINT', 'SIGTERM'])
         process.once(signal, () => {
-          close().catch(() => {
-            console.error('No se pudo cerrar el worker correctamente.')
+          logger.info('worker.signal', { signal })
+          close().catch((error) => {
+            logger.error('worker.close_failed', errorSummary(error))
             process.exitCode = 1
           })
         })
     })
-    .catch(() => {
-      console.error(
-        'No se pudo iniciar el worker. Revisar configuración, esquema y procesos activos.',
-      )
+    .catch((error) => {
+      logger.error('worker.start_failed', { ...errorSummary(error), message: 'Revisar configuración, esquema y procesos activos.' })
       process.exitCode = 1
     })
 }

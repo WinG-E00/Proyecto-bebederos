@@ -8,8 +8,10 @@ import { registerModels } from './models/index.js'
 import { assertSchemaReady } from './scripts/migrate.js'
 import { createIdentityApi } from './router/auth.router.js'
 import { createMailService } from './services/mail.service.js'
+import { createHealthRouter } from './router/health.router.js'
+import { createLogger, errorSummary, silentLogger } from './services/logger.js'
 
-export async function startServer({ env = loadEnv(), limits } = {}) {
+export async function startServer({ env = loadEnv(), limits, logger = silentLogger } = {}) {
   const db = createDatabase(env)
   try {
     await db.authenticate()
@@ -24,9 +26,11 @@ export async function startServer({ env = loadEnv(), limits } = {}) {
     })
     const app = createApp({
       trustProxy: env.TRUST_PROXY,
+      logger,
       configure(app) {
         identity.install(app)
-        installMonitoringApi(app, { db, mail, appUrl: env.APP_URL, weatherProvider: createWeatherProvider({url:env.WEATHER_URL,apiKey:env.WEATHER_API_KEY}) })
+        app.use('/api/v1/health', createHealthRouter({ db, logger }))
+        installMonitoringApi(app, { db, mail, appUrl: env.APP_URL, logger, weatherProvider: createWeatherProvider({url:env.WEATHER_URL,apiKey:env.WEATHER_API_KEY}) })
       },
     })
     const server = await new Promise((resolve, reject) => {
@@ -38,11 +42,16 @@ export async function startServer({ env = loadEnv(), limits } = {}) {
     let closing
     const close = () =>
       (closing ??= (async () => {
-        await new Promise((resolve, reject) =>
+        logger.info('api.stopping')
+        // Deja de aceptar conexiones, cierra las inactivas y espera respuestas en curso.
+        const closed = new Promise((resolve, reject) =>
           server.close((error) => (error ? reject(error) : resolve())),
         )
+        server.closeIdleConnections?.()
+        await closed
         identity.close()
         await db.close()
+        logger.info('api.stopped')
       })())
     return { app, server, db, close }
   } catch (error) {
@@ -54,23 +63,21 @@ if (
   process.argv[1] &&
   import.meta.url === pathToFileURL(process.argv[1]).href
 ) {
-  startServer()
+  const logger = createLogger({ base: { process: 'api' } })
+  startServer({ logger })
     .then(({ close }) => {
-      console.log(
-        'API iniciada en loopback; esquema verificado, sin cambios automáticos.',
-      )
+      logger.info('api.started', { message: 'API en loopback; esquema verificado, sin cambios automáticos.' })
       for (const signal of ['SIGINT', 'SIGTERM'])
         process.once(signal, () => {
-          close().catch(() => {
-            console.error('No se pudo cerrar la API correctamente.')
+          logger.info('api.signal', { signal })
+          close().catch((error) => {
+            logger.error('api.close_failed', errorSummary(error))
             process.exitCode = 1
           })
         })
     })
-    .catch(() => {
-      console.error(
-        'No se pudo iniciar la API. Revisar configuración, MySQL y migraciones pendientes.',
-      )
+    .catch((error) => {
+      logger.error('api.start_failed', { ...errorSummary(error), message: 'Revisar configuración, MySQL y migraciones pendientes.' })
       process.exitCode = 1
     })
 }

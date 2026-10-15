@@ -13,7 +13,9 @@
     "seed": "node scripts/seed.js",
     "worker": "node workers/index.js",
     "start": "node server.js",
-    "sample": "node scripts/sample.js"
+    "sample": "node scripts/sample.js",
+    "health": "node scripts/health.js",
+    "load:pilot": "node scripts/load-pilot.js"
   },
   "keywords": [],
   "type": "module",

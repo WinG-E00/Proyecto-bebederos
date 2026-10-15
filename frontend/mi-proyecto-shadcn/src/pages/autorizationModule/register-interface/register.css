@@ -28,7 +28,7 @@
 .register__brand img { width: min(175px, 39vw); height: auto; display: block; }
 
 .register__navigation { display: flex; align-items: center; gap: 7px; }
-.register__navigation a { color: #eff9ed; padding: 9px 12px; border-radius: 8px; text-decoration: none; font-size: .9rem; font-weight: 560; transition: background-color .18s ease, color .18s ease; }
+.register__navigation a { min-height: 44px; display: inline-flex; align-items: center; color: #eff9ed; padding: 9px 12px; border-radius: 8px; text-decoration: none; font-size: .9rem; font-weight: 560; transition: background-color .18s ease, color .18s ease; }
 .register__navigation a:hover, .register__navigation a:focus-visible { background: rgb(255 255 255 / 13%); outline: none; }
 .register__navigation .register__active-link { color: var(--forest-950); background: #e2f0da; }
 
@@ -57,7 +57,7 @@
 .register select { height: 46px; padding: 0 13px; border: 1px solid #b8cabc; border-radius: 10px; appearance: auto; transition: border-color .18s ease, box-shadow .18s ease; }
 .register select:focus { border-color: var(--forest-700); box-shadow: 0 0 0 3px rgb(35 112 68 / 16%); }
 
-.register__visibility { display: grid; place-items: center; padding: 5px; border: 0; color: #53705b; background: transparent; cursor: pointer; border-radius: 6px; }
+.register__visibility { min-width: 44px; min-height: 44px; margin-right: -10px; display: grid; place-items: center; padding: 5px; border: 0; color: #53705b; background: transparent; cursor: pointer; border-radius: 6px; }
 .register__visibility:hover { color: var(--forest-800); background: var(--forest-100); }
 .register__visibility:focus-visible, .register__submit:focus-visible, .register a:focus-visible { outline: 3px solid #d3a865; outline-offset: 3px; }
 

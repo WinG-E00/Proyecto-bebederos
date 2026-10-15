@@ -27,7 +27,7 @@
 .login__brand { display: inline-flex; align-items: center; }
 .login__brand img { width: min(175px, 39vw); height: auto; display: block; }
 .login__navigation { display: flex; align-items: center; gap: 7px; }
-.login__navigation a { padding: 9px 12px; border-radius: 8px; color: #eff9ed; font-size: .9rem; font-weight: 560; text-decoration: none; transition: color .18s ease, background-color .18s ease; }
+.login__navigation a { min-height: 44px; display: inline-flex; align-items: center; padding: 9px 12px; border-radius: 8px; color: #eff9ed; font-size: .9rem; font-weight: 560; text-decoration: none; transition: color .18s ease, background-color .18s ease; }
 .login__navigation a:hover, .login__navigation a:focus-visible { outline: none; background: rgb(255 255 255 / 13%); }
 .login__navigation .login__active-link { color: var(--forest-950); background: #e2f0da; }
 
@@ -44,7 +44,7 @@
 .login__input-wrap:focus-within { border-color: var(--forest-700); box-shadow: 0 0 0 3px rgb(35 112 68 / 16%); }
 .login input { min-width: 0; width: 100%; padding: 0 10px; border: 0; outline: 0; color: #193124; background: transparent; font: inherit; font-weight: 450; caret-color: var(--forest-700); }
 .login input::placeholder { color: #849488; opacity: 1; }
-.login__visibility { display: grid; place-items: center; padding: 5px; border: 0; border-radius: 6px; color: #53705b; background: transparent; cursor: pointer; }
+.login__visibility { min-width: 44px; min-height: 44px; margin-right: -10px; display: grid; place-items: center; padding: 5px; border: 0; border-radius: 6px; color: #53705b; background: transparent; cursor: pointer; }
 .login__visibility:hover { color: var(--forest-800); background: var(--forest-100); }
 .login__visibility:focus-visible, .login__submit:focus-visible, .login a:focus-visible { outline: 3px solid #d3a865; outline-offset: 3px; }
 

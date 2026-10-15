@@ -1,3 +1,5 @@
+import { errorSummary, safePath } from '../services/logger.js'
+
 const messages = {
   401: 'Iniciá sesión para continuar.',
   403: 'No tenés permiso para esta acción.',
@@ -19,7 +21,7 @@ export class ApiError extends Error {
 export function notFound(_req, _res, next) {
   next(new ApiError(404, 'NOT_FOUND'))
 }
-export function errorHandler(error, _req, res, next) {
+export function errorHandler(error, req, res, next) {
   if (res.headersSent) return next(error)
   let status = 500
   let code = 'INTERNAL_ERROR'
@@ -38,6 +40,8 @@ export function errorHandler(error, _req, res, next) {
     status = 503
     code = 'DEPENDENCY_UNAVAILABLE'
   }
+  // Fallos internos y de dependencias: solo nombre/código, nunca mensaje, SQL ni stack.
+  if (status >= 500) req.app?.locals.logger?.error('http.error', { code, path: safePath(req.originalUrl), ...errorSummary(error) })
   const body = { code, message: error instanceof ApiError ? error.message : messages[status] }
   if (status === 422 && error instanceof ApiError && error.fields) body.fields = error.fields
   res.status(status).json(body)

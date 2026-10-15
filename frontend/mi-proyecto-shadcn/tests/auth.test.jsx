@@ -11,6 +11,7 @@ import { api } from '../src/services/api.js'
 const json = (data, status = 200) => new Response(JSON.stringify(data), { status, headers: { 'Content-Type': 'application/json' } })
 const empty = (status = 204) => new Response(null, { status })
 const owner = { id: 1, name: 'Ana Dueña', email: 'ana@test.invalid', role: 'owner' }
+const emptySummary = { farms: 0, animals: 0, troughs: 0, workers: 0, water: { low: 0, critical: 0, missing: 0 }, activeAlerts: 0, tasks: { pending: 0, inProgress: 0, validation: 0, total: 0 }, map: [] }
 const worker = { id: 2, name: 'Pedro Peón', email: 'pedro@test.invalid', role: 'worker' }
 
 // Servidor simulado: cada ruta responde según el estado de la prueba y registra lo enviado.
@@ -86,7 +87,12 @@ it('login usa la sesión del servidor, muestra el panel del rol y cerrar sesión
     'GET /auth/me': () => session ? json({ account: session }) : json({ code: 'UNAUTHENTICATED', message: '' }, 401),
     'POST /auth/login': () => { session = owner; return json({ account: owner, csrfToken: 'rotated' }) },
     'POST /auth/logout': () => { session = null; return empty() },
+    // El panel espera el resumen real del alcance antes de mostrarse.
+    'GET /dashboard': () => json(emptySummary),
+    'GET /farms': () => json({ items: [], total: 0, page: 1, limit: 20 }),
   })
+  // jsdom no implementa ResizeObserver, que usa el mapa del panel.
+  vi.stubGlobal('ResizeObserver', class { observe() {} disconnect() {} })
   const user = userEvent.setup()
   const client = renderApp('/login')
   await user.type(await screen.findByLabelText('Correo electrónico'), owner.email)

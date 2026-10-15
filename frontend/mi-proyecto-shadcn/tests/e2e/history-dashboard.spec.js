@@ -61,11 +61,11 @@ test('US9 paneles reales, cinco antecedentes, retiro y revocación',async({page,
   await worker.getByRole('button',{name:'Ver antecedentes'}).click()
   await expect(worker.getByRole('heading',{name:'Antecedentes de Animal historial'})).toBeVisible()
   await expect(worker.getByText('Visita estimada al bebedero #'+t.id+'. No acredita consumo.')).toBeVisible()
-  await page.evaluate(async({workerId,farmId,tId})=>{
+  await page.evaluate(async({workerId,tId})=>{
    const {csrfToken}=await(await fetch('/api/v1/auth/csrf')).json()
    await fetch(`/api/v1/team/${workerId}/assignments`,{method:'PUT',headers:{'Content-Type':'application/json','X-CSRF-Token':csrfToken},body:JSON.stringify({farmIds:[]})})
    await fetch(`/api/v1/troughs/${tId}`,{method:'DELETE',headers:{'X-CSRF-Token':csrfToken}})
-  },{workerId,farmId:f.id,tId:t.id})
+  },{workerId,tId:t.id})
   await expect(worker.getByRole('heading',{name:'Antecedentes de Animal historial'})).toHaveCount(0,{timeout:20000})
   await page.getByLabel('Tipo de evento').selectOption('water')
   await expect(page.getByText('Agua: 19% · Crítico')).toBeVisible()

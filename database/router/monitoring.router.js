@@ -11,7 +11,7 @@ import { createMapRouter } from './map.router.js'
 import { createTroughsRouter } from './troughs.router.js'
 import { createAccessService } from '../services/access.service.js'
 import { createFarmsRouter } from './farms.router.js'
-export function installMonitoringApi(app, { db, clock, mail, appUrl, weatherProvider }) {
+export function installMonitoringApi(app, { db, clock, mail, appUrl, weatherProvider, logger }) {
   const access = createAccessService(db)
   app.use('/api/v1', (req, res, next) => {
     res.set('Cache-Control', 'no-store')
@@ -19,7 +19,7 @@ export function installMonitoringApi(app, { db, clock, mail, appUrl, weatherProv
   })
   app.use('/api/v1/alerts', createAlertsRouter({ db, access, clock }))
   app.use('/api/v1/notifications', createNotificationsRouter({ db, access, clock }))
-  app.use('/api/v1', createWeatherRouter({ db, access, clock, provider: weatherProvider }))
+  app.use('/api/v1', createWeatherRouter({ db, access, clock, provider: weatherProvider, logger }))
   app.use('/api/v1', createHistoryRouter({ db, access }))
   app.use('/api/v1/dashboard', createDashboardRouter({ db, access }))
   app.use('/api/v1/team', createTeamRouter({ db, access, clock }))

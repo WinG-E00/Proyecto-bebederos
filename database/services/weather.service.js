@@ -1,5 +1,6 @@
 import { createAccessService } from './access.service.js'
 import { select, sqlDate } from './monitoringSql.service.js'
+import { errorSummary, silentLogger } from './logger.js'
 const codes = {0:'Despejado',1:'Mayormente despejado',2:'Parcialmente nublado',3:'Nublado',45:'Niebla',48:'Niebla con escarcha',51:'Llovizna leve',53:'Llovizna',55:'Llovizna intensa',56:'Llovizna helada',57:'Llovizna helada intensa',61:'Lluvia leve',63:'Lluvia',65:'Lluvia intensa',66:'Lluvia helada',67:'Lluvia helada intensa',71:'Nieve leve',73:'Nieve',75:'Nieve intensa',77:'Granos de nieve',80:'Chaparrones leves',81:'Chaparrones',82:'Chaparrones intensos',85:'Chubascos de nieve',86:'Chubascos de nieve intensos',95:'Tormenta',96:'Tormenta con granizo',99:'Tormenta con granizo intenso'}
 export const localDay=(date,timezone)=>new Intl.DateTimeFormat('en-CA',{timeZone:timezone,year:'numeric',month:'2-digit',day:'2-digit'}).format(date)
 export const cacheFresh=(fetchedAt,now)=>+now-new Date(fetchedAt)>=0 && +now-new Date(fetchedAt)<15*60000
@@ -23,7 +24,7 @@ export function createWeatherProvider({url='https://customer-api.open-meteo.com/
   finally{clearTimeout(timer)}
  }
 }
-export function createWeatherService(db,{clock={now:()=>new Date()},provider=createWeatherProvider()}={}) {
+export function createWeatherService(db,{clock={now:()=>new Date()},provider=createWeatherProvider(),logger=silentLogger}={}) {
  const access=createAccessService(db), pending=new Map()
  async function fetchField(farm) {
   const loc=location(farm), now=clock.now()
@@ -39,7 +40,10 @@ export function createWeatherService(db,{clock={now:()=>new Date()},provider=cre
     return true
    })
    return saved?{...data,fetchedAt:fetchedAt.toISOString(),stale:false}:{unavailable:true}
-  }catch{return previous?{...previous.data,fetchedAt:new Date(previous.fetchedAt).toISOString(),stale:true}:{unavailable:true}}
+  }catch(error){
+   // Timeout, HTTP o respuesta incompleta del proveedor: sin URL, clave ni cuerpo.
+   logger.warn('weather.refresh_failed',{farmId:farm.id,fallback:previous?'stale':'unavailable',...errorSummary(error)})
+   return previous?{...previous.data,fetchedAt:new Date(previous.fetchedAt).toISOString(),stale:true}:{unavailable:true}}
  }
  return {async get(account,id){
   const farm=await access.farm(account,id), key=JSON.stringify([farm.id,location(farm)])

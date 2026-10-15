@@ -1,160 +1,59 @@
-# Preparación del entorno y despliegue futuro
+# Operación y despliegue
 
-T001–T020 están implementadas. La API se construye en `app.js` y arranca en
-`server.js`, sin sincronizar ni recrear tablas. Las rutas legacy están deshabilitadas.
-Autenticación y rutas de negocio se incorporan en las historias siguientes.
-El worker independiente procesa correo encolado; agua/GPS/alertas todavía no están habilitados.
+Instrucciones para preparar un servidor. Nada aquí contrata servicios ni despliega
+automáticamente: cada paso lo ejecuta una persona con acceso al servidor.
 
-## Instalación reproducible
+## Componentes
 
-Desde la raíz, con Node 22 y npm:
+| Proceso | Comando | Función |
+|---|---|---|
+| API | `npm run start --prefix database` (`server.js`) | Express en `127.0.0.1:PORT`, sesiones SQL, `/api/v1` |
+| Worker | `npm run worker --prefix database` (`workers/index.js`) | Ciclo de 5 s: invitaciones, cola SMTP, agua/GPS/visitas/alertas/vigencia |
+| Frontend | `npm run build --prefix frontend/mi-proyecto-shadcn` | Archivos estáticos en `frontend/mi-proyecto-shadcn/dist` |
+| MySQL 8 | — | Base operativa con usuario limitado a esa base |
 
-```bash
-npm ci --prefix database
-npm ci --prefix frontend/mi-proyecto-shadcn
-npm test --prefix database
-npm test --prefix frontend/mi-proyecto-shadcn
-npm run test:e2e:list --prefix frontend/mi-proyecto-shadcn
-```
+API y worker verifican las tres migraciones al arrancar y no modifican el esquema.
+Ninguno ejecuta el seed: los datos del piloto solo se cargan con `npm run seed` en desarrollo/pruebas.
 
-Las dependencias existentes conservan sus versiones del lockfile. Las adiciones se
-fijan con versiones exactas. `migrate` y `worker` ya están implementados; `seed`
-sigue reservado para T133. `dev` inicia `server.js` con watch y `start` sin watch.
+## Requisitos previos a operar
 
-## Variables de entorno
+1. Node 22 y npm; `npm ci --prefix database` y `npm ci --prefix frontend/mi-proyecto-shadcn`.
+2. MySQL 8.0.16+; base y usuario exclusivos (DDL y TRIGGER para migrar; con binlog activo, el
+   administrador debe habilitar `log_bin_trust_function_creators` o migrar con un usuario con privilegio suficiente).
+3. `database/.env` fuera del repositorio, a partir de `database/.env.example`:
+   - `NODE_ENV=production`, `APP_URL=https://…` (la validación exige HTTPS en producción).
+   - `SESSION_SECRET` y `OUTBOX_SECRET` distintos, de 32 bytes o más
+     (`node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`).
+   - `TRUST_PROXY=1` si hay exactamente un proxy (Nginx) delante; nunca `true`.
+   - `SMTP_*` con TLS (465 implícito, 587 STARTTLS) y remitente; sin SMTP las invitaciones y
+     enlaces quedan en cola y fallan tras los reintentos.
+   - `WEATHER_URL=https://customer-api.open-meteo.com/v1/forecast` y `WEATHER_API_KEY` de la
+     modalidad comercial; sin clave el clima responde indisponible (no se usa el servicio gratuito).
+   - `DEMO_PASSWORD` vacío: está prohibido en producción.
+4. `npm run check:env --prefix database` (valida sin conectar) y `npm run migrate --prefix database`.
+5. Teselas del mapa: `VITE_TILE_URL` en `frontend/mi-proyecto-shadcn/.env.local` antes de compilar si
+   no se usa OpenStreetMap; respetar su política de uso y atribución. Todo `VITE_*` es público.
 
-Copiar `database/.env.example` a `.env` y completar secretos localmente. Ejecutar
-`npm run check:env --prefix database` valida sin abrir MySQL, SMTP ni clima.
-La configuración se valida al iniciar API, migrador y worker.
-No se reemplaza ningún `.env` local existente.
+## HTTPS y mismo origen
 
-- `DB_*`: credenciales backend; MySQL 8, nombres de base alfanuméricos con guion bajo.
-- `SESSION_SECRET` y `OUTBOX_SECRET`: valores diferentes, de al menos 32 bytes cada uno.
-  Generar cada uno con `node -e "console.log(require('crypto').randomBytes(32).toString('hex'))"`.
-- `PORT=3000`, `APP_URL=http://localhost:5173`, `VISIT_RADIUS_METERS=5` en desarrollo.
-- `TRUST_PROXY=0` por defecto. En producción fijar la cantidad exacta de proxies
-  confiables y bloquear acceso directo al servidor de API; no usar `true` indiscriminadamente.
-- `SMTP_*`: solo backend; puerto 465 usa TLS implícito y 587 debe usar STARTTLS
-  en el transporte implementado. Si se configura host, el remitente es obligatorio;
-  usuario y contraseña se configuran juntos cuando el proveedor exige autenticación.
-- `WEATHER_URL=https://customer-api.open-meteo.com/v1/forecast` y `WEATHER_API_KEY`:
-  solo backend. Configurar credencial comercial antes de operación real.
-- `DEMO_PASSWORD`: solo cuentas de pruebas/seed, mínimo 10 caracteres y máximo
-  72 bytes UTF-8; prohibido en producción.
-- `MAP_TILE_URL`: URL pública de referencia, sin credenciales ni query string.
-  La interfaz futura consumirá `VITE_MAP_TILE_URL` de un `.env.local` ignorado bajo
-  `frontend/mi-proyecto-shadcn/`. Todo `VITE_*` es público: nunca usarlo para SMTP,
-  sesiones, cola, base de datos o claves comerciales privadas. El mapa existente
-  mantiene por ahora su URL pública; su integración configurable corresponde a US4.
-
-## MySQL exclusivo para pruebas
-
-Copiar `database/.env.test.example` a `.env.test` y crear previamente una base que
-termine en `_test`, distinta de `DB_NAME`. Usar un usuario exclusivo con permisos
-solo sobre esa base, nunca root ni el usuario operativo. No hay fallback a `DB_*`.
-`tests/helpers/testDatabase.js` rechaza configuraciones inseguras antes de construir
-una conexión. Importarlo no abre conexiones ni ejecuta `sync`, DROP o DELETE.
-
-Las pruebas de integración usan `loadTestEnvironment()` y `migrateDatabase(db)`.
-Se ejecutan con `npm run test:integration --prefix database`, con configuración
-de pruebas completa. Verifican migraciones, restricciones, permisos, historial,
-correo durable y arranque/cierre sobre MySQL 8 real. Los fixtures tienen identificadores
-únicos por ejecución y no borran hechos históricos. Usar una base descartable para
-evitar acumular fixtures indefinidamente. La fase 2 utilizó una base exclusiva
-en un contenedor MySQL 8.4, nunca la conexión del `.env` operativo.
-
-## Migraciones y procesos disponibles
-
-Crear previamente una base MySQL 8.0.16+ de la familia 8, con usuario limitado a ella,
-completar `.env` y ejecutar desde la raíz:
-
-```bash
-npm run check:env --prefix database
-npm run migrate --prefix database
-npm run start --prefix database
-```
-
-En otra terminal: `npm run worker --prefix database`.
-API y worker verifican las tres versiones en `SchemaMigrations` y no modifican el
-esquema al arrancar. El migrador usa Umzug con almacenamiento de versiones SQL
-explícito, un bloqueo asesor por base y DDL no destructivo. Las tablas ya creadas
-por una ejecución interrumpida se conservan y se retoma la misma versión. No hay
-comando de reset ni rollback destructivo: los cambios posteriores exigen otra migración.
-
-La cuenta que ejecuta migraciones necesita permisos DDL y TRIGGER en esa base.
-Con binlog habilitado, MySQL puede exigir configuración administrativa adicional
-para crear triggers. El administrador debe resolverlo antes de migrar; el script
-no cambia variables globales. En el contenedor aislado se habilitó
-`log_bin_trust_function_creators` exclusivamente para las pruebas.
-
-El esquema usa nombres de tablas/campos en inglés (`Accounts`, `Farms`,
-`Assignments`, etc.), estados de negocio en español y tipos internos documentados
-en las migraciones. `Sessions` tiene `sid`, `data`, `expires`, `createdAt`, `updatedAt`
-compatibles con connect-session-sequelize; la sesión se conectará en US1.
-Los modelos compartidos son fábricas registradas sobre una instancia explícita de
-Sequelize. Los modelos/controladores legacy no se importan por el arranque nuevo.
-
-La cola solo admite invitación, verificación y recuperación vinculadas a un token
-vigente. Exige la transacción del cambio de identidad, usa AES-256-GCM y secreto
-separado, y elimina el payload al enviar o vencer; las referencias pendientes
-se revalidan antes de cada envío y se retiran si ya no son válidas. Un intento inicial
-y hasta tres reintentos esperan 1, 2 y 4 minutos. No almacena errores SMTP privados.
-El bloqueo de fila evita doble envío concurrente; SMTP y MySQL no comparten una
-transacción: un crash después de aceptación SMTP y antes del commit puede reenviar.
-La aceptación SMTP no acredita entrega al buzón.
-
-El worker tiene ciclo de 5 segundos, no solapa ciclos, mantiene salud persistente,
-retoma la cola al reiniciar y usa un bloqueo asesor para impedir dos instancias
-sobre la misma base. SIGINT/SIGTERM esperan el trabajo en curso y cierran conexiones.
-La salud no sustituye la futura marcación transaccional de cada muestra.
-
-## Playwright y referencia visual
-
-Instalar Chromium y ejecutar desde la raíz:
-
-```bash
-npm exec --prefix frontend/mi-proyecto-shadcn -- playwright install chromium
-npm run test:e2e --prefix frontend/mi-proyecto-shadcn
-npm run capture:baseline --prefix frontend/mi-proyecto-shadcn
-```
-
-Si se instala en otro directorio, usar el mismo `PLAYWRIGHT_BROWSERS_PATH` al instalar
-y ejecutar. La verificación inicial usó `/tmp/bebederos-playwright`.
-Playwright inicia solo Vite, en 127.0.0.1:5173, y rechaza un puerto ocupado.
-Las capturas usan los componentes originales mediante `/tests/baseline/index.html`;
-no son rutas de producto ni prueban login. Las teselas se sustituyen por una imagen
-local y el reloj se fija. Los proyectos cubren 375, 768 y 1280 px. Las cuentas futuras
-usan `@test.invalid` y nombres «de prueba E2E» en `tests/e2e/helpers.js`; no se crean
-cuentas reales ni se hace seed al arrancar estas pruebas.
-
-## Proxy de desarrollo
-
-Vite reenvía `/api` a `http://127.0.0.1:3000`, conservando ruta y código HTTP.
-El cliente compartido `src/services/api.js` usa rutas relativas `/api/v1/...`; ningún error 401/404/500 de
-API debe convertirse en HTML de la SPA. Las URL absolutas de login/registro legacy
-se adaptarán en US1. Las pruebas de proxy usan un servidor HTTP controlado de prueba.
-
-## Mismo origen HTTPS en producción
-
-Ejemplo de Nginx para adaptar cuando se implemente el despliegue de T139. Frontend y
-API comparten `https://bebederos.example`; certificados y DNS se configuran entonces.
-La API escucha solo en loopback y Express confía únicamente en el proxy configurado.
+Frontend y API comparten dominio. La API escucha solo en loopback; Nginx termina TLS,
+sirve `dist/` y reenvía `/api/` sin reescribir rutas ni convertir errores en HTML.
 
 ```nginx
 server {
-    listen 443 ssl;
+    listen 80;
     server_name bebederos.example;
-    ssl_certificate /ruta/al/certificado.pem;
-    ssl_certificate_key /ruta/a/la/clave.pem;
-    root /ruta/frontend/dist;
+    return 301 https://$host$request_uri;
+}
+server {
+    listen 443 ssl;
+    http2 on;
+    server_name bebederos.example;
+    ssl_certificate /etc/letsencrypt/live/bebederos.example/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/bebederos.example/privkey.pem;
+    add_header Strict-Transport-Security "max-age=31536000" always;
+    root /srv/bebederos/frontend/mi-proyecto-shadcn/dist;
 
-    location = /api {
-        proxy_pass http://127.0.0.1:3000;
-        proxy_set_header Host $host;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_set_header X-Forwarded-For $remote_addr;
-        proxy_intercept_errors off;
-    }
     location ^~ /api/ {
         proxy_pass http://127.0.0.1:3000;
         proxy_set_header Host $host;
@@ -162,18 +61,82 @@ server {
         proxy_set_header X-Forwarded-For $remote_addr;
         proxy_intercept_errors off;
     }
-    # No publicar archivos del harness de pruebas o configuraciones.
+    # El harness de pruebas no se publica.
+    location ^~ /tests/ { return 404; }
     location / {
         try_files $uri $uri/ /index.html;
     }
 }
 ```
 
-Redirigir HTTP a HTTPS en un bloque separado. No agregar `error_page` que redirija
-errores API a `/index.html`. Conservar cookies y `X-CSRF-Token`; las cookies Secure
-y las rutas protegidas se implementan en US1. Antes de publicar se requieren también
-supervisión de API/worker, migraciones, backups y restauración de T139.
+Con `NODE_ENV=production` la cookie de sesión es `Secure`, `HttpOnly`, `SameSite=Lax` y dura 24 h.
+Toda escritura exige `X-CSRF-Token`. Límites: 600 solicitudes/min por IP y 30 cada 15 min en identidad.
+El firewall debe bloquear el puerto de la API y de MySQL desde fuera.
 
-Referencias de configuración: [Vitest](https://vitest.dev/config/file),
-[Playwright webServer](https://playwright.dev/docs/test-webserver) y
-[proyectos Playwright](https://playwright.dev/docs/test-projects).
+## Supervisión de procesos
+
+`deployment/processes.config.cjs` define API y worker para PM2:
+
+```bash
+npm install -g pm2
+pm2 start database/deployment/processes.config.cjs
+pm2 save && pm2 startup   # reinicio automático al arrancar el servidor
+```
+
+Una sola instancia de cada uno. El worker toma un bloqueo MySQL y rechaza una segunda instancia.
+`SIGTERM` cierra limpio: la API deja de aceptar conexiones y espera respuestas en curso; el worker
+termina el ciclo, libera el bloqueo y cierra conexiones. `kill_timeout` da 15/30 s antes de forzar.
+Equivalente con systemd: un servicio por proceso, `Restart=always`, `KillSignal=SIGTERM`,
+`TimeoutStopSec=30`, `EnvironmentFile` apuntando a `database/.env` con permisos 600.
+
+## Salud y logs
+
+- `GET /api/v1/health`: público y mínimo, `{status, database, time}`; 503 si MySQL no responde.
+- `npm run health --prefix database`: monitoreo interno (cron/supervisor). Imprime JSON con el último
+  ciclo exitoso, duración y código de error del worker; sale con código 1 si la base no responde, el
+  worker lleva más de 15 s sin un ciclo exitoso o registró error. Ejemplo cada minuto:
+  `* * * * * cd /srv/bebederos && npm run --silent health --prefix database || logger -t bebederos "salud degradada"`.
+- API y worker escriben una línea JSON por evento en stdout (`time`, `level`, `event`, `process`):
+  `http.request` (método, ruta sin query, estado, duración), `http.error` (solo nombre/código),
+  `worker.cycle` (duración, atraso, procesados; con errores o lentitud y un latido por minuto),
+  `worker.job_failed` (p. ej. `SMTP_FAILED`), `weather.refresh_failed`, inicio y cierre.
+  Se redactan contraseñas, tokens, cookies, CSRF, payload de correo, credenciales y correos.
+  Rotar con `pm2 install pm2-logrotate` o logrotate.
+
+## Copia diaria y restauración
+
+`database/scripts/backup.sh` usa `mysqldump --single-transaction` (consistente, sin bloquear) con
+triggers, comprime, verifica el archivo y aplica retención (14 días por defecto). Credenciales en un
+archivo de opciones MySQL con permisos 600 (`MYSQL_DEFAULTS_FILE`), nunca en argumentos.
+
+```bash
+# /etc/cron.d/bebederos-backup
+0 3 * * * bebederos MYSQL_DEFAULTS_FILE=/etc/bebederos/backup.cnf DB_NAME=bebederos BACKUP_DIR=/var/backups/bebederos /srv/bebederos/database/scripts/backup.sh >> /var/log/bebederos/backup.log 2>&1
+```
+
+Copiar las copias fuera del servidor (otro disco o almacenamiento externo). Ensayo de restauración,
+al menos mensual y antes de operar, sobre una base vacía distinta de la operativa:
+
+```bash
+mysql --defaults-extra-file=/etc/bebederos/backup.cnf -e "CREATE DATABASE bebederos_restore"
+RESTORE_FILE=/var/backups/bebederos/bebederos-AAAAmmdd-HHMMSS.sql.gz RESTORE_DB=bebederos_restore \
+  MYSQL_DEFAULTS_FILE=/etc/bebederos/backup.cnf DB_NAME=bebederos database/scripts/backup.sh restore
+```
+
+El script rechaza restaurar sobre `DB_NAME` o sobre una base con tablas. Comparar cantidades por
+tabla y triggers; para recuperar la operación, detener API y worker, apuntar `DB_NAME` a la base
+restaurada, ejecutar `npm run migrate` (no aplica nada si está al día) y reiniciar. Las muestras
+reenviadas por la fuente tras la restauración se deduplican por `sourceKey`; las ya procesadas no se
+reprocesan. Ensayo ejecutado el 2026-10-14 en MySQL 8.3 de pruebas: ver
+`specs/001-monitoreo-bebederos/validation/recovery.md`.
+
+## Desarrollo y pruebas
+
+- Proxy de Vite: `/api` → `http://127.0.0.1:3000`, sin reescritura.
+- Pruebas de integración: `database/.env.test` (copiar de `.env.test.example`) con base que termine
+  en `_test` y usuario exclusivo (nunca root ni el operativo); `npm run test:integration --prefix database`.
+- E2E con API real: `E2E_FULLSTACK=1` y variables `E2E_DB_*`/`E2E_OUTBOX_SECRET` de una base `_e2e`;
+  API en 3000 y `npm run test:e2e --prefix frontend/mi-proyecto-shadcn`.
+- Seed del piloto (2 dueños, peón compartido, 10 campos, 100 bebederos, 1.000 animales):
+  `DEMO_PASSWORD=… npm run seed --prefix database` con `NODE_ENV=development`. Idempotente.
+- Carga piloto: `npm run load:pilot --prefix database` (ver `scripts/load-pilot.js`).
