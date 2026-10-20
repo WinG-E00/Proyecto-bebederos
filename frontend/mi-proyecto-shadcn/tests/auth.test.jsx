@@ -98,7 +98,7 @@ it('login usa la sesión del servidor, muestra el panel del rol y cerrar sesión
   await user.type(await screen.findByLabelText('Correo electrónico'), owner.email)
   await user.type(screen.getByLabelText('Contraseña'), 'clave-segura-10')
   await user.click(screen.getByRole('button', { name: 'Iniciar sesión' }))
-  expect(await screen.findByRole('heading', { name: 'Dueño' })).toBeVisible()
+  expect(await screen.findByRole('heading', { name: 'Panel del campo' })).toBeVisible()
   expect(screen.getByText('Ana Dueña · Dueño')).toBeVisible()
   client.setQueryData(['account', 1, 'farm', 'all', 'farms'], [{ id: 9 }])
   await user.click(screen.getByRole('button', { name: 'Cerrar sesión' }))

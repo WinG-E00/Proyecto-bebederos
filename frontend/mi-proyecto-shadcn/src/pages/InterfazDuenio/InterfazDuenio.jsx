@@ -11,7 +11,7 @@ const navigation = [
   { id: 'alertas', label: 'Alertas', Icon: Bell },
 ]
 
-function InterfazDuenio({ datos = {}, onNavigate, children }) {
+function InterfazDuenio({ datos = {}, onNavigate, children, compact = false }) {
   const sectionId = useId()
   const [activeSection, setActiveSection] = useState('inicio')
   const [darkMode, setDarkMode] = useState(() => {
@@ -43,7 +43,7 @@ function InterfazDuenio({ datos = {}, onNavigate, children }) {
 
   return (
     <div className={`interfaz-duenio${darkMode ? ' interfaz-duenio--dark' : ''}`}>
-      <aside className="interfaz-duenio__sidebar">
+      {!compact && <aside className="interfaz-duenio__sidebar">
         <a className="interfaz-duenio__brand" href="/" aria-label="Proyecto Bebederos, inicio">
           <img src={logo} alt="Proyecto Bebederos" />
         </a>
@@ -60,12 +60,12 @@ function InterfazDuenio({ datos = {}, onNavigate, children }) {
             </a>
           ))}
         </nav>
-      </aside>
+      </aside>}
 
       <main className="interfaz-duenio__main" id={`${sectionId}-inicio`}>
         <header className="interfaz-duenio__header">
           <div>
-            <h1>Dueño</h1>
+            <h1>{compact ? 'Panel del campo' : 'Dueño'}</h1>
             <p>Resumen general</p>
           </div>
           <button
@@ -80,7 +80,7 @@ function InterfazDuenio({ datos = {}, onNavigate, children }) {
         </header>
 
 
-        <div className="interfaz-duenio__dashboard">
+        {!compact && <div className="interfaz-duenio__dashboard">
           <section className="interfaz-duenio__box interfaz-duenio__status" aria-labelledby={`${sectionId}-estado`}>
             <h2 id={`${sectionId}-estado`}>Estado del sistema</h2>
             <p>{estado || 'Estado no disponible'}</p>
@@ -123,7 +123,7 @@ function InterfazDuenio({ datos = {}, onNavigate, children }) {
               <ul>{actividad.map((evento, index) => <li key={evento.id}>{index === 0 ? <CircleCheck size={17} aria-hidden="true" /> : <Wrench size={17} aria-hidden="true" />}<span>{evento.mensaje}</span></li>)}</ul>
             ) : <p>No hay actividad reciente.</p>}
           </section>
-        </div>
+        </div>}
         {children}
       </main>
     </div>

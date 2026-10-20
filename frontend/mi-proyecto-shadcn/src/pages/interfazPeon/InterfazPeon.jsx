@@ -16,6 +16,7 @@ import {
 import MapaBebederos from './MapaBebederos'
 import { formatDate } from '../../lib/dates.js'
 import './InterfazPeon.css'
+import PanelSection from '../../components/PanelSection.jsx'
 
 // Limita el nivel visible a 0–100; sin medición devuelve null para no mostrar ceros inventados.
 function porcentajeSeguro(valor) {
@@ -34,6 +35,7 @@ function InterfazPeon({
   farmId,
   center,
   children,
+  compact = false,
 }) {
   const titleId = useId()
   const [darkMode, setDarkMode] = useState(false)
@@ -142,7 +144,7 @@ function InterfazPeon({
           </span>
         </header>
 
-        <section className="interfaz-peon__stats" aria-label="Resumen de monitoreo">
+        {!compact && <section className="interfaz-peon__stats" aria-label="Resumen de monitoreo">
           {stats.map(({ label, value, detail, Icon, color }) => (
             <div className="interfaz-peon__stat" key={label}>
               <span className={`interfaz-peon__stat-icon interfaz-peon__stat-icon--${color}`}>
@@ -155,7 +157,7 @@ function InterfazPeon({
               </div>
             </div>
           ))}
-        </section>
+        </section>}
 
         {cargando && (
           <p role="status" className="interfaz-peon__notice">
@@ -168,6 +170,8 @@ function InterfazPeon({
           </p>
         )}
 
+        {compact && children}
+        <PanelSection enabled={compact} title="Mediciones de bebederos" description={`${records.length} registros disponibles · Consultar niveles y telemetría`} icon={Waves}>
         <section aria-labelledby={titleId}>
           <h2 className="interfaz-peon__section-title" id={titleId}>
             <Waves aria-hidden="true" /> Bebederos en Registro
@@ -258,8 +262,9 @@ function InterfazPeon({
           </div>
         </section>
 
-        {children}
-        <section className="interfaz-peon__map-card" aria-labelledby={`${titleId}-map`}>
+        </PanelSection>
+        {!compact && children}
+        {!compact && <section className="interfaz-peon__map-card" aria-labelledby={`${titleId}-map`}>
           <div className="interfaz-peon__map-heading">
             <div>
               <h2 id={`${titleId}-map`}>
@@ -271,7 +276,7 @@ function InterfazPeon({
             <span className="interfaz-peon__system">Ubicaciones registradas</span>
           </div>
           <MapaBebederos farmId={farmId} center={center} />
-        </section>
+        </section>}
       </main>
 
       <footer className="interfaz-peon__footer">

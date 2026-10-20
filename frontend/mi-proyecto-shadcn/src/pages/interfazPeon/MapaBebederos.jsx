@@ -5,12 +5,15 @@ import 'leaflet/dist/leaflet.css'
 import { useMap } from '../../hooks/useMap.js'
 import MapFallback from '../../components/MapFallback.jsx'
 import AsyncState from '../../components/AsyncState.jsx'
+import { List, Map } from 'lucide-react'
 const valid = (m) =>
   Number.isFinite(m.latitude) &&
   Number.isFinite(m.longitude) &&
   Math.abs(m.latitude) <= 90 &&
   Math.abs(m.longitude) <= 180
-export default function MapaBebederos({ farmId = '', center }) {
+export default function MapaBebederos({ farmId = '', center, compact = false }) {
+  const [view, setView] = useState('map')
+  const showMap = !compact || view === 'map'
   const query = useMap(farmId)
   const positions = (query.data ?? []).filter(valid)
   const container = useRef(null)
@@ -20,6 +23,7 @@ export default function MapaBebederos({ farmId = '', center }) {
   const [tileError, setTileError] = useState(false)
   const navigate = useNavigate()
   useEffect(() => {
+    if (!showMap) return
     const instance = L.map(container.current).setView([0, 0], 2)
     map.current = instance
     layer.current = L.layerGroup().addTo(instance)
@@ -41,7 +45,7 @@ export default function MapaBebederos({ farmId = '', center }) {
       layer.current = null
       centered.current = null
     }
-  }, [])
+  }, [showMap])
   useEffect(() => {
     if (!layer.current) return
     layer.current.clearLayers()
@@ -67,7 +71,7 @@ export default function MapaBebederos({ farmId = '', center }) {
       }).addTo(layer.current)
       marker.bindPopup(popup)
     }
-  }, [query.data, navigate])
+  }, [query.data, navigate, showMap])
   useEffect(() => {
     if (!map.current || query.data === undefined || centered.current === farmId) return
     if (center && valid(center)) {
@@ -78,18 +82,21 @@ export default function MapaBebederos({ farmId = '', center }) {
       else map.current.setView([0, 0], 2)
     }
     centered.current = farmId
-  }, [farmId, center, query.data])
+  }, [farmId, center, query.data, showMap])
   return (
     <>
+      {compact && <div className="flex gap-2 mb-4" role="group" aria-label="Vista de ubicaciones">
+        {[[Map, 'map', 'Mapa'], [List, 'list', 'Lista']].map(([Icon, value, label]) => <button key={value} type="button" aria-pressed={view === value} className="inline-flex min-h-11 items-center gap-2 rounded-lg border px-4 aria-pressed:bg-[#dcecdf] aria-pressed:text-[#153e26]" onClick={() => setView(value)}><Icon size={18} aria-hidden="true" />{label}</button>)}
+      </div>}
       <AsyncState loading={query.isPending} error={query.error} onRetry={() => query.refetch()} />
       {query.stale && <p role="status">Sin conexión. Ubicaciones anteriores.</p>}
-      <div
+      {showMap && <div
         ref={container}
         role="region"
         aria-label="Mapa de animales y bebederos"
-        style={{ height: 400, width: '100%', position: 'relative', zIndex: 0 }}
-      />
-      {!query.denied && <MapFallback markers={positions} tileError={tileError} />}
+        style={{ height: compact ? 280 : 400, width: '100%', position: 'relative', zIndex: 0 }}
+      />}
+      {!query.denied && (!compact || view === 'list' || tileError) && <MapFallback markers={positions} tileError={tileError} compact={compact} />}
     </>
   )
 }

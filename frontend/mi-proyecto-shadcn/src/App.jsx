@@ -1,7 +1,6 @@
 import Historial from '@/pages/Historial/Historial.jsx'
 import DashboardDetails from '@/components/DashboardDetails.jsx'
 import FarmSelector from '@/components/FarmSelector.jsx'
-import MapaBebederos from '@/pages/interfazPeon/MapaBebederos.jsx'
 import { useFarmScope } from '@/hooks/useFarmScope.js'
 import { useDashboard } from '@/hooks/useDashboard.js'
 import { useAlerts } from '@/hooks/useAlerts.js'
@@ -80,6 +79,7 @@ function WorkerPanel({scope,summary,children}) {
   const troughs = useTroughs(scope.farmId)
   return (
     <InterfazPeon
+      compact
       usuario={account.name}
       establecimiento={scope.selected?.name || 'Campos asignados'}
       bebederos={(troughs.data?.items ?? []).map((t) => ({...t,porcentaje:t.waterLevel,ubicacion:t.name}))}
@@ -98,11 +98,10 @@ function WorkerPanel({scope,summary,children}) {
 }
 
 function Dashboard() {
-  const { account } = useAuth(), scope=useFarmScope(), navigate=useNavigate()
+  const { account } = useAuth(), scope=useFarmScope()
   const query=useDashboard(scope.farmId), alerts=useAlerts(scope.farmId), tasks=useTasks({farmId:scope.farmId})
   const data=query.data
-  const details=data?<DashboardDetails data={data} scope={scope}/>:null
-  function go(destination){const path={inicio:'dashboard',bebederos:'troughs',peones:'team',alertas:'alerts'}[destination];navigate(`/${path}${scope.farmId?`?farmId=${scope.farmId}`:''}`)}
+  const details=data?<DashboardDetails data={data} scope={scope} alerts={alerts.data?.items ?? []} activity={tasks.data?.items ?? []}/>:null
   return <>
     <SessionBar />
     <AppNavigation scope={scope} showProfile={false} />
@@ -112,15 +111,9 @@ function Dashboard() {
       {query.stale&&<p role="status">Sin conexión. Resumen anterior.</p>}
       {scope.invalidScope&&<p>No tenés acceso al establecimiento seleccionado.</p>}
     </div>
-    {data&&!scope.invalidScope&&(account.role==='owner'?<InterfazDuenio onNavigate={go} datos={{
-      estado:data.activeAlerts?`${data.activeAlerts} alertas activas`:data.troughs||data.animals?'Sin alertas activas registradas':'Sin recursos registrados',
-      estadoOptimo:data.activeAlerts===0,totalBebederos:data.troughs,totalPeones:data.workers,totalAlertas:data.activeAlerts,
-      alertas:(alerts.data?.items??[]).slice(0,5).map(a=>({id:a.id,mensaje:`${a.message} · Recurso #${a.resourceId}`})),
-      actividad:(tasks.data?.items??[]).slice(0,5).map(t=>({id:t.id,mensaje:`${t.title} · ${t.state} · ${t.workerName??'Sin asignar'}`})),
-    }}>
+    {data&&!scope.invalidScope&&(account.role==='owner'?<InterfazDuenio compact>
       <AsyncState loading={alerts.isPending||tasks.isPending} error={alerts.error||tasks.error} onRetry={()=>{alerts.refetch();tasks.refetch()}}/>
       {details}
-      <section className="rounded-xl border p-4 mt-6"><h2 className="text-xl font-bold mb-3">Mapa de animales y bebederos</h2><MapaBebederos farmId={scope.farmId} center={scope.selected}/></section>
     </InterfazDuenio>:<WorkerPanel scope={scope} summary={data}>{details}</WorkerPanel>)}
   </>
 }
