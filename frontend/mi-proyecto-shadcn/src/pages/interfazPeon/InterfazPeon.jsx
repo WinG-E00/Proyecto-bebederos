@@ -83,7 +83,8 @@ function InterfazPeon({
 
   return (
     <div className={`interfaz-peon${darkMode ? ' interfaz-peon--dark' : ''}`}>
-      <header className="interfaz-peon__navbar">
+      {!compact && (
+        <header className="interfaz-peon__navbar">
         <div className="interfaz-peon__nav-container">
           <a href="/" className="interfaz-peon__brand">
             <span className="interfaz-peon__logo">
@@ -125,6 +126,7 @@ function InterfazPeon({
           </div>
         </div>
       </header>
+      )}
 
       <main className="interfaz-peon__main" aria-busy={cargando}>
         <header className="interfaz-peon__heading">
@@ -185,10 +187,12 @@ function InterfazPeon({
                 texto: b.waterCategory ?? 'Sin medición',
                 clase:
                   b.waterCategory === 'Crítico'
-                    ? 'riesgo'
+                    ? 'rojo'
                     : b.waterCategory === 'Bajo'
-                      ? 'atencion'
-                      : 'normal',
+                      ? 'amarillo'
+                      : b.waterCategory === 'Normal'
+                        ? 'verde'
+                        : 'sin-datos',
               }
               const level = porcentajeSeguro(b.porcentaje)
               return (

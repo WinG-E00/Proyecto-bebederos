@@ -18,15 +18,41 @@ function PanelWeather({ farms }) {
 export default function DashboardDetails({ data, scope, alerts = [], activity = [] }) {
  const farms = scope.selected ? [scope.selected] : (scope.farms.data?.items ?? [])
  const suffix = scope.farmId ? `?farmId=${scope.farmId}` : ''
- return <div className="dashboard-details mt-6">
-  <section className="rounded-xl border p-4 space-y-3" aria-label="Necesita atención">
-   <h2 className="text-lg font-semibold flex items-center gap-2"><Bell size={20} aria-hidden="true" />Necesita atención</h2>
-   <div className="flex flex-wrap gap-x-6 gap-y-2">
-    <Link className="inline-flex min-h-11 items-center gap-2 underline" to={`/alerts${suffix}`}>Alertas activas: {data.activeAlerts}</Link>
-    <Link className="inline-flex min-h-11 items-center gap-2 underline" to={`/troughs${suffix}`}><Droplets size={18} aria-hidden="true" />Agua crítica: {data.water.critical} · Baja: {data.water.low} · Sin medición: {data.water.missing}</Link>
+ const hasIssues = data.activeAlerts > 0 || data.water.critical > 0 || data.water.low > 0 || data.water.missing > 0
+ return <div className="dashboard-details mt-6 space-y-4">
+  <section
+    className={`rounded-2xl border p-5 space-y-3.5 shadow-xs transition ${
+      hasIssues
+        ? 'border-amber-300/80 bg-amber-50/50 dark:bg-amber-950/20 dark:border-amber-900/60'
+        : 'border-emerald-200/80 bg-emerald-50/40 dark:bg-emerald-950/20 dark:border-emerald-900/50'
+    }`}
+    aria-label="Necesita atención"
+  >
+   <h2 className="text-lg font-bold flex items-center gap-2 text-foreground">
+     <Bell className={hasIssues ? 'text-amber-600 dark:text-amber-400' : 'text-emerald-600 dark:text-emerald-400'} size={20} aria-hidden="true" />
+     Necesita atención
+   </h2>
+   <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm font-medium">
+    <Link className="inline-flex min-h-11 items-center gap-2 rounded-lg px-2 hover:bg-black/5 dark:hover:bg-white/5 underline focus-visible:outline-3 focus-visible:outline-[#d3a865]" to={`/alerts${suffix}`}>
+      Alertas activas: {data.activeAlerts}
+    </Link>
+    <Link className="inline-flex min-h-11 items-center gap-2 rounded-lg px-2 hover:bg-black/5 dark:hover:bg-white/5 underline focus-visible:outline-3 focus-visible:outline-[#d3a865]" to={`/troughs${suffix}`}>
+      <Droplets className="text-blue-600 dark:text-blue-400" size={18} aria-hidden="true" />
+      Agua crítica: {data.water.critical} · Baja: {data.water.low} · Sin medición: {data.water.missing}
+    </Link>
    </div>
-   {alerts.length > 0 && <ul className="space-y-2">{alerts.slice(0, 3).map(a => <li key={a.id}><Link className="inline-flex min-h-11 items-center underline" to={`/alerts${suffix}`}>{a.message}</Link></li>)}</ul>}
-   {!data.activeAlerts && !data.water.critical && !data.water.low && !data.water.missing && <p>Sin alertas activas ni problemas de agua registrados.</p>}
+   {alerts.length > 0 && (
+     <ul className="space-y-2 border-t border-border/50 pt-2 text-sm">
+       {alerts.slice(0, 3).map(a => (
+         <li key={a.id}>
+           <Link className="inline-flex min-h-11 items-center rounded-lg px-2 hover:bg-black/5 dark:hover:bg-white/5 underline focus-visible:outline-3 focus-visible:outline-[#d3a865]" to={`/alerts${suffix}`}>
+             {a.message}
+           </Link>
+         </li>
+       ))}
+     </ul>
+   )}
+   {!hasIssues && <p className="text-sm text-muted-foreground">Sin alertas activas ni problemas de agua registrados.</p>}
   </section>
   <PanelSection title="Tareas y actividad" description={`${data.tasks.total} abiertas · ${data.tasks.pending} pendientes · ${data.tasks.validation} por validar`} icon={ClipboardList}>
    <p className="mb-3">En progreso: {data.tasks.inProgress}</p>

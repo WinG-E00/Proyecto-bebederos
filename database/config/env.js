@@ -17,7 +17,7 @@ const schema = z.object({
   DB_PORT: port.default(3306),
   DB_NAME: z.string().regex(/^[a-zA-Z0-9_]+$/),
   DB_USER: z.string().min(1),
-  DB_PASSWORD: z.string().min(1),
+  DB_PASSWORD: z.string().default(''),
   SESSION_SECRET: secret,
   OUTBOX_SECRET: secret,
   APP_URL: httpUrl,

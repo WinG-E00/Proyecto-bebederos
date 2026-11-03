@@ -70,39 +70,52 @@ export default function Animales() {
           )}
           <div className="grid gap-4 md:grid-cols-2">
             {items?.map((a) => (
-              <article key={a.id} className="space-y-2 rounded-xl border bg-card p-4">
-                <h2 className="text-xl font-semibold">{a.name}</h2>
-                <p>
+              <article key={a.id} className="space-y-3 rounded-2xl border border-border bg-card p-5 shadow-xs transition hover:shadow-md">
+                <div className="flex items-start justify-between gap-2 flex-wrap">
+                  <h2 className="text-xl font-bold tracking-tight text-foreground">{a.name}</h2>
+                  <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-muted text-muted-foreground">
+                    #{a.id}
+                  </span>
+                </div>
+                <p className="text-sm font-medium text-foreground">
                   {a.species} · {a.breed} · {a.ageYears} años · {a.state}
                 </p>
-                <p>
-                  GPS:{' '}
-                  {a.position
-                    ? `${a.position.latitude}, ${a.position.longitude}`
-                    : 'Sin ubicación recibida'}
-                </p>
-                <Freshness value={a.freshness} date={a.position?.measuredAt} />
-                <h3 className="font-semibold">Última visita al bebedero</h3>
-                {a.lastVisit ? (
+                <div className="rounded-xl bg-muted/40 p-3.5 space-y-2 text-sm text-muted-foreground">
                   <p>
-                    {a.lastVisit.troughName} · {formatDate(a.lastVisit.visitedAt)} · Visita estimada
-                    por proximidad; no acredita consumo.
+                    <span className="font-medium text-foreground">GPS:</span>{' '}
+                    {a.position
+                      ? `${a.position.latitude}, ${a.position.longitude}`
+                      : 'Sin ubicación recibida'}
                   </p>
-                ) : (
-                  <p>Sin visitas registradas</p>
-                )}
-                <button className="min-h-11 px-3 underline" onClick={()=>setHistoryId(historyId===a.id?null:a.id)}>{historyId===a.id?'Ocultar antecedentes':'Ver antecedentes'}</button>
+                  <Freshness value={a.freshness} date={a.position?.measuredAt} />
+                </div>
+                <div className="rounded-xl bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-200/60 dark:border-emerald-900/40 p-3.5 space-y-1.5 text-sm">
+                  <h3 className="font-semibold text-emerald-950 dark:text-emerald-200">Última visita al bebedero</h3>
+                  {a.lastVisit ? (
+                    <p className="text-emerald-900/90 dark:text-emerald-300/90 leading-relaxed">
+                      <span className="font-semibold">{a.lastVisit.troughName}</span> · {formatDate(a.lastVisit.visitedAt)} · Visita estimada
+                      por proximidad; no acredita consumo.
+                    </p>
+                  ) : (
+                    <p className="text-muted-foreground">Sin visitas registradas</p>
+                  )}
+                </div>
+                <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-border/60">
+                  <button className="min-h-11 rounded-lg px-3 text-sm font-medium text-primary hover:bg-muted focus-visible:outline-3 focus-visible:outline-[#d3a865]" onClick={()=>setHistoryId(historyId===a.id?null:a.id)}>
+                    {historyId===a.id?'Ocultar antecedentes':'Ver antecedentes'}
+                  </button>
+                  {account.role === 'owner' && (
+                    <div className="flex gap-2">
+                      <button className="min-h-11 rounded-lg px-3 text-sm font-medium text-foreground hover:bg-muted focus-visible:outline-3 focus-visible:outline-[#d3a865]" onClick={() => setEditing(a)}>
+                        Editar
+                      </button>
+                      <button className="min-h-11 rounded-lg px-3 text-sm font-medium text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 focus-visible:outline-3 focus-visible:outline-[#d3a865]" onClick={() => setRemoving(a)}>
+                        Eliminar
+                      </button>
+                    </div>
+                  )}
+                </div>
                 {historyId===a.id&&<ResourceHistory resourceType="animals" resource={a}/>}
-                {account.role === 'owner' && (
-                  <div className="flex gap-3">
-                    <button className="min-h-11 px-3" onClick={() => setEditing(a)}>
-                      Editar
-                    </button>
-                    <button className="min-h-11 px-3" onClick={() => setRemoving(a)}>
-                      Eliminar
-                    </button>
-                  </div>
-                )}
               </article>
             ))}
           </div>

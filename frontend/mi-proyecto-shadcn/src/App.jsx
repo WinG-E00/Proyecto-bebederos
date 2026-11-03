@@ -103,8 +103,7 @@ function Dashboard() {
   const data=query.data
   const details=data?<DashboardDetails data={data} scope={scope} alerts={alerts.data?.items ?? []} activity={tasks.data?.items ?? []}/>:null
   return <>
-    <SessionBar />
-    <AppNavigation scope={scope} showProfile={false} />
+    <AppNavigation scope={scope} />
     <div className="p-4 space-y-3">
       <FarmSelector scope={scope}/>
       <AsyncState loading={query.isPending||scope.farms.isPending} error={query.error||scope.farms.error} onRetry={()=>{query.refetch();scope.farms.refetch()}}/>

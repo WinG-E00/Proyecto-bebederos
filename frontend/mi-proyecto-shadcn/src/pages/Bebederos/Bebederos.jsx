@@ -54,28 +54,61 @@ export default function Bebederos() {
           )}
           <div className="grid gap-4 md:grid-cols-2">
             {(selected ? (query.data ? [query.data] : []) : query.data?.items)?.map((t) => (
-              <article key={t.id} className="space-y-2 rounded-xl border bg-card p-4">
-                <h2 className="text-xl font-semibold">{t.name}</h2>
-                <p>
-                  Capacidad: {t.capacityLiters} litros · {t.operationalState}
+              <article key={t.id} className="space-y-3 rounded-2xl border border-border bg-card p-5 shadow-xs transition hover:shadow-md">
+                <div className="flex items-start justify-between gap-2 flex-wrap">
+                  <h2 className="text-xl font-bold tracking-tight text-foreground">{t.name}</h2>
+                  <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-muted text-muted-foreground">
+                    #{t.id}
+                  </span>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Capacidad: <span className="font-medium text-foreground">{t.capacityLiters} litros</span> · {t.operationalState}
                 </p>
-                <p className="text-lg font-bold">
-                  Agua:{' '}
-                  {t.waterLevel === null ? 'Sin medición' : `${t.waterLevel}% · ${t.waterCategory}`}
-                </p>
-                <Freshness value={t.freshness} date={t.lastUpdatedAt} />
-                <p>
-                  Ubicación:{' '}
-                  {t.latitude === null ? 'Sin ubicación' : `${t.latitude}, ${t.longitude}`} ·{' '}
-                  {t.locationSource === 'device' ? 'GPS de dispositivo' : 'Administrativa'}
-                </p>
-                <button className="min-h-11 px-3 underline" onClick={()=>setHistoryId(historyId===t.id?null:t.id)}>{historyId===t.id?'Ocultar antecedentes':'Ver antecedentes'}</button>
-                {historyId===t.id&&<ResourceHistory resourceType="troughs" resource={t}/>}
-                {account.role === 'owner' && (
-                  <button className="min-h-11 px-3" onClick={() => setRemoving(t)}>
-                    Eliminar
+                <div className="rounded-xl bg-muted/40 p-3.5 space-y-2">
+                  <p className="text-base font-bold text-foreground">
+                    Agua:{' '}
+                    {t.waterLevel === null ? 'Sin medición' : `${t.waterLevel}% · ${t.waterCategory}`}
+                  </p>
+                  {t.waterLevel !== null && (
+                    <div
+                      className="h-2.5 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden"
+                      role="progressbar"
+                      aria-valuenow={t.waterLevel}
+                      aria-valuemin={0}
+                      aria-valuemax={100}
+                    >
+                      <div
+                        className={`h-full rounded-full transition-all duration-500 ${
+                          t.waterLevel > 50
+                            ? 'bg-emerald-600'
+                            : t.waterLevel >= 20
+                              ? 'bg-amber-500'
+                              : 'bg-rose-600'
+                        }`}
+                        style={{ width: `${Math.min(100, Math.max(0, t.waterLevel))}%` }}
+                      />
+                    </div>
+                  )}
+                </div>
+                <div className="text-sm space-y-1 text-muted-foreground">
+                  <Freshness value={t.freshness} date={t.lastUpdatedAt} />
+                  <p>
+                    Ubicación:{' '}
+                    {t.latitude === null ? 'Sin ubicación' : `${t.latitude}, ${t.longitude}`} ·{' '}
+                    {t.locationSource === 'device' ? 'GPS de dispositivo' : 'Administrativa'}
+                  </p>
+                </div>
+                <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-border/60">
+                  <button className="min-h-11 rounded-lg px-3 text-sm font-medium text-primary hover:bg-muted focus-visible:outline-3 focus-visible:outline-[#d3a865]" onClick={()=>setHistoryId(historyId===t.id?null:t.id)}>
+                    {historyId===t.id?'Ocultar antecedentes':'Ver antecedentes'}
                   </button>
-                )}
+                  {account.role === 'owner' && (
+                    <button className="min-h-11 rounded-lg px-3 text-sm font-medium text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 focus-visible:outline-3 focus-visible:outline-[#d3a865]" onClick={() => setRemoving(t)}>
+                      Eliminar
+                    </button>
+                  )}
+                </div>
+                {historyId===t.id&&<ResourceHistory resourceType="troughs" resource={t}/>}
               </article>
             ))}
           </div>

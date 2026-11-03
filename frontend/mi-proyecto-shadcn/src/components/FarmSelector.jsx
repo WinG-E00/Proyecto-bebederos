@@ -1,9 +1,9 @@
 export default function FarmSelector({ scope }) {
   return (
-    <label className="grid gap-1">
-      Establecimiento
+    <label className="grid gap-1.5 max-w-md text-sm font-semibold text-foreground">
+      <span>Establecimiento</span>
       <select
-        className="min-h-11 rounded-lg border border-border bg-background p-2"
+        className="min-h-11 rounded-xl border border-input bg-card px-3 py-2 text-sm text-foreground shadow-xs focus-visible:outline-3 focus-visible:outline-[#d3a865]"
         value={scope.farmId}
         onChange={(e) => scope.selectFarm(e.target.value)}
       >
