@@ -11,11 +11,11 @@ const valid = (m) =>
   Number.isFinite(m.longitude) &&
   Math.abs(m.latitude) <= 90 &&
   Math.abs(m.longitude) <= 180
-export default function MapaBebederos({ farmId = '', center, compact = false }) {
+export default function MapaBebederos({ farmId = '', center, compact = false, resourceType }) {
   const [view, setView] = useState('map')
   const showMap = !compact || view === 'map'
   const query = useMap(farmId)
-  const positions = (query.data ?? []).filter(valid)
+  const positions = (query.data ?? []).filter(m => valid(m) && (!resourceType || m.type === resourceType))
   const container = useRef(null)
   const map = useRef(null)
   const layer = useRef(null)
@@ -49,7 +49,7 @@ export default function MapaBebederos({ farmId = '', center, compact = false }) 
   useEffect(() => {
     if (!layer.current) return
     layer.current.clearLayers()
-    for (const m of (query.data ?? []).filter(valid)) {
+    for (const m of (query.data ?? []).filter(m => valid(m) && (!resourceType || m.type === resourceType))) {
       const popup = document.createElement('div')
       const heading = document.createElement('strong')
       heading.textContent = `${m.type === 'animal' ? 'Animal' : 'Bebedero'}: ${m.name}`
@@ -71,18 +71,18 @@ export default function MapaBebederos({ farmId = '', center, compact = false }) 
       }).addTo(layer.current)
       marker.bindPopup(popup)
     }
-  }, [query.data, navigate, showMap])
+  }, [query.data, navigate, showMap, resourceType])
   useEffect(() => {
     if (!map.current || query.data === undefined || centered.current === farmId) return
     if (center && valid(center)) {
       map.current.setView([center.latitude, center.longitude], 15)
     } else {
-      const points = query.data.filter(valid).map((m) => [m.latitude, m.longitude])
+      const points = query.data.filter(m => valid(m) && (!resourceType || m.type === resourceType)).map((m) => [m.latitude, m.longitude])
       if (points.length) map.current.fitBounds(points, { padding: [35, 35], maxZoom: 15 })
       else map.current.setView([0, 0], 2)
     }
     centered.current = farmId
-  }, [farmId, center, query.data, showMap])
+  }, [farmId, center, query.data, showMap, resourceType])
   return (
     <>
       {compact && <div className="flex gap-2 mb-4" role="group" aria-label="Vista de ubicaciones">

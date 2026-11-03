@@ -6,6 +6,9 @@ import { api } from '../../services/api.js'
 import ResourceLayout from '../../components/ResourceLayout.jsx'
 import ConfirmAction from '../../components/ConfirmAction.jsx'
 import FarmForm from './FarmForm.jsx'
+import { Link } from 'react-router-dom'
+import { Beef, Building2, ChevronDown, Droplets, MapPinned, Pencil, Plus, Ruler, Trash2 } from 'lucide-react'
+import { EmptyResources, ResourceFormDialog, ResourceToolbar } from '../../components/ManagementUI.jsx'
 export default function Establecimientos() {
   const scope = useFarmScope()
   const query = scope.farms
@@ -13,6 +16,8 @@ export default function Establecimientos() {
   const client = useQueryClient()
   const [editing, setEditing] = useState(null)
   const [removing, setRemoving] = useState(null)
+  const [search, setSearch] = useState('')
+  const visible = (query.data?.items ?? []).filter(f => (!scope.farmId || String(f.id) === scope.farmId) && f.name.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase()))
   async function save(body) {
     await api.request(editing.id ? `/farms/${editing.id}` : '/farms', {
       method: editing.id ? 'PATCH' : 'POST',
@@ -22,53 +27,39 @@ export default function Establecimientos() {
     await client.invalidateQueries({ queryKey: ['account', account.id] })
   }
   return (
-    <ResourceLayout title="Establecimientos" scope={scope} query={query}>
-      {account.role === 'owner' && (
-        <button
-          className="min-h-11 rounded-lg bg-[#198754] px-4 text-white"
-          onClick={() => setEditing({})}
-        >
-          Nuevo establecimiento
-        </button>
-      )}
+    <ResourceLayout title="Establecimientos" query={query} redesigned eyebrow="Gestión de campos" description="Consultá y administrá los campos vinculados a tu cuenta."
+      actions={account.role === 'owner' && <button className="primary-button" onClick={() => setEditing({})}><Plus size={18} aria-hidden="true" />Nuevo establecimiento</button>}>
+      <ResourceToolbar search={search} onSearch={setSearch} label="Buscar establecimiento" count={visible.length} onRefresh={() => query.refetch()} refreshing={query.isFetching} />
       {editing && (
+        <ResourceFormDialog title={editing.id ? `Editar ${editing.name}` : 'Crear establecimiento'} onClose={() => setEditing(null)}>
         <FarmForm
           key={editing.id ?? 'new'}
           initial={editing.id ? editing : undefined}
           onSave={save}
           onCancel={() => setEditing(null)}
         />
+        </ResourceFormDialog>
       )}
-      <div className="grid gap-4 md:grid-cols-2">
-        {query.data?.items
-          .filter((f) => !scope.farmId || String(f.id) === scope.farmId)
-          .map((f) => (
-            <article key={f.id} className="space-y-2 rounded-xl border border-border bg-card p-4">
-              <h2 className="text-xl font-semibold">{f.name}</h2>
-              <p>{f.description}</p>
-              <p>
-                {f.areaHa} ha · {f.animalCount} animales · {f.troughCount} bebederos
-              </p>
-              <p>
-                Ubicación: {f.latitude}, {f.longitude}
-              </p>
-              <p>
-                Antigüedad máxima: {f.staleMinutes} minutos · {f.timezone}
-              </p>
-              {account.role === 'owner' && (
-                <div className="flex gap-3">
-                  <button className="min-h-11 px-3" onClick={() => setEditing(f)}>
-                    Editar
-                  </button>
-                  <button className="min-h-11 px-3" onClick={() => setRemoving(f)}>
-                    Eliminar
-                  </button>
-                </div>
-              )}
+      <div className="farms-grid">
+        {visible.map((f) => (
+            <article key={f.id} className="farm-card">
+              <div className="farm-card-top"><span className="farm-symbol"><Building2 size={23} aria-hidden="true" /></span><div><h2>{f.name}</h2><p>{f.description}</p></div>
+                {account.role === 'owner' && <button className="icon-button" aria-label={`Editar ${f.name}`} title="Editar" onClick={() => setEditing(f)}><Pencil size={17} aria-hidden="true" /></button>}
+              </div>
+              <div className="farm-priorities">
+                <div><span><Ruler size={17} aria-hidden="true" />Superficie</span><strong>{Number(f.areaHa).toLocaleString('es-AR')} ha</strong></div>
+                <div><span><Beef size={17} aria-hidden="true" />Animales</span><strong>{f.animalCount}</strong></div>
+                <div><span><Droplets size={17} aria-hidden="true" />Bebederos</span><strong>{f.troughCount}</strong></div>
+              </div>
+              <div className="farm-location"><MapPinned size={18} aria-hidden="true" /><div><strong>Ubicación administrativa</strong><small>Ubicación: {f.latitude}, {f.longitude}</small></div></div>
+              <details className="technical-details"><summary>Configuración técnica<ChevronDown size={16} aria-hidden="true" /></summary><div><span>Zona horaria<strong>{f.timezone}</strong></span><span>Antigüedad máxima<strong>{f.staleMinutes} minutos</strong></span></div></details>
+              <div className="farm-actions"><Link className="secondary-button" to={`/dashboard?farmId=${f.id}`}>Ver panel del campo</Link>
+                {account.role === 'owner' && <button className="danger-ghost" onClick={() => setRemoving(f)}><Trash2 size={16} aria-hidden="true" />Eliminar</button>}
+              </div>
             </article>
           ))}
       </div>
-      {query.data?.total === 0 && <p>No hay establecimientos disponibles.</p>}
+      {query.data && !visible.length && <EmptyResources icon={Building2} title={search ? 'No encontramos establecimientos' : 'No hay establecimientos disponibles.'} description={search ? 'Probá con otro nombre o cambiá el establecimiento seleccionado.' : 'Los campos vinculados a tu cuenta aparecerán aquí.'} />}
       <ConfirmAction
         open={!!removing}
         title="Eliminar establecimiento"

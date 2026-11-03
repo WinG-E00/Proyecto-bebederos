@@ -1,0 +1,381 @@
+/* Diseño de la referencia .make, acotado a las pantallas de gestión. */
+.management-ui .page-heading { margin-bottom: 23px; display: flex; justify-content: space-between; align-items: end; }
+.management-ui .eyebrow { margin: 0 0 4px; color: #468060 !important; font-size: 11px !important; font-weight: 700; letter-spacing: .9px; text-transform: uppercase; }
+.management-ui .page-heading h1 { margin: 0; font: 800 28px/1.25 'Manrope Variable'; letter-spacing: -.7px; color: #153c29; }
+.management-ui .page-heading p { margin: 5px 0 0; color: #718077; font-size: 14px; }
+.management-ui .page-heading p strong { color: #3f5d4d; font-weight: 600; }
+.management-ui .heading-date { height: 39px; padding: 0 13px; border: 1px solid #dae2da; border-radius: 8px; color: #64786c; background: #fafbfa; display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.management-ui .attention { padding: 18px 20px 12px; border: 1px solid #ead7cf; border-left: 4px solid #cc4e3f; border-radius: 12px; background: #fffaf8; display: grid; grid-template-columns: 1fr auto; }
+.management-ui .attention-copy { display: flex; gap: 11px; align-items: center; }
+.management-ui .alert-icon { width: 38px; height: 38px; border-radius: 9px; color: #c1493c; background: #fae7e2; display: grid; place-items: center; }
+.management-ui .attention h2, .management-ui .panel h2 { margin: 0; font: 700 15px/1.3 'Manrope Variable'; color: #243b2f; }
+.management-ui .attention-copy p, .management-ui .panel-title p { margin: 3px 0 0; color: #7c8b82; font-size: 12px; }
+.management-ui .text-button { padding: 0; border: 0; color: #28704d; background: transparent; display: inline-flex; align-items: center; gap: 3px; font-size: 12px; font-weight: 700; }
+.management-ui .alert-list { grid-column: 1 / -1; margin-top: 15px; border-top: 1px solid #eedfd9; }
+.management-ui .alert-row { min-height: 58px; padding: 9px 5px; border-bottom: 1px solid #eee6e2; display: grid; grid-template-columns: 10px 1fr auto 18px; align-items: center; gap: 10px; }
+.management-ui .alert-row:last-child { border-bottom: 0; }
+.management-ui .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #cc4e3f; }
+.management-ui .alert-row strong { font-size: 12px; }
+.management-ui .alert-row p { margin: 2px 0 0; color: #77867d; font-size: 11px; }
+.management-ui .alert-row time { color: #859188; font-size: 10px; }
+.management-ui .metrics-grid { margin: 18px 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 13px; }
+.management-ui .metric-card { min-height: 105px; padding: 17px; border: 1px solid #dde4dd; border-radius: 11px; background: white; display: flex; align-items: center; gap: 13px; box-shadow: 0 2px 8px rgba(21,54,37,.025); }
+.management-ui .metric-card > svg { width: 17px; margin-left: auto; color: #9aaba0; }
+.management-ui .metric-icon { width: 42px; height: 42px; flex: 0 0 auto; border-radius: 10px; display: grid; place-items: center; }
+.management-ui .metric-icon svg { width: 21px; }
+.management-ui .metric-icon.green { color: #26744e; background: #e6f2e9; }
+.management-ui .metric-icon.ochre { color: #9b6c1e; background: #f6ecd7; }
+.management-ui .metric-icon.blue { color: #3f7189; background: #e5eff3; }
+.management-ui .metric-icon.red { color: #bd4b40; background: #f9e7e4; }
+.management-ui .metric-card p { margin: 0; color: #708076; font-size: 11px; }
+.management-ui .metric-card strong { margin: 2px 0 1px; display: block; color: #21382c; font: 700 24px/1.2 'Manrope Variable'; }
+.management-ui .metric-card small { color: #88958d; font-size: 9px; }
+.management-ui .metric-card small b { color: #496f5a; }
+.management-ui .dashboard-grid { display: grid; grid-template-columns: minmax(0, 1.65fr) minmax(270px, .7fr); gap: 16px; }
+.management-ui .panel { border: 1px solid #dce3dc; border-radius: 12px; background: white; box-shadow: 0 2px 8px rgba(21,54,37,.025); overflow: hidden; }
+.management-ui .panel-title { min-height: 70px; padding: 17px 19px; display: flex; align-items: center; justify-content: space-between; }
+.management-ui .task-tabs { height: 39px; padding: 0 19px; border-bottom: 1px solid #e1e6e1; display: flex; gap: 20px; }
+.management-ui .task-tabs button { padding: 0; border: 0; border-bottom: 2px solid transparent; color: #718177; background: transparent; font-size: 11px; font-weight: 600; }
+.management-ui .task-tabs button.active { border-color: #2a7651; color: #275f43; }
+.management-ui .task-tabs span { margin-left: 4px; padding: 1px 5px; border-radius: 8px; background: #edf1ed; font-size: 9px; }
+.management-ui .task-row { width: 100%; min-height: 67px; padding: 10px 18px; border: 0; border-bottom: 1px solid #edf0ed; color: #31483a; background: white; display: flex; align-items: center; gap: 11px; text-align: left; }
+.management-ui .task-row:hover { background: #f8faf8; }
+.management-ui .task-row:last-child { border: 0; }
+.management-ui .task-check { width: 31px; height: 31px; flex: 0 0 auto; border-radius: 8px; display: grid; place-items: center; }
+.management-ui .task-check.blue { color: #467991; background: #e9f2f5; }
+.management-ui .task-check.amber { color: #a16c19; background: #faf0d9; }
+.management-ui .task-info { min-width: 0; flex: 1; }
+.management-ui .task-info strong { display: block; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.management-ui .task-info small { margin-top: 5px; color: #849088; display: flex; align-items: center; font-size: 10px; }
+.management-ui .task-meta { text-align: right; }
+.management-ui .task-meta small { margin-top: 4px; color: #8a968e; display: block; font-size: 9px; }
+.management-ui .badge { padding: 3px 7px; border-radius: 9px; font-size: 9px; font-style: normal; font-weight: 700; white-space: nowrap; }
+.management-ui .badge.blue { color: #3a7089; background: #e8f2f5; }
+.management-ui .badge.amber { color: #92631a; background: #faf0d9; }
+.management-ui .task-row > svg { color: #9ba79f; }
+.management-ui .weather-main { padding: 5px 20px 22px; display: flex; align-items: center; gap: 14px; }
+.management-ui .sun { width: 57px; height: 57px; border-radius: 50%; color: #d59726; background: #fff5da; display: grid; place-items: center; }
+.management-ui .weather-main strong { font: 800 32px/1 'Manrope Variable'; color: #254432; }
+.management-ui .weather-main p { margin: 5px 0 0; color: #697c70; font-size: 11px; }
+.management-ui .weather-stats { margin: 0 19px; padding: 14px 0; border-top: 1px solid #e4e9e4; border-bottom: 1px solid #e4e9e4; display: grid; grid-template-columns: 1fr 1fr; }
+.management-ui .weather-stats div + div { padding-left: 18px; border-left: 1px solid #e4e9e4; }
+.management-ui .weather-stats small, .management-ui .weather-stats strong { display: block; }
+.management-ui .weather-stats small { color: #809087; font-size: 10px; }
+.management-ui .weather-stats strong { margin-top: 4px; color: #385747; font-size: 14px; }
+.management-ui .updated { margin: 12px 19px 16px; color: #9aa49e; font-size: 9px; }
+.management-ui .locations-panel { grid-column: 1 / -1; }
+.management-ui .water { fill: none; stroke: #a9cad2; stroke-width: 7; }
+.management-ui .marker { position: absolute; width: 30px; height: 30px; border: 3px solid white; border-radius: 50%; color: white; font-size: 10px; font-weight: 800; box-shadow: 0 2px 6px rgba(26,57,39,.2); }
+.management-ui .marker.animal { background: #8b6540; }
+.management-ui .marker.trough { border-radius: 8px; background: #287452; }
+.management-ui .map-footer { min-height: 48px; padding: 8px 20px; display: flex; justify-content: space-between; align-items: center; }
+.management-ui .map-footer > span { color: #7b8981; display: flex; align-items: center; gap: 6px; font-size: 10px; }
+.management-ui .search { height: 38px; padding: 0 11px; border: 1px solid #dce3dc; border-radius: 8px; display: flex; align-items: center; gap: 8px; }
+.management-ui .search input { width: 100%; border: 0; outline: 0; font-size: 12px; }
+.management-ui .establishments-heading { margin-bottom: 22px; display: flex; align-items: end; justify-content: space-between; gap: 20px; }
+.management-ui .establishments-heading h1 { margin: 0; color: #153c29; font: 800 28px/1.25 'Manrope Variable'; letter-spacing: -.7px; }
+.management-ui .establishments-heading p:not(.eyebrow) { margin: 5px 0 0; color: #718077; font-size: 14px; }
+.management-ui .primary-button, .management-ui .secondary-button, .management-ui .danger-ghost { min-height: 40px; padding: 0 15px; border-radius: 8px; display: inline-flex; align-items: center; justify-content: center; gap: 7px; font-size: 12px; font-weight: 700; }
+.management-ui .primary-button { border: 1px solid #246a48; color: white; background: #246a48; box-shadow: 0 2px 5px rgba(26,83,55,.14); }
+.management-ui .primary-button:hover { background: #1d5a3c; }
+.management-ui .secondary-button { border: 1px solid #d5ded6; color: #385747; background: white; }
+.management-ui .danger-ghost { border: 0; color: #b2463d; background: transparent; }
+.management-ui .danger-ghost:disabled { color: #9da7a1; cursor: not-allowed; }
+.management-ui .farm-toolbar { margin-bottom: 16px; padding: 12px; border: 1px solid #dde4dd; border-radius: 11px; background: white; display: flex; align-items: center; gap: 10px; }
+.management-ui .farm-toolbar .farm-search { width: min(360px, 100%); }
+.management-ui .farm-toolbar > span { margin-left: auto; color: #7b8981; font-size: 11px; }
+.management-ui .farms-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+.management-ui .farm-card { padding: 20px; border: 1px solid #dbe3dc; border-radius: 13px; background: white; box-shadow: 0 3px 12px rgba(21,54,37,.035); }
+.management-ui .farm-card-top { display: grid; grid-template-columns: 44px 1fr 40px; align-items: start; gap: 12px; }
+.management-ui .farm-symbol { width: 44px; height: 44px; border-radius: 11px; color: #2a6e4c; background: #e6f1e8; display: grid; place-items: center; }
+.management-ui .farm-card h2 { margin: 1px 0 4px; color: #1d3d2c; font: 700 17px/1.25 'Manrope Variable'; }
+.management-ui .farm-card-top p { margin: 0; color: #77867d; font-size: 11px; line-height: 1.45; }
+.management-ui .farm-priorities { margin: 18px 0; padding: 15px 0; border-top: 1px solid #e6ebe7; border-bottom: 1px solid #e6ebe7; display: grid; grid-template-columns: 1.35fr 1fr 1fr; }
+.management-ui .farm-priorities > div + div { padding-left: 16px; border-left: 1px solid #e2e8e3; }
+.management-ui .farm-priorities span, .management-ui .farm-priorities strong { display: flex; align-items: center; gap: 6px; }
+.management-ui .farm-priorities span { color: #7a8980; font-size: 10px; }
+.management-ui .farm-priorities strong { margin-top: 6px; color: #254532; font: 700 18px/1.2 'Manrope Variable'; }
+.management-ui .farm-location { margin-bottom: 13px; color: #47705a; display: flex; gap: 9px; align-items: center; }
+.management-ui .farm-location strong, .management-ui .farm-location small { display: block; }
+.management-ui .farm-location strong { font-size: 11px; }
+.management-ui .farm-location small { margin-top: 2px; color: #89958e; font-size: 9px; }
+.management-ui .technical-details { border-radius: 8px; background: #f5f7f4; }
+.management-ui .technical-details summary { padding: 10px 11px; color: #5f7166; cursor: pointer; list-style: none; display: flex; justify-content: space-between; font-size: 10px; font-weight: 700; }
+.management-ui .technical-details[open] summary svg { transform: rotate(180deg); }
+.management-ui .technical-details > div { padding: 0 11px 11px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.management-ui .technical-details span, .management-ui .technical-details strong { display: block; }
+.management-ui .technical-details span { color: #849087; font-size: 9px; }
+.management-ui .technical-details strong { margin-top: 3px; color: #435e4f; font-size: 10px; overflow-wrap: anywhere; }
+.management-ui .farm-actions { margin-top: 15px; display: flex; align-items: center; justify-content: space-between; }
+.management-ui .state-card { min-height: 310px; padding: 35px; border: 1px dashed #ccd8ce; border-radius: 13px; background: white; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+.management-ui .state-card h2 { margin: 13px 0 4px; color: #2b4938; font: 700 16px 'Manrope Variable'; }
+.management-ui .state-card p { margin: 0 0 16px; color: #7b8981; font-size: 12px; }
+.management-ui .empty-icon { width: 54px; height: 54px; border-radius: 50%; color: #4f795f; background: #e9f1ea; display: grid; place-items: center; }
+.management-ui .modal-header { padding: 20px 22px 16px; border-bottom: 1px solid #e4e9e5; display: flex; justify-content: space-between; align-items: start; }
+.management-ui .modal-header h2 { margin: 0; color: #203e2d; font: 700 19px/1.3 'Manrope Variable'; }
+.management-ui .trough-summary { margin-bottom: 18px; padding: 20px; border: 1px solid #dbe3dc; border-radius: 13px; background: #f8faf7; box-shadow: 0 3px 12px rgba(21,54,37,.03); }
+.management-ui .summary-title { margin-bottom: 15px; display: flex; align-items: start; justify-content: space-between; }
+.management-ui .summary-title h2 { margin: 0; color: #1f3e2d; font: 700 16px/1.3 'Manrope Variable'; }
+.management-ui .summary-title p { margin: 3px 0 0; color: #7d8a82; font-size: 10px; }
+.management-ui .monitoring-badge { padding: 5px 9px; border-radius: 12px; color: #28704b; background: #e2f2e6; display: flex; align-items: center; gap: 5px; font-size: 9px; font-weight: 700; }
+.management-ui .monitoring-badge > span { width: 6px; height: 6px; border-radius: 50%; background: #36a765; box-shadow: 0 0 0 3px rgba(54,167,101,.12); }
+.management-ui .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.management-ui .summary-grid article { min-height: 128px; padding: 15px; border: 1px solid #dfe5df; border-radius: 10px; background: white; }
+.management-ui .summary-card-label { color: #697970; display: flex; justify-content: space-between; align-items: center; font-size: 10px; }
+.management-ui .water-average .summary-card-label svg { color: #2491a7; }
+.management-ui .stale-card .summary-card-label svg { color: #dd8427; }
+.management-ui .summary-grid article > strong { margin: 8px 0 5px; color: #17412c; display: block; font: 800 24px/1.1 'Manrope Variable'; }
+.management-ui .summary-grid article > strong small { color: #738278; font: 500 11px 'DM Sans Variable'; }
+.management-ui .summary-grid article > p { margin: 7px 0 0; color: #7a8980; font-size: 10px; }
+.management-ui .level-track { height: 7px; border-radius: 4px; background: #e5eae6; overflow: hidden; }
+.management-ui .level-track i { height: 100%; border-radius: inherit; background: #1d9c8c; display: block; }
+.management-ui .stale-card > em { padding: 3px 7px; border-radius: 10px; color: #c55b32; background: #fff0e8; font-size: 9px; font-style: normal; font-weight: 700; }
+.management-ui .operational-summary { margin-top: 12px; padding: 15px; border: 1px solid #dfe5df; border-radius: 10px; background: white; }
+.management-ui .operational-title { margin-bottom: 10px; display: flex; justify-content: space-between; }
+.management-ui .operational-title strong { color: #2d4537; font-size: 12px; }
+.management-ui .operational-title span { color: #7d8a82; font-size: 10px; }
+.management-ui .status-bar { height: 8px; border-radius: 5px; display: flex; gap: 2px; overflow: hidden; }
+.management-ui .status-bar i { min-width: 5px; }
+.management-ui .status-bar .operational { background: #208342; }
+.management-ui .status-bar .maintenance { background: #e69515; }
+.management-ui .status-bar .inactive { background: #da3636; }
+.management-ui .status-counts { margin-top: 13px; display: grid; grid-template-columns: repeat(3, 1fr); }
+.management-ui .status-counts > div + div { padding-left: 18px; border-left: 1px solid #e5eae6; }
+.management-ui .status-counts span, .management-ui .status-counts strong, .management-ui .status-counts small { display: flex; align-items: center; }
+.management-ui .status-counts span { color: #64746a; gap: 5px; font-size: 9px; }
+.management-ui .status-counts strong { margin: 5px 0 1px; color: #254a34; font: 700 18px 'Manrope Variable'; }
+.management-ui .status-counts small { color: #859188; font-size: 9px; }
+.management-ui .trough-list-shell { border: 1px solid #dbe3dc; border-radius: 13px; background: white; overflow: hidden; box-shadow: 0 3px 12px rgba(21,54,37,.03); }
+.management-ui .list-disclosure { width: 100%; min-height: 72px; padding: 14px 18px; border: 0; color: #314a3b; background: white; display: flex; align-items: center; gap: 12px; text-align: left; }
+.management-ui .list-disclosure:hover { background: #f8faf8; }
+.management-ui .list-disclosure > span:nth-child(2) { flex: 1; }
+.management-ui .list-disclosure strong, .management-ui .list-disclosure small { display: block; }
+.management-ui .list-disclosure strong { font: 700 13px 'Manrope Variable'; }
+.management-ui .list-disclosure small { margin-top: 3px; color: #819087; font-size: 10px; }
+.management-ui .list-disclosure[aria-expanded="true"] > svg { transform: rotate(180deg); }
+.management-ui .disclosure-icon { width: 38px; height: 38px; border-radius: 9px; color: #286d4b; background: #e7f1e9; display: grid; place-items: center; }
+.management-ui .list-count { min-width: 27px; height: 24px; padding: 0 7px; border-radius: 12px; color: #486255; background: #edf2ee; display: grid; place-items: center; font-size: 10px; font-weight: 700; }
+.management-ui .farm-symbol.compact { width: 36px; height: 36px; border-radius: 8px; }
+.management-ui .trough-list-content { margin-top: 9px; padding: 14px; border: 1px solid #dce4dd; border-radius: 10px; background: white; }
+.management-ui .trough-cards { display: grid; gap: 10px; }
+.management-ui .trough-card { border: 1px solid #dfe5df; border-radius: 11px; background: white; overflow: hidden; }
+.management-ui .trough-card-main { padding: 16px; display: grid; grid-template-columns: 105px 1fr; gap: 17px; }
+.management-ui .water-gauge { min-height: 105px; border-radius: 9px; color: #17766d; background: #e7f5f2; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+.management-ui .water-gauge strong { margin: 5px 0 1px; font: 800 22px 'Manrope Variable'; }
+.management-ui .water-gauge small { font-size: 9px; font-weight: 700; }
+.management-ui .water-gauge.low { color: #a96b16; background: #fff3dc; }
+.management-ui .water-gauge.critical { color: #bf4439; background: #fbe8e5; }
+.management-ui .water-gauge.none { color: #75847b; background: #edf1ee; }
+.management-ui .trough-name { display: flex; justify-content: space-between; align-items: start; gap: 10px; }
+.management-ui .trough-name h3 { margin: 0; color: #203f2e; font: 700 14px/1.3 'Manrope Variable'; }
+.management-ui .trough-name p { margin: 4px 0 0; color: #75847b; font-size: 10px; }
+.management-ui .trough-name p strong { color: #4a6154; }
+.management-ui .operation-badge { padding: 4px 8px; border-radius: 10px; color: #2d774d; background: #e5f2e8; font-size: 9px; font-weight: 700; white-space: nowrap; }
+.management-ui .operation-badge.en-mantenimiento { color: #a56a18; background: #fff0d8; }
+.management-ui .operation-badge.fuera-de-servicio { color: #aa443c; background: #f8e8e6; }
+.management-ui .trough-info-grid { margin-top: 15px; display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.management-ui .trough-info-grid > div { padding: 10px; border-radius: 8px; background: #f6f8f6; color: #597063; display: flex; align-items: start; gap: 8px; }
+.management-ui .trough-info-grid small, .management-ui .trough-info-grid strong, .management-ui .trough-info-grid em { display: block; }
+.management-ui .trough-info-grid small { color: #89958e; font-size: 8px; }
+.management-ui .trough-info-grid strong { margin: 2px 0; color: #465e50; font-size: 10px; }
+.management-ui .trough-info-grid em { color: #718078; font-size: 8px; font-style: normal; }
+.management-ui .trough-info-grid em.fresh { color: #278052; }
+.management-ui .trough-info-grid em.stale { color: #c36430; }
+.management-ui .trough-card-actions { padding: 10px 16px; border-top: 1px solid #e7ebe8; background: #fafbfa; display: flex; gap: 6px; }
+.management-ui .trough-card-actions .danger-ghost { margin-left: auto; }
+.management-ui .trough-map-panel { margin-bottom: 18px; }
+.management-ui .animal-metrics { margin-bottom: 0; }
+.management-ui .animal-portrait { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; border-radius: 9px; color: #9b6c1e; background: #f6ecd7; }
+.management-ui .animal-portrait small { font-size: 10px; }
+
+/* Integración con los componentes y datos reales del proyecto. */
+.management-ui {
+  --background: #fff; --foreground: #233b2d; --card: #fff; --card-foreground: #233b2d;
+  --border: #dce3dc; --muted: #f4f6f2; --muted-foreground: #5e7165;
+  color: #233b2d; background: #f4f6f2; font: 400 14px/1.5 'DM Sans Variable', sans-serif;
+  color-scheme: light; overflow-wrap: anywhere; font-variant-numeric: tabular-nums;
+}
+.management-content { max-width: 1532px; margin: 0 auto; padding: 30px; min-height: calc(100dvh - 72px); }
+.app-workspace:has(.management-ui) { background: #f4f6f2; }
+.management-ui a { text-decoration: none; }
+.management-ui button, .management-ui summary { cursor: pointer; }
+.management-ui button:disabled { cursor: not-allowed; opacity: .55; }
+.management-ui :is(input, select, button, a, summary):focus-visible { outline: 2px solid #246746; outline-offset: 3px; }
+.management-ui ::selection { color: #123f2b; background: #d8e6dc; }
+.management-ui input { caret-color: #246746; }
+.management-ui input::placeholder { color: #64766a; opacity: 1; }
+.management-ui svg { flex-shrink: 0; }
+.management-ui :is(h1,h2,h3,h4,p) { overflow-wrap: anywhere; }
+.management-ui :is(h1,h2,h3,h4) { text-wrap: balance; }
+.management-ui .eyebrow { margin: 0 0 4px; }
+.management-ui .page-heading, .management-ui .establishments-heading { align-items: center; flex-wrap: wrap; }
+.management-ui .page-heading h1, .management-ui .establishments-heading h1 { font-size: 28px; }
+.management-ui .page-heading p, .management-ui .establishments-heading p:not(.eyebrow) { color: #5f7165; }
+.management-ui .primary-button { white-space: nowrap; }
+.management-ui .icon-button { min-width: 44px; }
+.management-ui .icon-button { display: inline-grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 1px solid #dce3dc; border-radius: 9px; color: #51685b; background: white; }
+.management-ui .secondary-button:hover, .management-ui .icon-button:hover { background: #f0f5ef; border-color: #a5bdab; }
+.management-ui .danger-ghost:hover { background: #fbece8; }
+.management-ui .farm-card { min-width: 0; box-shadow: none; }
+.management-ui .farm-card-top { grid-template-columns: 44px minmax(0,1fr) 44px; }
+.management-ui .farm-card-top p { font-size: 13px; color: #617467; }
+.management-ui .farm-priorities span { color: #607265; font-size: 12px; }
+.management-ui .farm-location strong { font-size: 12px; }
+.management-ui .farm-location small { color: #617467; font-size: 12px; }
+.management-ui .technical-details summary { font-size: 12px; }
+.management-ui .technical-details :is(span,strong) { color: #536a5b; font-size: 12px; }
+.management-ui .farm-toolbar { flex-wrap: wrap; }
+.management-ui .farm-toolbar > span { font-size: 12px; color: #607265; }
+.management-ui .search { min-height: 44px; color: #617467; background: white; min-width: 0; }
+.management-ui .search:focus-within { outline: 2px solid #246746; outline-offset: 2px; }
+.management-ui .search input { min-width: 0; height: 42px; background: transparent; font-size: 13px; }
+.management-ui .search input:focus-visible { outline: none; }
+.management-ui .management-notice { padding: 12px 16px; margin-bottom: 18px; border: 1px solid #d4dfd4; border-radius: 10px; background: #edf3ea; }
+.management-ui .summary-title { gap: 16px; flex-wrap: wrap; }
+.management-ui .summary-title p { color: #617467; font-size: 12px; }
+.management-ui .monitoring-badge { font-size: 11px; }
+.management-ui .summary-card-label { font-size: 13px; color: #5e7165; }
+.management-ui .summary-grid article > p, .management-ui .summary-grid article > strong small { font-size: 12px; color: #5f7165; }
+.management-ui .status-counts span, .management-ui .status-counts small, .management-ui .operational-title span { font-size: 12px; color: #5f7165; }
+.management-ui .status-counts strong { font-size: 23px; }
+.management-ui .trough-summary, .management-ui .trough-list-shell, .management-ui .panel, .management-ui .metric-card { box-shadow: none; }
+.management-ui .trough-list-content { margin: 0; padding: 16px; border: 0; border-top: 1px solid #e4e9e4; border-radius: 0; }
+.management-ui .trough-name { gap: 12px; flex-wrap: wrap; }
+.management-ui .trough-name h3 { font-size: 16px; }
+.management-ui .trough-name p { font-size: 12px; color: #617467; }
+.management-ui .operation-badge { font-size: 11px; }
+.management-ui .water-gauge small { font-size: 11px; }
+.management-ui .trough-info-grid { gap: 12px; }
+.management-ui .trough-info-grid :is(small,h4) { margin: 0; color: #617467; font: 400 11px/1.5 'DM Sans Variable',sans-serif; }
+.management-ui .trough-info-grid strong { font-size: 12px; }
+.management-ui .trough-info-grid em { font-size: 11px; color: #5e7165; }
+.management-ui .freshness-copy { font-size: 11px; }
+.management-ui .freshness-copy.fresh { color: #26714a; }
+.management-ui .freshness-copy.stale { color: #985820; }
+.management-ui .freshness-copy.missing { color: #617467; }
+.management-ui .trough-card-actions { flex-wrap: wrap; }
+.management-ui .resource-history { padding: 16px; border-top: 1px solid #e1e7e1; }
+.management-ui .management-map { padding: 0 18px; }
+.management-ui .management-map [role="region"] { border: 1px solid #dbe4db; border-radius: 10px; overflow: hidden; background: #eaf0e6; }
+.management-ui .management-map [role="group"] { justify-content: flex-end; }
+.management-ui .management-map [role="group"] button { font-size: 12px; }
+.management-ui .map-footer { gap: 10px; flex-wrap: wrap; }
+.management-ui .map-footer > span { font-size: 12px; color: #617467; }
+.management-ui .panel-title { gap: 16px; }
+.management-ui .panel-title h2 { margin: 0; color: #243b2f; font: 700 15px/1.3 'Manrope Variable',sans-serif; }
+.management-ui .panel-title p { font-size: 12px; color: #617467; }
+.management-ui .list-count { font-size: 12px; }
+.management-ui .list-disclosure { list-style: none; }
+.management-ui .list-disclosure::-webkit-details-marker { display: none; }
+.management-ui .list-disclosure h2 { margin: 0; color: #243b2f; font: 700 15px/1.3 'Manrope Variable',sans-serif; }
+.management-ui .list-disclosure small { color: #617467; font-size: 12px; }
+.management-ui .trough-list-shell[open] > summary > svg:last-child { transform: rotate(180deg); }
+.management-ui .state-card { min-height: 200px; padding: 24px; }
+.management-ui .state-card p { color: #617467; }
+.management-ui .resource-form-dialog { width: min(600px,calc(100% - 32px)); max-height: calc(100dvh - 48px); margin: auto; padding: 0; border: 0; border-radius: 14px; background: #fff; color: #233b2d; box-shadow: 0 22px 60px rgb(9 34 20 / 24%); }
+.management-ui .resource-form-dialog::backdrop { background: rgb(12 34 22 / 55%); }
+.management-ui .resource-form-dialog form { border: 0; border-radius: 0; padding: 22px; gap: 16px; background: white; }
+.management-ui .resource-form-dialog label { font-size: 13px; font-weight: 600; }
+.management-ui .resource-form-dialog :is(input,select) { width: 100%; font-size: 14px; font-weight: 400; border-color: #d5ded6; }
+.management-ui .resource-form-dialog input[aria-invalid="true"] { border-color: #b2463d; }
+.management-ui .resource-form-dialog [role="alert"], .management-ui .resource-form-dialog [id$="-error"] { color: #a43b32; }
+.management-ui .resource-form-dialog form > div:last-child { grid-column: 1 / -1; flex-wrap: wrap; padding-top: 8px; }
+.management-ui .resource-form-dialog form button:first-child { background: #246a48; }
+.management-ui dialog:not(.resource-form-dialog) { font: 400 14px/1.5 'DM Sans Variable',sans-serif; }
+.management-ui .dashboard-heading-actions { display: flex; align-items: center; gap: 10px; }
+.management-ui .heading-date { text-transform: capitalize; }
+.management-ui .attention { gap: 8px; }
+.management-ui .attention--calm { border-color: #d5e2d6; border-left-color: #347553; background: #f8fcf7; }
+.management-ui .attention--calm .alert-icon { background: #e6f2e9; color: #26744e; }
+.management-ui .attention-copy p { font-size: 12px; color: #6c655f; }
+.management-ui .attention .alert-row { grid-template-columns: 10px minmax(0,1fr) 18px; color: #3f4e43; }
+.management-ui .alert-row strong { font-size: 13px; }
+.management-ui .alert-row p { font-size: 12px; color: #6c655f; }
+.management-ui .alert-row:hover { background: rgb(255 255 255 / 70%); }
+.management-ui .all-clear { padding: 12px 4px; font-size: 13px; }
+.management-ui .metric-card { min-width: 0; padding: 15px; }
+.management-ui a.metric-card:hover { border-color: #87ab91; background: #fbfdf9; }
+.management-ui .metric-card p { font-size: 12px; color: #5f7165; }
+.management-ui .metric-card small { font-size: 11px; color: #617467; }
+.management-ui .metric-card > div { min-width: 0; }
+.management-ui .dashboard-grid { grid-template-columns: minmax(0,1.65fr) minmax(250px,.7fr); align-items: start; }
+.management-ui .locations-panel { min-width: 0; }
+.management-ui .task-tabs { height: 44px; }
+.management-ui .task-tabs button { font-size: 12px; }
+.management-ui .task-tabs span { font-size: 11px; }
+.management-ui .task-info strong { white-space: normal; font-size: 13px; }
+.management-ui .task-info small { color: #617467; font-size: 12px; }
+.management-ui .task-meta small { color: #617467; font-size: 11px; }
+.management-ui .badge { font-size: 10px; }
+.management-ui .panel-message { padding: 0 20px 16px; color: #617467; font-size: 13px; }
+.management-ui .panel-message:empty { display: none; }
+.management-ui .tasks-footer { padding: 8px 18px; border-top: 1px solid #e4e9e4; }
+.management-ui .weather-selector { display: grid; gap: 5px; padding: 0 20px 16px; color: #617467; font-size: 12px; }
+.management-ui .weather-selector select { min-width: 0; width: 100%; min-height: 44px; padding: 8px; border: 1px solid #d5ded6; border-radius: 8px; }
+.management-ui .weather-main p, .management-ui .weather-stats small, .management-ui .updated { color: #617467; font-size: 12px; }
+.management-ui .resources-footer { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; padding: 8px 0; color: #536e5b; font-size: 12px; }
+.management-ui .resources-footer span { margin-left: auto; }
+.dashboard-query-state:not(:empty) { padding: 16px 30px; }
+.management-ui--dark { --background: #1b3024; --card: #1b3024; --card-foreground: #e2eee4; --foreground: #e2eee4; --border: #41634d; color: #e2eee4; background: #12261b; color-scheme: dark; }
+.management-ui--dark :is(.panel,.metric-card,.task-row,.icon-button,.heading-date,.search,.management-map input,.management-map select,.weather-selector select) { color: #e2eee4; background: #1b3024; border-color: #41634d; }
+.management-ui--dark .attention { color: #e2eee4; background: #2d2d23; border-color: #8e7762; }
+.management-ui--dark :is(h1,h2,h3,.metric-card strong,.weather-main strong,.weather-stats strong,.task-info strong,.text-button) { color: #e2eee4; }
+.management-ui--dark :is(.page-heading p,.page-heading p strong,.panel-title p,.metric-card p,.metric-card small,.attention-copy p,.alert-row p,.panel-message,.task-info small,.task-meta small,.weather-main p,.weather-stats small,.updated,.resources-footer,.map-footer > span,.weather-selector) { color: #b1c9b7; }
+.management-ui--dark .attention .alert-row { color: #e2eee4; }
+.management-ui--dark :is(a.metric-card:hover,.task-row:hover,.alert-row:hover) { background: #274632; }
+.management-ui--dark .eyebrow { color: #9fc8aa !important; }
+.management-ui--dark .task-tabs button { color: #b1c9b7; }
+.management-ui--dark .task-tabs button.active { color: #d4efda; border-color: #a5d6b1; }
+.management-ui--dark .task-tabs span { background: #344e3d; }
+.management-ui--dark :is(a,button,input,select):focus-visible { outline-color: #f1c86c; }
+.management-ui--dark .icon-button:hover { color: #e2eee4; background: #274632; border-color: #a5bdab; }
+@media (max-width: 1200px) {
+  .management-ui .metrics-grid { grid-template-columns: repeat(2,minmax(0,1fr)); }
+  .management-ui .farms-grid { grid-template-columns: minmax(0,1fr); }
+  .management-ui .dashboard-grid { grid-template-columns: minmax(0,1fr); }
+}
+@media (min-width: 761px) and (max-width: 1100px) {
+  .management-ui .trough-card-main { grid-template-columns: 80px minmax(0,1fr); }
+  .management-ui .trough-info-grid { grid-template-columns: minmax(0,1fr); }
+  .management-ui .animal-portrait, .management-ui .water-gauge { align-self: start; min-height: 110px; }
+  .management-ui .attention { grid-template-columns: minmax(0,1fr); }
+}
+@media (max-width: 760px) {
+  .management-content { min-height: calc(100dvh - 66px); padding: 24px 16px; }
+  .management-ui .page-heading h1, .management-ui .establishments-heading h1 { font-size: 25px; }
+  .management-ui .page-heading, .management-ui .establishments-heading { gap: 16px; }
+  .management-ui .heading-date { font-size: 11px; }
+  .management-ui .attention { grid-template-columns: minmax(0,1fr); padding: 16px; }
+  .management-ui .attention > .text-button { justify-self: start; }
+  .management-ui .metrics-grid { gap: 10px; }
+  .management-ui .metric-card { padding: 12px; gap: 9px; }
+  .management-ui .metric-icon { width: 34px; height: 34px; }
+  .management-ui .metric-card > svg { display: none; }
+  .management-ui .trough-summary { padding: 16px; }
+  .management-ui .trough-card-main { grid-template-columns: 80px minmax(0,1fr); padding: 14px; gap: 12px; }
+  .management-ui .trough-info-grid { grid-template-columns: minmax(0,1fr); }
+  .management-ui .trough-card-actions { padding: 10px 12px; gap: 8px; }
+  .management-ui .trough-card-actions .danger-ghost { margin-left: 0; }
+  .management-ui .farm-card { padding: 16px; }
+  .management-ui .farm-toolbar .farm-search { width: 100%; }
+  .management-ui .farm-priorities > div + div { padding-left: 10px; }
+  .management-ui .summary-grid { grid-template-columns: minmax(0,1fr); }
+  .management-ui .status-counts { grid-template-columns: minmax(0,1fr); gap: 12px; }
+  .management-ui .status-counts > div { display: grid; grid-template-columns: minmax(0,1fr) auto; align-items: center; }
+  .management-ui .status-counts > div + div { padding: 12px 0 0; border-left: 0; border-top: 1px solid #e5eae6; }
+  .management-ui .status-counts span { gap: 6px; }
+  .management-ui .status-counts strong { grid-column: 2; grid-row: 1; margin: 0; }
+  .management-ui .status-counts small { grid-column: 1 / -1; }
+  .management-ui .task-row { flex-wrap: wrap; gap: 8px; }
+  .management-ui .task-meta { padding-left: 39px; text-align: left; flex-basis: calc(100% - 28px); }
+  .management-ui .panel-title { padding: 16px; flex-wrap: wrap; }
+  .management-ui .management-map { padding-inline: 12px; }
+  .management-ui .technical-details > div { grid-template-columns: minmax(0,1fr); }
+}
+@media (max-width: 380px) {
+  .management-ui .farm-priorities span { flex-wrap: wrap; }
+  .management-ui .metric-card { align-items: flex-start; flex-direction: column; }
+  .management-ui .trough-card-main { grid-template-columns: minmax(0,1fr); }
+  .management-ui .water-gauge, .management-ui .animal-portrait { padding: 12px; min-height: 88px; }
+}
+@media (prefers-reduced-motion: reduce) { .management-ui *, .management-ui *::before, .management-ui *::after { scroll-behavior: auto !important; animation: none !important; transition: none !important; } }

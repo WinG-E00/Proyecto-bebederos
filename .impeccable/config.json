@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "side-tab",
+        "value": "*",
+        "files": [
+          "frontend/mi-proyecto-shadcn/src/components/ManagementUI.css"
+        ],
+        "createdAt": "2026-10-27T19:37:27.943Z",
+        "reason": "Agent: el usuario pidió implementar el diseño del archivo implementacion panel establecimientios bebederos animales.make; su CSS original incluye .attention con border-left: 4px solid #cc4e3f. Se conserva esa decisión visual de la referencia entregada."
+      }
+    ]
+  }
+}

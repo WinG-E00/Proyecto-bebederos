@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test'
 import { prepareBaselinePage } from './helpers.js'
 
 for (const role of ['owner', 'worker']) {
- test(`panel ${role}: urgencias visibles y detalles a demanda`, async ({ page }, testInfo) => {
+ test(`panel ${role}: urgencias visibles y contenido operativo`, async ({ page }, testInfo) => {
   const errors = []
   const calls = []
   page.on('pageerror', e => errors.push(e.message))
@@ -24,6 +24,15 @@ for (const role of ['owner', 'worker']) {
   await page.goto('/dashboard?farmId=1')
   await expect(page.getByRole('heading', { name: 'Necesita atención' })).toBeVisible()
   await expect(page.getByText('Agua crítica en Corral Norte', { exact: true })).toBeVisible()
+  if (role === 'owner') {
+   await expect(page.getByRole('heading', { name: 'Tareas y actividad', exact: true })).toBeVisible()
+   await expect(page.getByText('Despejado', { exact: true })).toBeVisible()
+   await expect(page.getByRole('region', { name: 'Mapa de animales y bebederos' })).toBeVisible()
+   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+   await page.screenshot({ path: testInfo.outputPath('panel-owner.png'), fullPage: true })
+   expect(errors).toEqual([])
+   return
+  }
   for (const button of await page.locator('.panel-section__toggle').all()) await expect(button).toHaveAttribute('aria-expanded', 'false')
   expect(calls).not.toContain('/map')
   expect(calls).not.toContain('/farms/1/weather')
