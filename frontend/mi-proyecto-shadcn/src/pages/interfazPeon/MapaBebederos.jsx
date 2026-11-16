@@ -84,19 +84,27 @@ export default function MapaBebederos({ farmId = '', center, compact = false }) 
     centered.current = farmId
   }, [farmId, center, query.data, showMap])
   return (
-    <>
-      {compact && <div className="flex gap-2 mb-4" role="group" aria-label="Vista de ubicaciones">
-        {[[Map, 'map', 'Mapa'], [List, 'list', 'Lista']].map(([Icon, value, label]) => <button key={value} type="button" aria-pressed={view === value} className="inline-flex min-h-11 items-center gap-2 rounded-lg border px-4 aria-pressed:bg-[#dcecdf] aria-pressed:text-[#153e26]" onClick={() => setView(value)}><Icon size={18} aria-hidden="true" />{label}</button>)}
+    <div className="space-y-6">
+      {compact && <div className="flex gap-2" role="group" aria-label="Vista de ubicaciones">
+        {[[Map, 'map', 'Mapa'], [List, 'list', 'Lista']].map(([Icon, value, label]) => <button key={value} type="button" aria-pressed={view === value} className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-border px-4 transition-colors hover:bg-muted focus-visible:outline-3 focus-visible:outline-[#d3a865] aria-pressed:bg-[#dcecdf] aria-pressed:text-[#153e26]" onClick={() => setView(value)}><Icon size={18} aria-hidden="true" />{label}</button>)}
       </div>}
       <AsyncState loading={query.isPending} error={query.error} onRetry={() => query.refetch()} />
-      {query.stale && <p role="status">Sin conexión. Ubicaciones anteriores.</p>}
-      {showMap && <div
-        ref={container}
-        role="region"
-        aria-label="Mapa de animales y bebederos"
-        style={{ height: compact ? 280 : 400, width: '100%', position: 'relative', zIndex: 0 }}
-      />}
+      {query.stale && (
+        <p role="status" className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-sm text-amber-900 dark:border-amber-900/60 dark:bg-amber-950/30 dark:text-amber-200">
+          Sin conexión. Ubicaciones anteriores.
+        </p>
+      )}
+      {showMap && (
+        <div className="overflow-hidden rounded-xl border border-border bg-muted/30 shadow-sm">
+          <div
+            ref={container}
+            role="region"
+            aria-label="Mapa de animales y bebederos"
+            className={`relative z-0 w-full ${compact ? 'h-[280px]' : 'h-[400px]'}`}
+          />
+        </div>
+      )}
       {!query.denied && (!compact || view === 'list' || tileError) && <MapFallback markers={positions} tileError={tileError} compact={compact} />}
-    </>
+    </div>
   )
 }

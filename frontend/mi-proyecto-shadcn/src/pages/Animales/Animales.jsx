@@ -12,6 +12,7 @@ import AdministrativeForm from '../../components/AdministrativeForm.jsx'
 import { Freshness } from '../../components/TelemetryDetails.jsx'
 import { formatDate } from '../../lib/dates.js'
 import Pagination from '../../components/Pagination.jsx'
+import { Droplets, History, MapPin, Pencil, Trash2 } from 'lucide-react'
 const fields = [
   ['name', 'Identificación individual', 'text'],
   ['species', 'Especie', 'text'],
@@ -68,48 +69,66 @@ export default function Animales() {
               }}
             />
           )}
-          <div className="grid gap-4 md:grid-cols-2">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {items?.map((a) => (
-              <article key={a.id} className="space-y-3 rounded-2xl border border-border bg-card p-5 shadow-xs transition hover:shadow-md">
-                <div className="flex items-start justify-between gap-2 flex-wrap">
-                  <h2 className="text-xl font-bold tracking-tight text-foreground">{a.name}</h2>
-                  <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-muted text-muted-foreground">
-                    #{a.id}
+              <article key={a.id} className="flex h-full flex-col gap-4 rounded-xl border border-border bg-card p-5 shadow-sm transition-shadow duration-200 hover:shadow-md">
+                <div className="flex flex-wrap items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <h2 className="break-words text-xl font-bold tracking-tight text-foreground">{a.name}</h2>
+                    <p className="mt-1 text-xs font-medium text-muted-foreground">#{a.id}</p>
+                  </div>
+                  <span className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-semibold ${
+                    a.state?.toLocaleLowerCase('es-AR') === 'activo'
+                      ? 'bg-emerald-100 text-emerald-900 dark:bg-emerald-900/40 dark:text-emerald-200'
+                      : 'bg-muted text-muted-foreground'
+                  }`}>
+                    {a.state}
                   </span>
                 </div>
                 <p className="text-sm font-medium text-foreground">
-                  {a.species} · {a.breed} · {a.ageYears} años · {a.state}
+                  {a.species} · {a.breed} · {a.ageYears} años
                 </p>
-                <div className="rounded-xl bg-muted/40 p-3.5 space-y-2 text-sm text-muted-foreground">
-                  <p>
-                    <span className="font-medium text-foreground">GPS:</span>{' '}
-                    {a.position
-                      ? `${a.position.latitude}, ${a.position.longitude}`
-                      : 'Sin ubicación recibida'}
+                <div className="space-y-2 text-sm">
+                  <p className="flex items-center gap-2 text-foreground">
+                    <MapPin size={16} className="shrink-0 text-muted-foreground" aria-hidden="true" />
+                    <span className="font-medium">GPS:</span>{' '}
+                    <span className="min-w-0 break-all text-muted-foreground">
+                      {a.position
+                        ? `${a.position.latitude}, ${a.position.longitude}`
+                        : 'Sin ubicación recibida'}
+                    </span>
                   </p>
-                  <Freshness value={a.freshness} date={a.position?.measuredAt} />
+                  <div className="pl-6 text-xs text-muted-foreground">
+                    <Freshness value={a.freshness} date={a.position?.measuredAt} />
+                  </div>
                 </div>
-                <div className="rounded-xl bg-emerald-50/60 dark:bg-emerald-950/20 border border-emerald-200/60 dark:border-emerald-900/40 p-3.5 space-y-1.5 text-sm">
-                  <h3 className="font-semibold text-emerald-950 dark:text-emerald-200">Última visita al bebedero</h3>
+                <div className="space-y-2 border-t border-border/70 pt-3 text-sm">
+                  <h3 className="flex items-center gap-2 font-semibold text-foreground">
+                    <Droplets size={16} className="shrink-0 text-emerald-700 dark:text-emerald-400" aria-hidden="true" />
+                    Última visita al bebedero
+                  </h3>
                   {a.lastVisit ? (
-                    <p className="text-emerald-900/90 dark:text-emerald-300/90 leading-relaxed">
+                    <p className="pl-6 leading-relaxed text-muted-foreground">
                       <span className="font-semibold">{a.lastVisit.troughName}</span> · {formatDate(a.lastVisit.visitedAt)} · Visita estimada
                       por proximidad; no acredita consumo.
                     </p>
                   ) : (
-                    <p className="text-muted-foreground">Sin visitas registradas</p>
+                    <p className="pl-6 text-sm text-muted-foreground">Sin visitas registradas</p>
                   )}
                 </div>
-                <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-border/60">
-                  <button className="min-h-11 rounded-lg px-3 text-sm font-medium text-primary hover:bg-muted focus-visible:outline-3 focus-visible:outline-[#d3a865]" onClick={()=>setHistoryId(historyId===a.id?null:a.id)}>
+                <div className="mt-auto flex flex-wrap items-center gap-2 border-t border-border/70 pt-3">
+                  <button className="inline-flex min-h-11 items-center gap-2 rounded-lg px-3 text-sm font-medium text-primary transition-colors hover:bg-muted focus-visible:outline-3 focus-visible:outline-[#d3a865]" onClick={()=>setHistoryId(historyId===a.id?null:a.id)}>
+                    <History size={16} aria-hidden="true" />
                     {historyId===a.id?'Ocultar antecedentes':'Ver antecedentes'}
                   </button>
                   {account.role === 'owner' && (
                     <div className="flex gap-2">
-                      <button className="min-h-11 rounded-lg px-3 text-sm font-medium text-foreground hover:bg-muted focus-visible:outline-3 focus-visible:outline-[#d3a865]" onClick={() => setEditing(a)}>
+                      <button className="inline-flex min-h-11 items-center gap-2 rounded-lg px-3 text-sm font-medium text-foreground transition-colors hover:bg-muted focus-visible:outline-3 focus-visible:outline-[#d3a865]" onClick={() => setEditing(a)}>
+                        <Pencil size={16} aria-hidden="true" />
                         Editar
                       </button>
-                      <button className="min-h-11 rounded-lg px-3 text-sm font-medium text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 focus-visible:outline-3 focus-visible:outline-[#d3a865]" onClick={() => setRemoving(a)}>
+                      <button className="inline-flex min-h-11 items-center gap-2 rounded-lg px-3 text-sm font-medium text-rose-700 transition-colors hover:bg-rose-50 focus-visible:outline-3 focus-visible:outline-[#d3a865] dark:text-rose-300 dark:hover:bg-rose-950/40" onClick={() => setRemoving(a)}>
+                        <Trash2 size={16} aria-hidden="true" />
                         Eliminar
                       </button>
                     </div>
@@ -119,7 +138,11 @@ export default function Animales() {
               </article>
             ))}
           </div>
-          {query.data?.total === 0 && <p>No hay animales disponibles.</p>}
+          {query.data?.total === 0 && (
+            <p className="rounded-xl border border-dashed border-border px-4 py-8 text-center text-sm text-muted-foreground">
+              No hay animales disponibles.
+            </p>
+          )}
           {!selected && <Pagination query={query} page={page} setPage={setPage} />}
         </>
       )}
