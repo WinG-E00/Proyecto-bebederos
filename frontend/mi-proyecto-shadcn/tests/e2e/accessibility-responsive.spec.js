@@ -69,6 +69,7 @@ async function login(page, email, password) {
 
 test('todas las pantallas de dueño y peón: táctil, teclado, etiquetas, foco y errores', async ({ page, request, browser }, testInfo) => {
   await page.route('**/*.tile.openstreetmap.org/**', (route) => route.abort())
+  await page.route('**/server.arcgisonline.com/**', (route) => route.abort())
   const problems = []
   // Pantallas públicas antes de iniciar sesión.
   for (const path of ['/login', '/register', '/forgot']) {
@@ -119,6 +120,7 @@ test('todas las pantallas de dueño y peón: táctil, teclado, etiquetas, foco y
 
     context = await browser.newContext({ viewport: testInfo.project.use.viewport, isMobile: testInfo.project.use.isMobile, hasTouch: true })
     await context.route('**/*.tile.openstreetmap.org/**', (route) => route.abort())
+    await context.route('**/server.arcgisonline.com/**', (route) => route.abort())
     const worker = await context.newPage()
     await worker.goto('http://127.0.0.1:5173/login')
     await login(worker, address, password)

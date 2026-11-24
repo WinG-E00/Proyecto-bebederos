@@ -49,6 +49,7 @@
   border-bottom: 1px solid rgb(255 255 255 / 11%);
 }
 .app-nav-brand { display: flex; align-items: center; gap: 11px; min-height: 44px; }
+.app-nav-brand-logo { display: block; width: 190px; max-width: 100%; height: auto; }
 .app-nav-brand-mark {
   display: grid;
   flex-shrink: 0;
@@ -71,15 +72,17 @@
   min-height: 44px;
   padding: 0 12px;
   border-radius: 9px;
-  color: #bcd0c3;
+  color: #d3e2d8;
+  background: #1b4d36;
   font-size: 14px;
   font-weight: 500;
   line-height: 1.35;
   transition: color 120ms ease-out, background-color 120ms ease-out;
 }
-.app-nav-item:hover { color: white; background: rgb(255 255 255 / 6%); }
+.app-nav-item + .app-nav-item { margin-top: 5px; }
+.app-nav-item:hover { color: white; background: #235c41; }
 .app-nav-item--active,
-.app-nav-item--active:hover { color: white; background: #246746; box-shadow: inset 3px 0 #f1c86c; }
+.app-nav-item--active:hover { color: white; background: #2d7552; box-shadow: inset 3px 0 #f1c86c; }
 .app-nav-footer { flex-shrink: 0; padding-top: 12px; }
 .app-nav-profile-link {
   display: flex;

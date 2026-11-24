@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useQueryClient } from '@tanstack/react-query'
-import { Beef, ChevronDown, Droplets, History, List, MapPin, Pencil, Plus, Trash2 } from 'lucide-react'
+import { Beef, ChevronDown, Droplets, History, MapPin, Pencil, Plus, Trash2 } from 'lucide-react'
 import { ResourceHistory } from '../Historial/Historial.jsx'
 import { useAuth } from '../../hooks/useAuth.js'
 import { useFarmScope } from '../../hooks/useFarmScope.js'
@@ -13,6 +13,7 @@ import AdministrativeForm from '../../components/AdministrativeForm.jsx'
 import { Freshness } from '../../components/TelemetryDetails.jsx'
 import { formatDate } from '../../lib/dates.js'
 import Pagination from '../../components/Pagination.jsx'
+import CowIcon from '../../components/icons/CowIcon.jsx'
 import { EmptyResources, MetricCard, ResourceFormDialog, ResourceMap, ResourceToolbar } from '../../components/ManagementUI.jsx'
 const fields = [
   ['name', 'Identificación individual', 'text'],
@@ -59,11 +60,11 @@ export default function Animales() {
       </section>}
       <ResourceMap scope={scope} type="animal" title="Mapa de animales" description="Última posición GPS recibida de cada animal" />
       <details className="trough-list-shell" aria-label="Listado de animales" open>
-        <summary className="list-disclosure"><span className="disclosure-icon"><List size={20} aria-hidden="true" /></span><span><h2>Listado de animales</h2><small>{scope.selected?.name || 'Todos los establecimientos'} · Consultá sus fichas y antecedentes</small></span><span className="list-count">{selected ? items.length : query.data?.total ?? '—'}</span><ChevronDown size={20} aria-hidden="true" /></summary>
+        <summary className="list-disclosure"><span className="disclosure-icon"><CowIcon size={20} aria-hidden="true" /></span><span><h2>Listado de animales</h2><small>{scope.selected?.name || 'Todos los establecimientos'} · Consultá sus fichas y antecedentes</small></span><span className="list-count">{selected ? items.length : query.data?.total ?? '—'}</span><ChevronDown size={20} aria-hidden="true" /></summary>
         <div className="trough-list-content">
           <ResourceToolbar search={search} onSearch={setSearch} label="Buscar identificación o raza" count={visible.length} onRefresh={() => query.refetch()} refreshing={query.isFetching} paginated={partial} />
           <div className="trough-cards">{visible.map(a => <article key={a.id} className="trough-card">
-            <div className="trough-card-main animal-card-main"><span className="animal-portrait"><Beef size={32} aria-hidden="true" /><small>{a.species}</small></span><div>
+            <div className="trough-card-main animal-card-main"><span className="animal-portrait"><CowIcon size={32} aria-hidden="true" /><small>{a.species}</small></span><div>
               <div className="trough-name"><div><h3>{a.name}</h3><p>{a.species} · {a.breed} · {a.ageYears} {a.ageYears === 1 ? 'año' : 'años'}</p></div><span className="operation-badge">{a.state}</span></div>
               <div className="trough-info-grid"><div><MapPin size={17} aria-hidden="true" /><div><small>Última posición GPS</small><strong>{a.position ? `${a.position.latitude}, ${a.position.longitude}` : 'Sin ubicación recibida'}</strong><div className={`freshness-copy ${a.freshness}`}><Freshness value={a.freshness} date={a.position?.measuredAt} /></div></div></div>
                 <div><Droplets size={17} aria-hidden="true" /><div><h4>Última visita al bebedero</h4><strong>{a.lastVisit ? `${a.lastVisit.troughName} · ${formatDate(a.lastVisit.visitedAt)}` : 'Sin visitas registradas'}</strong><em>Visita estimada por proximidad; no acredita consumo.</em></div></div>
@@ -74,7 +75,7 @@ export default function Animales() {
             </div>
             {historyId === a.id && <div className="resource-history"><ResourceHistory resourceType="animals" resource={a} /></div>}
           </article>)}</div>
-          {query.data && !visible.length && <EmptyResources icon={Beef} title={search ? 'No encontramos animales' : 'No hay animales disponibles.'} description={search ? 'Probá con otra identificación o raza en esta página.' : undefined} />}
+          {query.data && !visible.length && <EmptyResources icon={CowIcon} title={search ? 'No encontramos animales' : 'No hay animales disponibles.'} description={search ? 'Probá con otra identificación o raza en esta página.' : undefined} />}
           {!selected && <Pagination query={query} page={page} setPage={setPage} />}
         </div>
       </details>

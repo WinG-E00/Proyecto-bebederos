@@ -1,0 +1,28 @@
+/* Mapa compartido: marcadores con ícono, selector de capa, etiquetas de límites y globos. */
+.map-shell { position: relative; }
+.map-canvas { border-radius: 12px; overflow: hidden; }
+.map-canvas.is-drawing, .map-canvas.is-drawing .leaflet-interactive { cursor: crosshair; }
+
+.map-pin { width: 36px; height: 36px; display: grid; place-items: center; border: 2.5px solid white; box-shadow: 0 2px 6px rgb(0 0 0 / 45%); transition: transform 120ms ease-out; }
+.map-pin--animal { border-radius: 50%; background: #a65f24; }
+.map-pin--trough { border-radius: 10px; background: #1f7a8c; }
+.leaflet-marker-icon:hover .map-pin, .leaflet-marker-icon:focus-visible .map-pin { transform: scale(1.12); }
+.leaflet-marker-icon:focus-visible { outline: none; }
+.leaflet-marker-icon:focus-visible .map-pin { box-shadow: 0 0 0 3px #ffd23f, 0 2px 6px rgb(0 0 0 / 45%); }
+
+.map-base-toggle { position: absolute; top: 10px; right: 10px; z-index: 500; padding: 3px; border-radius: 10px; display: flex; gap: 3px; background: rgb(255 255 255 / 94%); box-shadow: 0 2px 8px rgb(0 0 0 / 25%); }
+.map-base-toggle button { min-height: 44px; padding: 0 12px; border: 0; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px; color: #3f5d4d; background: transparent; font-size: 13px; font-weight: 700; cursor: pointer; }
+.map-base-toggle button[aria-pressed='true'] { color: white; background: #246a48; }
+.map-base-toggle button:focus-visible { outline: 3px solid #7fc49d; outline-offset: 1px; }
+
+.leaflet-tooltip.map-boundary-label { padding: 3px 9px; border: 0; border-radius: 999px; color: #1a1a1a; background: rgb(255 210 63 / 92%); box-shadow: 0 1px 4px rgb(0 0 0 / 35%); font-size: 12px; font-weight: 700; white-space: nowrap; }
+.leaflet-tooltip.map-boundary-label::before { display: none; }
+
+.map-popup-shell .leaflet-popup-content { margin: 12px 14px; }
+.map-popup { display: grid; gap: 4px; min-width: 160px; color: #1f2937; }
+.map-popup small { color: #6b7a70; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; }
+.map-popup strong { font-size: 14px; }
+.map-popup button { margin-top: 6px; min-height: 44px; border: 0; border-radius: 8px; color: white; background: #246a48; font-weight: 700; cursor: pointer; }
+.map-popup button:hover { background: #1d5a3c; }
+
+@media (prefers-reduced-motion: reduce) { .map-pin { transition: none; } }

@@ -21,8 +21,10 @@ export function testAccount(role) {
 export async function prepareBaselinePage(page) {
   await page.clock.install({ time: new Date('2026-10-13T12:00:00.000Z') })
   // Capturas deterministas y sin consultas a proveedores de teselas.
-  await page.route('https://*.tile.openstreetmap.org/**', (route) => route.fulfill({
+  const tile = (route) => route.fulfill({
     status: 200, contentType: 'image/png',
     body: Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+afooAAAAASUVORK5CYII=', 'base64'),
-  }))
+  })
+  await page.route('https://*.tile.openstreetmap.org/**', tile)
+  await page.route('https://server.arcgisonline.com/**', tile)
 }

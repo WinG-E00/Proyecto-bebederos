@@ -1,24 +1,26 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import {
-  Beef, Bell, Building2, Check, ChevronRight, CloudSun, Droplets,
-  History, LayoutDashboard, LogOut, Map, Menu, UserRound, Users, X,
+  Bell, BellRing, ChevronRight, ClipboardCheck, CloudSunRain, Fence,
+  History, LogOut, MapPinned, Menu, Tractor, UserRound, Users, Waves, X,
 } from 'lucide-react'
 import { useAuth } from '../hooks/useAuth.js'
 import FarmSelector from './FarmSelector.jsx'
+import CowIcon from './icons/CowIcon.jsx'
+import logo from '../pages/interfaz-principal/logo.png'
 import '@fontsource-variable/dm-sans'
 import '@fontsource-variable/manrope'
 import './AppNavigation.css'
 
 const destinations = [
-  ['/dashboard', 'Panel', LayoutDashboard],
-  ['/farms', 'Establecimientos', Building2],
-  ['/troughs', 'Bebederos', Droplets],
-  ['/animals', 'Animales', Beef],
-  ['/map', 'Mapa', Map],
-  ['/tasks', 'Tareas', Check],
-  ['/alerts', 'Alertas', Bell],
-  ['/weather', 'Clima', CloudSun],
+  ['/dashboard', 'Panel', Tractor],
+  ['/farms', 'Establecimientos', Fence],
+  ['/troughs', 'Bebederos', Waves],
+  ['/animals', 'Animales', CowIcon],
+  ['/map', 'Mapa', MapPinned],
+  ['/tasks', 'Tareas', ClipboardCheck],
+  ['/alerts', 'Alertas', BellRing],
+  ['/weather', 'Clima', CloudSunRain],
   ['/team', 'Equipo', Users, 'owner'],
   ['/history', 'Historial', History, 'owner'],
 ]
@@ -97,8 +99,7 @@ export default function AppNavigation({ scope, mobileOpen, setMobileOpen }) {
     >
       <div className="app-nav-brand-row">
         <Link className="app-nav-brand" to={`/dashboard${suffix}`} onClick={closeMenu} aria-label="Proyecto Bebederos, inicio">
-          <span className="app-nav-brand-mark"><Droplets size={23} strokeWidth={2.3} aria-hidden="true" /></span>
-          <span><strong>Bebederos</strong><small>Monitoreo ganadero</small></span>
+          <img className="app-nav-brand-logo" src={logo} alt="" />
         </Link>
         <button ref={closer} className="app-nav-close" type="button" aria-label="Cerrar menú" onClick={closeMenu}><X size={20} aria-hidden="true" /></button>
       </div>

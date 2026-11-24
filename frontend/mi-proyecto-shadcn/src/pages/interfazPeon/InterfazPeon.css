@@ -34,7 +34,7 @@
 .interfaz-peon__brand { display: flex; gap: 12px; align-items: center; color: #fff; text-decoration: none; }
 .interfaz-peon__brand strong { display: block; font-size: 17px; }
 .interfaz-peon__brand small { display: block; font-size: 11px; color: #e1f3e8; }
-.interfaz-peon__logo { display: grid; place-items: center; width: 42px; height: 42px; background: rgb(255 255 255 / 16%); border-radius: 12px; flex-shrink: 0; }
+.interfaz-peon__logo { display: block; width: 180px; max-width: 42vw; height: auto; flex-shrink: 0; }
 .interfaz-peon__nav-right { display: flex; align-items: center; gap: 20px; }
 .interfaz-peon__clock { display: flex; gap: 7px; align-items: center; font-size: 14px; font-variant-numeric: tabular-nums; }
 .interfaz-peon__theme { display: flex; align-items: center; gap: 6px; min-height: 44px; background: rgb(255 255 255 / 16%); border: 1px solid rgb(255 255 255 / 25%); color: #fff; padding: 8px 14px; border-radius: 10px; cursor: pointer; font-size: 13px; }

@@ -19,6 +19,7 @@ async function login(page, email, password) {
 // a un campo ajeno y revocación que retira datos de una vista abierta.
 test('aislamiento de caché entre cuentas, URL ajena y revocación en vista abierta', async ({ page, request, browser }, testInfo) => {
   await page.route('**/*.tile.openstreetmap.org/**', (route) => route.abort())
+  await page.route('**/server.arcgisonline.com/**', (route) => route.abort())
   const db = await ownerSession(page, request)
   let context
   try {
@@ -49,6 +50,7 @@ test('aislamiento de caché entre cuentas, URL ajena y revocación en vista abie
     await fixtureInsert(db, 'Assignments', { farmId: farmA.id, workerId, createdAt: new Date(), updatedAt: new Date() })
     context = await browser.newContext({ viewport: testInfo.project.use.viewport, isMobile: testInfo.project.use.isMobile, hasTouch: true })
     await context.route('**/*.tile.openstreetmap.org/**', (route) => route.abort())
+    await context.route('**/server.arcgisonline.com/**', (route) => route.abort())
     const worker = await context.newPage()
     await worker.goto('http://127.0.0.1:5173/login')
     await worker.getByLabel('Correo electrónico').fill(address)

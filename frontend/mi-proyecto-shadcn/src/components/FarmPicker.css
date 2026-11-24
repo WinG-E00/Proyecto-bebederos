@@ -1,0 +1,31 @@
+/* Selector de establecimiento en botones (pantalla Mapa y mapa del panel). */
+.farm-picker { padding: 14px 16px; border: 1px solid #dde4dd; border-radius: 13px; background: white; display: flex; flex-wrap: wrap; align-items: center; gap: 14px 20px; box-shadow: 0 2px 8px rgb(21 54 37 / 3%); }
+.farm-picker :is(button, select):focus-visible { outline: 3px solid #7fc49d; outline-offset: 2px; }
+.farm-picker-copy { display: flex; align-items: center; gap: 11px; min-width: 0; }
+.farm-picker-icon { width: 42px; height: 42px; flex-shrink: 0; border-radius: 11px; display: grid; place-items: center; color: #26744e; background: #e6f2e9; }
+.farm-picker-copy p { margin: 0; color: #708076; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .6px; }
+.farm-picker-copy strong { display: block; color: #1f3a2b; font: 700 16px/1.3 'Manrope Variable', sans-serif; overflow-wrap: anywhere; }
+.farm-chips { flex: 1; display: flex; flex-wrap: wrap; justify-content: flex-end; gap: 8px; }
+.farm-chip {
+  min-height: 44px; padding: 0 15px; border: 1px solid #d5ded6; border-radius: 999px;
+  display: inline-flex; align-items: center; gap: 7px;
+  color: #3f5d4d; background: white; font-size: 13px; font-weight: 600; cursor: pointer;
+  transition: background-color 120ms ease-out, border-color 120ms ease-out, color 120ms ease-out;
+}
+.farm-chip:hover { border-color: #9cc3aa; background: #f3f8f4; }
+.farm-chip--all { border-color: #b9d4c2; color: #245f40; background: #eef6f0; }
+.farm-chip[aria-pressed='true'] { border-color: #246a48; color: white; background: #246a48; box-shadow: 0 2px 6px rgb(26 83 55 / 18%); }
+.farm-select { flex: 1 1 240px; display: grid; gap: 5px; color: #3f5d4d; font-size: 13px; font-weight: 600; }
+.farm-select select { min-height: 44px; padding: 0 12px; border: 1px solid #d5ded6; border-radius: 8px; color: #21382c; background: white; font: inherit; }
+/* Dentro de un panel: sin marco propio. */
+.panel .farm-picker { margin: 0 19px 14px; padding: 12px 14px; box-shadow: none; background: #f8faf8; }
+.management-ui--dark .farm-picker { border-color: #41634d; background: #12261b; }
+.management-ui--dark .farm-picker-copy strong { color: #e2eee4; }
+.management-ui--dark .farm-picker-copy p { color: #b1c9b7; }
+.management-ui--dark .farm-chip:not([aria-pressed='true']) { border-color: #41634d; color: #cfe0d4; background: #1b3024; }
+@media (max-width: 640px) {
+  .farm-chips { flex-basis: 100%; justify-content: flex-start; }
+  .farm-chip { flex: 1 1 auto; justify-content: center; }
+  .panel .farm-picker { margin-inline: 16px; }
+}
+@media (prefers-reduced-motion: reduce) { .farm-chip { transition: none; } }

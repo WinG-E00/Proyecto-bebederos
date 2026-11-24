@@ -54,6 +54,7 @@ test('US4 animal, visita estimada, mapa táctil y alternativa sin teselas', asyn
     await page.getByRole('button', { name: 'Guardar animal' }).click()
     await expect(page.getByText('Bovino · Angus · 3 años · Activo')).toBeVisible()
     await page.route('**/*.tile.openstreetmap.org/**', (route) => route.abort())
+    await page.route('**/server.arcgisonline.com/**', (route) => route.abort())
     await page.goto(`/map?farmId=${f.id}`)
     await expect(page.getByRole('region', { name: 'Mapa de animales y bebederos' })).toBeVisible()
     await expect(page.getByText(/No se pudo cargar el mapa base/)).toBeVisible()

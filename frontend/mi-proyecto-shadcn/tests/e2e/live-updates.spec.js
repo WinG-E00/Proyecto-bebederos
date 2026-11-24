@@ -9,6 +9,7 @@ test.skip(!config, 'Requiere API real y MySQL de pruebas')
 // actualizan sin recarga dentro de 30 s desde que el dato queda disponible.
 test('vista abierta refleja agua, resumen y GPS sin recargar en ≤30 s', async ({ page, request }, testInfo) => {
   await page.route('**/*.tile.openstreetmap.org/**', (route) => route.abort())
+  await page.route('**/server.arcgisonline.com/**', (route) => route.abort())
   const db = await ownerSession(page, request)
   try {
     const f = await createFarm(page, 'Campo en vivo')

@@ -10,6 +10,7 @@ test.setTimeout(120000)
 test.skip(!config,'Requiere API real y MySQL de pruebas')
 test('US9 paneles reales, cinco antecedentes, retiro y revocación',async({page,request,browser},testInfo)=>{
  await page.route('**/*.tile.openstreetmap.org/**',route=>route.abort())
+ await page.route('**/server.arcgisonline.com/**',route=>route.abort())
  const db=await ownerSession(page,request);let context
  try {
   const f=await createFarm(page,'Campo historial')
@@ -49,6 +50,7 @@ test('US9 paneles reales, cinco antecedentes, retiro y revocación',async({page,
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true)
   context=await browser.newContext({viewport:testInfo.project.use.viewport,isMobile:testInfo.project.use.isMobile,hasTouch:true})
   await context.route('**/*.tile.openstreetmap.org/**',route=>route.abort())
+  await context.route('**/server.arcgisonline.com/**',route=>route.abort())
   const worker=await context.newPage()
   await worker.goto('http://127.0.0.1:5173/login')
   await worker.getByLabel('Correo electrónico').fill(address);await worker.getByLabel('Contraseña',{exact:true}).fill(password)

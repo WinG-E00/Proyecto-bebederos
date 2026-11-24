@@ -1,0 +1,17 @@
+/* Pantalla Mapa: selector de campo, editor de límites, leyenda y mapa grande. */
+.map-page { display: grid; gap: 16px; }
+
+.map-page-legend { display: flex; flex-wrap: wrap; gap: 8px 18px; color: #5f7366; font-size: 12px; font-weight: 600; }
+.map-page-legend span { display: inline-flex; align-items: center; gap: 7px; }
+.map-page-legend i { width: 24px; height: 24px; display: grid; place-items: center; color: white; border: 2px solid white; box-shadow: 0 0 0 1px #d5ded6; }
+.map-page-legend .legend-trough { border-radius: 7px; background: #1f7a8c; }
+.map-page-legend .legend-animal { border-radius: 50%; background: #a65f24; }
+.map-page-legend .legend-line { width: 26px; height: 0; border: 0; border-top: 3.5px solid #e8a400; border-radius: 0; box-shadow: 0 0 0 1px rgb(0 0 0 / 25%); }
+.map-page-legend .legend-line--approx { border-top-style: dashed; }
+
+.map-page-canvas { display: grid; gap: 16px; }
+.map-page-canvas .map-canvas { height: min(560px, 64vh) !important; border: 1px solid #dde4dd; box-shadow: 0 2px 10px rgb(21 54 37 / 5%); }
+
+@media (max-width: 640px) {
+  .map-page-canvas .map-canvas { height: 400px !important; }
+}

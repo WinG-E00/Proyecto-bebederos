@@ -37,4 +37,4 @@ Las mediciones ausentes se muestran como «Sin medición» y el nivel visible se
 
 ## Mapa
 
-El mapa usa Leaflet y teselas de OpenStreetMap (o `VITE_TILE_URL`), omite coordenadas inválidas, muestra un aviso ante fallos de carga y conserva la atribución.
+El mapa usa Leaflet con dos capas base: satélite (Esri World Imagery, por defecto) y calles (OpenStreetMap o `VITE_TILE_URL`). Omite coordenadas inválidas, muestra un aviso ante fallos de carga y conserva la atribución. Dibuja el límite de cada establecimiento: el dibujado en el navegador (`src/lib/farmBoundaries.js`), el fijo de `src/data/limitesCampos.js` o, si no hay ninguno, un cuadrado aproximado según `areaHa`.

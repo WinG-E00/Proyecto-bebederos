@@ -1,0 +1,47 @@
+/* Lista de ubicaciones de la pantalla Mapa, agrupada en desplegables por tipo. */
+.map-locations { display: grid; gap: 12px; }
+.map-locations :is(a, button, input, summary):focus-visible { outline: 3px solid #7fc49d; outline-offset: 2px; }
+.map-locations-warning { margin: 0; padding: 10px 14px; border: 1px solid #ecdcb8; border-radius: 10px; color: #6f5214; background: #fdf8ec; font-size: 13px; }
+.map-locations-head { display: flex; align-items: center; gap: 11px; }
+.map-locations-head-icon { width: 40px; height: 40px; flex-shrink: 0; border-radius: 10px; display: grid; place-items: center; color: #26744e; background: #e6f2e9; }
+.map-locations-head h2 { margin: 0; color: #1f3a2b; font: 700 18px/1.3 'Manrope Variable', sans-serif; }
+.map-locations-head p { margin: 2px 0 0; color: #708076; font-size: 12px; }
+.map-locations-empty { margin: 0; padding: 18px; border: 1px dashed #ccd8ce; border-radius: 12px; color: #708076; text-align: center; }
+
+.map-locations-search { min-height: 44px; padding: 0 12px; border: 1px solid #d5ded6; border-radius: 8px; display: flex; align-items: center; gap: 8px; color: #708076; background: white; }
+.map-locations-search input { flex: 1; min-width: 0; min-height: 42px; border: 0; outline: none; color: #21382c; background: transparent; font: inherit; }
+.map-locations-search:focus-within { border-color: #7fc49d; box-shadow: 0 0 0 3px rgb(127 196 157 / 35%); }
+
+.map-group { border: 1px solid #dde4dd; border-radius: 13px; background: white; overflow: hidden; }
+.map-group > summary { min-height: 64px; padding: 12px 16px; display: flex; align-items: center; gap: 12px; list-style: none; cursor: pointer; }
+.map-group > summary::-webkit-details-marker { display: none; }
+.map-group > summary:hover { background: #f8faf8; }
+.map-group-icon { width: 40px; height: 40px; flex-shrink: 0; border-radius: 10px; display: grid; place-items: center; }
+.map-group--animal .map-group-icon { color: #8a5a1c; background: #f6ecd7; }
+.map-group--trough .map-group-icon { color: #1f7a8c; background: #e1f1f4; }
+.map-group-title { flex: 1; min-width: 0; }
+.map-group-title strong { display: block; color: #1f3a2b; font: 700 16px/1.3 'Manrope Variable', sans-serif; }
+.map-group-title small { display: block; margin-top: 2px; color: #708076; font-size: 12px; }
+.map-group-count { min-width: 30px; height: 28px; padding: 0 10px; border-radius: 999px; display: inline-grid; place-items: center; color: white; font-size: 12px; font-weight: 700; }
+.map-group--animal .map-group-count { background: #a65f24; }
+.map-group--trough .map-group-count { background: #1f7a8c; }
+.map-group-chevron { flex-shrink: 0; color: #7c8b82; transition: transform 160ms ease-out; }
+.map-group[open] .map-group-chevron { transform: rotate(180deg); }
+
+.map-group-list { margin: 0; padding: 4px 16px 16px; list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 250px), 1fr)); gap: 8px; }
+.map-location-item { display: flex; gap: 6px; }
+.map-location-item .map-location-link { flex: 1; min-width: 0; width: 100%; font: inherit; text-align: left; cursor: pointer; }
+.map-location-record { width: 44px; flex-shrink: 0; border: 1px solid #e3e9e3; border-radius: 10px; display: grid; place-items: center; color: #28704d; background: #fcfdfc; }
+.map-location-record:hover { border-color: #9cc3aa; background: #f3f8f4; }
+.map-location-link { min-height: 56px; padding: 8px 12px; border: 1px solid #e3e9e3; border-radius: 10px; display: flex; align-items: center; gap: 10px; color: #21382c; background: #fcfdfc; text-decoration: none; transition: border-color 120ms ease-out, background-color 120ms ease-out; }
+.map-location-link:hover { border-color: #9cc3aa; background: #f3f8f4; }
+.map-location-link > svg { flex-shrink: 0; margin-left: auto; color: #9aaba0; }
+.map-location-icon { width: 34px; height: 34px; flex-shrink: 0; border-radius: 9px; display: grid; place-items: center; }
+.map-group--animal .map-location-icon { color: #8a5a1c; background: #f6ecd7; }
+.map-group--trough .map-location-icon { color: #1f7a8c; background: #e1f1f4; }
+.map-location-copy { min-width: 0; }
+.map-location-copy strong { display: block; font-size: 14px; font-weight: 600; overflow-wrap: anywhere; }
+.map-location-copy small { display: block; color: #708076; font-size: 11px; font-variant-numeric: tabular-nums; }
+.map-group-empty { margin: 0; padding: 0 16px 16px; color: #708076; font-size: 13px; }
+
+@media (prefers-reduced-motion: reduce) { .map-group-chevron, .map-location-link { transition: none; } }

@@ -1,7 +1,8 @@
-import { useEffect, useId, useRef } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { ChevronRight, MapPin, Search, X } from 'lucide-react'
 import MapaBebederos from '../pages/interfazPeon/MapaBebederos.jsx'
+import FarmPicker from './FarmPicker.jsx'
 import './ManagementUI.css'
 
 export function MetricCard({ icon: Icon, label, value, detail, tone = 'green', to }) {
@@ -21,11 +22,17 @@ export function ResourceToolbar({ search, onSearch, label, count, onRefresh, ref
   </div>
 }
 
-export function ResourceMap({ scope, type, title, description }) {
-  const suffix = scope.farmId ? `?farmId=${scope.farmId}` : ''
+export function ResourceMap({ scope, type, title, description, farmPicker = false }) {
+  // Con selector propio, el campo elegido cambia solo este mapa (el resto de la pantalla sigue igual).
+  const [localFarmId, setLocalFarmId] = useState(scope.farmId)
+  const farms = scope.farms.data?.items ?? []
+  const farmId = farmPicker ? localFarmId : scope.farmId
+  const selected = farmPicker ? farms.find(f => String(f.id) === String(localFarmId)) : scope.selected
+  const suffix = farmId ? `?farmId=${farmId}` : ''
   return <section className="panel trough-map-panel">
-    <header className="panel-title"><div><h2>{title}</h2><p>{description || scope.selected?.name || 'Todos los establecimientos'}</p></div><MapPin size={19} aria-hidden="true" /></header>
-    <div className="management-map"><MapaBebederos farmId={scope.farmId} center={scope.selected} compact resourceType={type} /></div>
+    <header className="panel-title"><div><h2>{title}</h2><p>{description || selected?.name || 'Todos los establecimientos'}</p></div><MapPin size={19} aria-hidden="true" /></header>
+    {farmPicker && <FarmPicker farms={farms} value={localFarmId} onChange={setLocalFarmId} />}
+    <div className="management-map"><MapaBebederos farmId={farmId} center={selected} farms={farms} compact resourceType={type} /></div>
     <footer className="map-footer"><span>Consultá la última ubicación recibida y abrí su ficha.</span><Link className="text-button" to={`/map${suffix}`}>Abrir mapa completo <ChevronRight size={16} aria-hidden="true" /></Link></footer>
   </section>
 }

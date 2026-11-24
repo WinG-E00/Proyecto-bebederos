@@ -13,6 +13,7 @@ import {
   User,
   Waves,
 } from 'lucide-react'
+import logo from '../interfaz-principal/logo.png'
 import MapaBebederos from './MapaBebederos'
 import { formatDate } from '../../lib/dates.js'
 import './InterfazPeon.css'
@@ -85,14 +86,8 @@ function InterfazPeon({
     <div className={`interfaz-peon${darkMode ? ' interfaz-peon--dark' : ''}`}>
       <header className="interfaz-peon__navbar">
         <div className="interfaz-peon__nav-container">
-          <a href="/" className="interfaz-peon__brand">
-            <span className="interfaz-peon__logo">
-              <Droplets aria-hidden="true" />
-            </span>
-            <span>
-              <strong>Proyecto bebederos</strong>
-              <small>Monitoreo Ganadero</small>
-            </span>
+          <a href="/" className="interfaz-peon__brand" aria-label="Proyecto Bebederos, inicio">
+            <img className="interfaz-peon__logo" src={logo} alt="" />
           </a>
           <div className="interfaz-peon__nav-right">
             <span className="interfaz-peon__clock">
