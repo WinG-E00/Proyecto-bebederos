@@ -28,16 +28,40 @@ export function createTroughService(db, { clock = { now: () => new Date() } } = 
       'SELECT COUNT(*) total FROM Troughs WHERE farmId IN (:ids) AND deletedAt IS NULL',
       { ids },
     )
+    const [waterSummary] = await select(
+      db,
+      `SELECT ROUND(AVG(w.percentage)) percentage,
+        COUNT(w.percentage) readings,
+        COUNT(CASE
+          WHEN w.percentage IS NOT NULL
+            AND w.measuredAt >= DATE_SUB(:now, INTERVAL f.staleMinutes MINUTE)
+          THEN 1
+        END) freshReadings
+       FROM Troughs t
+       JOIN Farms f ON f.id=t.farmId
+       LEFT JOIN TroughStates s ON s.troughId=t.id
+       LEFT JOIN WaterReadings w ON w.id=s.lastReadingId
+       WHERE t.farmId IN (:ids) AND t.deletedAt IS NULL`,
+      { ids, now: clock.now() },
+    )
     const rows = await select(
       db,
       `${troughSelect} WHERE t.farmId IN (:ids) AND t.deletedAt IS NULL ORDER BY t.id LIMIT :limit OFFSET :offset`,
       { ids, ...p },
     )
-    return paginated(
-      rows.map((r) => serializeTrough(r, clock.now())),
-      Number(count.total),
-      p,
-    )
+    const now = clock.now()
+    return {
+      ...paginated(
+        rows.map((r) => serializeTrough(r, now)),
+        Number(count.total),
+        p,
+      ),
+      waterAverage: {
+        percentage: waterSummary.percentage == null ? null : Number(waterSummary.percentage),
+        readings: Number(waterSummary.readings ?? 0),
+        freshReadings: Number(waterSummary.freshReadings ?? 0),
+      },
+    }
   }
   async function create(a, farmId, body) {
     return db.transaction(async (transaction) => {

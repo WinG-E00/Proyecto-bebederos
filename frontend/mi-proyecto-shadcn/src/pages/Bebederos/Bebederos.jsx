@@ -28,8 +28,15 @@ export default function Bebederos() {
   const [search, setSearch] = useState('')
   const items = selected ? (query.data ? [query.data] : []) : (query.data?.items ?? [])
   const visible = items.filter(t => t.name.toLocaleLowerCase().includes(search.trim().toLocaleLowerCase()))
-  const recent = items.filter(t => t.freshness === 'fresh' && t.waterLevel != null)
-  const average = recent.length ? Math.round(recent.reduce((sum, t) => sum + t.waterLevel, 0) / recent.length) : null
+  const average = selected
+    ? query.data?.waterLevel ?? null
+    : query.data?.waterAverage?.percentage ?? null
+  const averageReadings = selected
+    ? (query.data?.waterLevel == null ? 0 : 1)
+    : query.data?.waterAverage?.readings ?? 0
+  const freshReadings = selected
+    ? (query.data?.freshness === 'fresh' && query.data?.waterLevel != null ? 1 : 0)
+    : query.data?.waterAverage?.freshReadings ?? 0
   const outdated = items.filter(t => t.freshness !== 'fresh').length
   const partial = !selected && query.data?.total > items.length
   const states = [['Operativo', 'Operativos', 'operational', Check], ['En mantenimiento', 'Mantenimiento', 'maintenance', Wrench], ['Fuera de servicio', 'No operativos', 'inactive', X]]
@@ -48,7 +55,7 @@ export default function Bebederos() {
       {query.data && <section className="trough-summary" aria-label="Resumen de bebederos">
         <div className="summary-title"><div><h2>Resumen de bebederos</h2><p>{scope.selected?.name || 'Todos los establecimientos'}{partial ? ` · Página ${page}: ${items.length} de ${query.data.total} bebederos` : ` · ${items.length} bebederos`}</p></div><span className="monitoring-badge"><Droplets size={14} aria-hidden="true" />Lecturas recibidas</span></div>
         <div className="summary-grid">
-          <article className="water-average"><div className="summary-card-label"><span>Nivel promedio de agua</span><Droplets size={18} aria-hidden="true" /></div><strong>{average === null ? '—' : `${average}%`}</strong><div className="level-track" aria-hidden="true"><i style={{ width: `${average ?? 0}%` }} /></div><p>{recent.length ? 'Promedio de lecturas vigentes' : 'Sin lecturas vigentes para calcular el promedio'}{partial && ' en esta página'}</p></article>
+          <article className="water-average"><div className="summary-card-label"><span>{selected ? 'Último nivel registrado' : 'Promedio de últimas lecturas'}</span><Droplets size={18} aria-hidden="true" /></div><strong>{average == null ? '—' : `${average}%`}</strong><div className="level-track" aria-hidden="true"><i style={{ width: `${average ?? 0}%` }} /></div><p>{averageReadings ? (selected ? (freshReadings ? 'Lectura vigente' : 'Lectura desactualizada') : `Promedio de ${averageReadings} lecturas · ${freshReadings} vigentes`) : 'Sin lecturas registradas'}{partial && ' · todos los bebederos'}</p></article>
           <article className="stale-card"><div className="summary-card-label"><span>Sin datos recientes</span><History size={18} aria-hidden="true" /></div><strong>{outdated}<small> de {items.length} bebederos</small></strong><p>Incluye mediciones desactualizadas y sin datos recibidos.</p></article>
         </div>
         <article className="operational-summary"><div className="operational-title"><strong>Estado operativo</strong><span>{partial ? 'En esta página' : `${items.length} bebederos`}</span></div>
